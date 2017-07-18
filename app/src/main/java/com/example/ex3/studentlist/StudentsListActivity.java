@@ -7,19 +7,10 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.CheckBox;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.ex3.studentlist.model.Model;
 import com.example.ex3.studentlist.model.Student;
@@ -48,7 +39,6 @@ public class StudentsListActivity extends Activity implements StudentListFragmen
             tran.commit();
         }else {
             Log.d("TAG" , "fragment is null");
-            List<Student> data = Model.instace.getAllStudents();
 
             studentListFragment = StudentListFragment.newInstance();
 
