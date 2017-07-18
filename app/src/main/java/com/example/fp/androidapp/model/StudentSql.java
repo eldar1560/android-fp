@@ -1,4 +1,4 @@
-package com.example.ex3.studentlist.model;
+package com.example.fp.androidapp.model;
 
 /**
  * Created by Aviv Gold on 6/11/2017.

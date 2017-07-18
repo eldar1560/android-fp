@@ -1,4 +1,4 @@
-package com.example.ex3.studentlist;
+package com.example.fp.androidapp;
 
 import android.app.Activity;
 import android.app.Dialog;

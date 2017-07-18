@@ -1,8 +1,5 @@
-package com.example.ex3.studentlist.model;
+package com.example.fp.androidapp.model;
 
-
-import com.example.ex3.studentlist.MyDatePicker;
-import com.example.ex3.studentlist.MyTimePicker;
 
 public class Student {
     public String id;

@@ -1,4 +1,4 @@
-package com.example.ex3.studentlist;
+package com.example.fp.androidapp;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import com.example.ex3.studentlist.model.Model;
-import com.example.ex3.studentlist.model.Student;
+import com.example.fp.androidapp.model.Model;
+import com.example.fp.androidapp.model.Student;
 
 
 public class StudentDetailsFragment extends Fragment {

@@ -1,4 +1,4 @@
-package com.example.ex3.studentlist;
+package com.example.fp.androidapp;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -14,8 +14,8 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.ex3.studentlist.model.Model;
-import com.example.ex3.studentlist.model.Student;
+import com.example.fp.androidapp.model.Model;
+import com.example.fp.androidapp.model.Student;
 
 import java.util.List;
 

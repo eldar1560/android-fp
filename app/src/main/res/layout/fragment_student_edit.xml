@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.ex3.studentlist.StudentEditFragment"
+    tools:context="com.example.fp.androidapp.StudentEditFragment"
     android:orientation="vertical">
 
     <ImageView
@@ -113,7 +113,7 @@
             android:gravity="center"
             android:layout_margin="7dp"/>
 
-        <com.example.ex3.studentlist.MyDatePicker
+        <com.example.fp.androidapp.MyDatePicker
             android:id="@+id/editBirthDateTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -132,7 +132,7 @@
             android:gravity="center"
             android:layout_margin="7dp"/>
 
-        <com.example.ex3.studentlist.MyTimePicker
+        <com.example.fp.androidapp.MyTimePicker
             android:id="@+id/editBirthTimeTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
