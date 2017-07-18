@@ -61,24 +61,10 @@ public class StudentDetailsFragment extends Fragment {
         stu_address.setText("Address : " + st.address);
 
         stu_bt = (TextView) contentView.findViewById(R.id.stu_bt);
-        if(st.birthTime.min < 10 && st.birthTime.hour < 10)
-            stu_bt.setText("Birth time : 0" + st.birthTime.hour + ":0" + st.birthTime.min);
-        else if(st.birthTime.min < 10)
-            stu_bt.setText("Birth time : " + st.birthTime.hour + ":0" + st.birthTime.min);
-        else if(st.birthTime.hour < 10)
-            stu_bt.setText("Birth time : 0" + st.birthTime.hour + ":" + st.birthTime.min);
-        else
-            stu_bt.setText("Birth time : " + st.birthTime.hour + ":" + st.birthTime.min);
+        stu_bt.setText("Birth time : "+st.birthTime);
 
         stu_bd = (TextView) contentView.findViewById(R.id.stu_bd);
-        if (st.birthDate.day < 10 && (st.birthDate.month + 1) < 10)
-            stu_bd.setText("Birth date : 0" + st.birthDate.day + "/" + "0" + (st.birthDate.month + 1) + "/" + st.birthDate.year);
-        else if (st.birthDate.day < 10)
-            stu_bd.setText("Birth date : 0" + st.birthDate.day + "/" + (st.birthDate.month + 1) + "/" + st.birthDate.year);
-        else if ((st.birthDate.month + 1) < 10)
-            stu_bd.setText("Birth date : " + st.birthDate.day + "/" + "0" + (st.birthDate.month + 1) + "/" + st.birthDate.year);
-        else
-            stu_bd.setText("Birth date : " + st.birthDate.day + "/" + (st.birthDate.month + 1) + "/" + st.birthDate.year);
+        stu_bd.setText("Birth date : "+st.birthDate);
 
         stu_cb = (CheckBox) contentView.findViewById(R.id.stu_cb);
         stu_cb.setChecked(st.checked);

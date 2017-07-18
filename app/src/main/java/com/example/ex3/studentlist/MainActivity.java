@@ -69,6 +69,7 @@ public class MainActivity extends Activity implements StudentMainFragment.Studen
 
     @Override
     public void onSave(EditText nameEt , EditText idEt , EditText phoneEt , EditText addressEt , CheckBox cbEt , MyTimePicker bt , MyDatePicker bd) {
+        Log.d("Mife",bt.getText().toString() + " , " + bd.getText().toString());
         if(idEt.getText().toString().equals("") || nameEt.getText().toString().equals("") || phoneEt.getText().toString().equals("") || addressEt.getText().toString().equals("") || bt.getText().toString().equals("") || bd.getText().toString().equals("")) {
             new AlertDialog.Builder(MainActivity.this)
                     .setTitle("New Student")
@@ -85,7 +86,7 @@ public class MainActivity extends Activity implements StudentMainFragment.Studen
                     .show();
             return;
         }
-        Student new_student = new Student(idEt.getText().toString() , nameEt.getText().toString(), phoneEt.getText().toString() , addressEt.getText().toString() , cbEt.isChecked(),"" , bt , bd);
+        Student new_student = new Student(idEt.getText().toString() , nameEt.getText().toString(), phoneEt.getText().toString() , addressEt.getText().toString() , cbEt.isChecked(),"" , bt.getText().toString() , bd.getText().toString());
         Model.instace.addStudent(new_student);
         new AlertDialog.Builder(MainActivity.this)
                 .setTitle("New Student")

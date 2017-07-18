@@ -97,11 +97,15 @@ public class StudentEditFragment extends Fragment {
         addressEt.setText(st_edit.address);
 
         final MyTimePicker bt= (MyTimePicker) contentView.findViewById(R.id.editBirthTimeTv);
-        bt.onTimeSet(st_edit.birthTime.hour , st_edit.birthTime.min);
+        bt.onTimeSet(Integer.valueOf(st_edit.birthTime.substring(0,st_edit.birthTime.indexOf(":"))),Integer.valueOf(st_edit.birthTime.substring(st_edit.birthTime.indexOf(":")+1)));
+
 
         final MyDatePicker bd = (MyDatePicker) contentView.findViewById(R.id.editBirthDateTv);
-        bd.onDateSet(st_edit.birthDate.year , st_edit.birthDate.month , st_edit.birthDate.day);
+        bd.onDateSet(Integer.valueOf(st_edit.birthDate.substring(st_edit.birthDate.lastIndexOf("/")+1)) , Integer.valueOf(st_edit.birthDate.substring(st_edit.birthDate.indexOf("/")+1,st_edit.birthDate.lastIndexOf("/")))-1 , Integer.valueOf(st_edit.birthDate.substring(0,st_edit.birthDate.indexOf("/"))));
 
+        Log.d("Mife" , Integer.valueOf(st_edit.birthTime.substring(0,st_edit.birthTime.indexOf(":"))) + " , " + Integer.valueOf(st_edit.birthTime.substring(st_edit.birthTime.indexOf(":")+1)) + " , " +
+                Integer.valueOf(st_edit.birthDate.substring(0,st_edit.birthDate.indexOf("/"))) + " , " + Integer.valueOf(st_edit.birthDate.substring(st_edit.birthDate.indexOf("/")+1,st_edit.birthDate.lastIndexOf("/")))
+        + " , " + Integer.valueOf(st_edit.birthDate.substring(st_edit.birthDate.lastIndexOf("/")+1)));
         final CheckBox cbEt= (CheckBox) contentView.findViewById(R.id.editCbTv);
         cbEt.setChecked(st_edit.checked);
 

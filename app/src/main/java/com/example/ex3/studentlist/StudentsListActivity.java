@@ -41,10 +41,6 @@ public class StudentsListActivity extends Activity implements StudentListFragmen
 
         if(getFragmentManager().findFragmentById(R.id.list_fragment_container) != null){
             List<Student> data = Model.instace.getAllStudents();
-            for (Student s : data) {
-                s.birthTime = new MyTimePicker(this);
-                s.birthDate = new MyDatePicker(this);
-            }
             
             FragmentTransaction tran = getFragmentManager().beginTransaction();
             studentListFragment = StudentListFragment.newInstance();
@@ -53,10 +49,6 @@ public class StudentsListActivity extends Activity implements StudentListFragmen
         }else {
             Log.d("TAG" , "fragment is null");
             List<Student> data = Model.instace.getAllStudents();
-            for (Student s : data) {
-                s.birthTime = new MyTimePicker(this);
-                s.birthDate = new MyDatePicker(this);
-            }
 
             studentListFragment = StudentListFragment.newInstance();
 

@@ -101,8 +101,8 @@ public class StudentEditActivity extends Activity implements StudentEditFragment
         st_edit.phone = phoneEt.getText().toString();
         st_edit.address = addressEt.getText().toString();
         st_edit.checked = cbEt.isChecked();
-        st_edit.birthTime = bt;
-        st_edit.birthDate = bd;
+        st_edit.birthTime = bt.getText().toString();
+        st_edit.birthDate = bd.getText().toString();
 
         new AlertDialog.Builder(StudentEditActivity.this)
                 .setTitle("Edit Student")

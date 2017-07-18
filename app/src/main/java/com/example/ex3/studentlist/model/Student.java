@@ -11,11 +11,11 @@ public class Student {
     public String imageUrl;
     public String phone;
     public String address;
-    public MyTimePicker birthTime;
-    public MyDatePicker birthDate;
+    public String birthTime;
+    public String birthDate;
 
     public Student(){}
-    public Student (String id , String name , String phone , String address , Boolean checked , String imageUrl , MyTimePicker birthTime , MyDatePicker birthDate){
+    public Student (String id , String name , String phone , String address , Boolean checked , String imageUrl , String birthTime , String birthDate){
         this.id = id;
         this.name = name;
         this.phone = phone;

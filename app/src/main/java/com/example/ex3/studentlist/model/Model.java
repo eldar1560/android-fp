@@ -19,6 +19,8 @@ public class Model {
             st.imageUrl = "";
             st.address = "Rishon";
             st.phone = " 0500000000";
+            st.birthTime = "12:00";
+            st.birthDate = "01/01/2017";
             data.add(st);
         }
     }
