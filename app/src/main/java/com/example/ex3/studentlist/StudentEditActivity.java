@@ -1,0 +1,131 @@
+package com.example.ex3.studentlist;
+
+import android.app.ActionBar;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.FragmentTransaction;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.os.StrictMode;
+import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.example.ex3.studentlist.model.Model;
+import com.example.ex3.studentlist.model.Student;
+
+public class StudentEditActivity extends Activity implements StudentEditFragment.StudentEditFragmentListener {
+
+    final static int RESAULT_SUCCESS_SAVE = 0;
+    final static int RESAULT_SUCCESS_DELETE = 2;
+    final static int RESAULT_FAIL = 1;
+    Student st_edit;
+
+    StudentEditFragment studentEditFragment;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_student_edit);
+        setResult(RESAULT_FAIL);
+
+        ActionBar bar = getActionBar();
+        bar.setTitle("Edit Students");
+        bar.setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Intent intent = getIntent();
+        final String stId = intent.getStringExtra("STID");
+
+        if(getFragmentManager().findFragmentById(R.id.edit_fragment_container) != null){
+            studentEditFragment = StudentEditFragment.newInstance(stId);
+
+            FragmentTransaction tran = getFragmentManager().beginTransaction();
+            tran.replace(R.id.edit_fragment_container,studentEditFragment);
+            tran.commit();
+
+        }else {
+            studentEditFragment = StudentEditFragment.newInstance(stId);
+
+            FragmentTransaction tran = getFragmentManager().beginTransaction();
+            tran.add(R.id.edit_fragment_container, studentEditFragment, "tag");
+            tran.commit();
+        }
+
+        st_edit = Model.instace.getStudent(stId);
+
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    @Override
+    public void onCancel() {
+        onBackPressed();
+    }
+
+    @Override
+    public void onSave(EditText idEt , EditText nameEt , EditText phoneEt , EditText addressEt , CheckBox cbEt , MyTimePicker bt , MyDatePicker bd) {
+        if(idEt.getText().toString().equals("") || nameEt.getText().toString().equals("") || phoneEt.getText().toString().equals("") || addressEt.getText().toString().equals("") || bt.getText().toString().equals("") || bd.getText().toString().equals("")) {
+            new AlertDialog.Builder(StudentEditActivity.this)
+                    .setTitle("Edit Student")
+                    .setMessage("Do not leave a field empty!")
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+            return;
+        }
+        if(Model.instace.getStudent(idEt.getText().toString()) != null && (!idEt.getText().toString().equals(st_edit.id))) {
+            new AlertDialog.Builder(StudentEditActivity.this)
+                    .setTitle("Edit Student")
+                    .setMessage("Id is already exist!")
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+            return;
+        }
+
+        st_edit.id = idEt.getText().toString();
+        st_edit.name = nameEt.getText().toString();
+        st_edit.phone = phoneEt.getText().toString();
+        st_edit.address = addressEt.getText().toString();
+        st_edit.checked = cbEt.isChecked();
+        st_edit.birthTime = bt;
+        st_edit.birthDate = bd;
+
+        new AlertDialog.Builder(StudentEditActivity.this)
+                .setTitle("Edit Student")
+                .setMessage("The save operation was completed successfully.")
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .show();
+        setResult(RESAULT_SUCCESS_SAVE);
+    }
+
+    @Override
+    public void onDelete() {
+        Model.instace.deleteStudent(st_edit);
+        new AlertDialog.Builder(StudentEditActivity.this)
+                .setTitle("Edit Student")
+                .setMessage("The delete operation was completed successfully.")
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        onBackPressed();
+                    }
+                })
+                .show();
+        setResult(RESAULT_SUCCESS_DELETE);
+    }
+}
