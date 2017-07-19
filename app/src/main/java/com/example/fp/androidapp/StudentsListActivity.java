@@ -31,16 +31,15 @@ public class StudentsListActivity extends Activity implements StudentListFragmen
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         if(getFragmentManager().findFragmentById(R.id.list_fragment_container) != null){
-            List<Student> data = Model.instace.getAllStudents();
             
             FragmentTransaction tran = getFragmentManager().beginTransaction();
-            studentListFragment = StudentListFragment.newInstance();
+            studentListFragment = StudentListFragment.newInstance("");
             tran.replace(R.id.list_fragment_container , studentListFragment);
             tran.commit();
         }else {
             Log.d("TAG" , "fragment is null");
 
-            studentListFragment = StudentListFragment.newInstance();
+            studentListFragment = StudentListFragment.newInstance("");
 
             FragmentTransaction tran = getFragmentManager().beginTransaction();
             tran.add(R.id.list_fragment_container, studentListFragment, "tag");
@@ -61,7 +60,10 @@ public class StudentsListActivity extends Activity implements StudentListFragmen
 
                 //FrameLayout fl = (FrameLayout)findViewById(R.id.list_fragment_container);
                 //fl.invalidate();
-
+                /*FragmentTransaction tran = getFragmentManager().beginTransaction();
+                studentListFragment = StudentListFragment.newInstance("");
+                tran.replace(R.id.list_fragment_container , studentListFragment);
+                tran.commit();*/
                 FragmentTransaction tran = getFragmentManager().beginTransaction();
                 tran.detach(studentListFragment);
                 tran.attach(studentListFragment);
@@ -106,6 +108,15 @@ public class StudentsListActivity extends Activity implements StudentListFragmen
         intent.putExtra("STID",data.get(position).id);
         Log.d("TAG","student id selected = " + data.get(position).id);
         startActivityForResult(intent , REQUEST_ID);
+    }
+
+    @Override
+    public void onSearch(String restName) {
+        FragmentTransaction tran = getFragmentManager().beginTransaction();
+        studentListFragment = StudentListFragment.newInstance(restName);
+        tran.replace(R.id.list_fragment_container , studentListFragment);
+        tran.commit();
+        Log.d("Mife" , "the string is :" +restName);
     }
 
 

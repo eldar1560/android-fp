@@ -67,6 +67,7 @@ public class StudentDetailsFragment extends Fragment {
 
         stu_cb = (CheckBox) contentView.findViewById(R.id.stu_cb);
         stu_cb.setChecked(st.checked);
+        Log.d("Mife","state:"+st.checked);
 
         return contentView;
     }

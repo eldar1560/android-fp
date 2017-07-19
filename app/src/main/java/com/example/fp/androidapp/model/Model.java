@@ -23,11 +23,17 @@ public class Model {
 
     }
 
+    public List<Student> getAllStudentsByName(String name){
+        return StudentSql.getAllStudentsByName(
+                Sql.getReadableDatabase(),name);
+
+    }
+
     public void addStudent(Student st){
         StudentSql.addStudent(Sql.getWritableDatabase(),st);
     }
     public  void deleteStudent(Student st){StudentSql.deleteStudent(Sql.getWritableDatabase(),st); }
-
+    public  void updateStudent(Student st){StudentSql.updateStudent(Sql.getWritableDatabase(),st); }
     public Student getStudent(String stId) {
         return StudentSql.getStudent(Sql.getReadableDatabase(),stId);
 

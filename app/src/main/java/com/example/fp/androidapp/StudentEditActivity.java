@@ -82,15 +82,23 @@ public class StudentEditActivity extends Activity implements StudentEditFragment
                     .show();
             return;
         }
-        if(Model.instace.getStudent(idEt.getText().toString()) != null && (!idEt.getText().toString().equals(st_edit.id))) {
+        /*if(Model.instace.getStudent(idEt.getText().toString()) != null && (!idEt.getText().toString().equals(st_edit.id))) {
             new AlertDialog.Builder(StudentEditActivity.this)
                     .setTitle("Edit Student")
                     .setMessage("Id is already exist!")
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
             return;
+        }*/
+        if(!idEt.getText().toString().equals(st_edit.id)){
+            new AlertDialog.Builder(StudentEditActivity.this)
+                    .setTitle("Edit Student")
+                    .setMessage("Cannot change ID!")
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+            return;
         }
-
+        Model.instace.deleteStudent(st_edit);
         st_edit.id = idEt.getText().toString();
         st_edit.name = nameEt.getText().toString();
         st_edit.phone = phoneEt.getText().toString();
@@ -98,7 +106,7 @@ public class StudentEditActivity extends Activity implements StudentEditFragment
         st_edit.checked = cbEt.isChecked();
         st_edit.birthTime = bt.getText().toString();
         st_edit.birthDate = bd.getText().toString();
-
+        Model.instace.addStudent(st_edit);
         new AlertDialog.Builder(StudentEditActivity.this)
                 .setTitle("Edit Student")
                 .setMessage("The save operation was completed successfully.")

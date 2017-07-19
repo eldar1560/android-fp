@@ -5,12 +5,16 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -26,19 +30,26 @@ public class StudentListFragment extends Fragment {
     LayoutInflater inflater;
     ListView list;
     StudentsListAdapter adapter;
-
-    public static StudentListFragment newInstance(){
+    private static final String ARG_PARAM1 = "param1";
+    private String name;
+    public static StudentListFragment newInstance(String param1){
         StudentListFragment fragment = new StudentListFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1 , param1);
+        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getArguments() != null)
+            name = getArguments().getString(ARG_PARAM1);
     }
 
     interface StudentListFragmentListener{
         void onSelect(AdapterView<?> parent, View view, int position, long id , List<Student> data);
+        void onSearch(String restName);
     }
 
     StudentListFragmentListener listener;
@@ -91,7 +102,10 @@ public class StudentListFragment extends Fragment {
             public void onClick(View v) {
                 int pos = (int)v.getTag();
                 Student st = data.get(pos);
+                Log.d("Mife","before:"+st.checked);
                 st.checked = !st.checked;
+                Log.d("Mife","after:"+st.checked);
+                Model.instace.updateStudent(st);
             }
         }
 
@@ -125,11 +139,22 @@ public class StudentListFragment extends Fragment {
         this.inflater = inflater;
         View contentView = inflater.inflate(R.layout.fragment_student_list, container, false);
         list = (ListView) contentView.findViewById(R.id.stlist_list);
-
-        data = Model.instace.getAllStudents();
+        if(name.equals(""))
+            data = Model.instace.getAllStudents();
+        else
+            data = Model.instace.getAllStudentsByName(name);
 
         adapter = new StudentsListAdapter();
+        final EditText searchTxt = (EditText) contentView.findViewById(R.id.search);
+        ImageButton searchBtn = (ImageButton) contentView.findViewById(R.id.search_button);
 
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(listener != null)
+                    listener.onSearch(searchTxt.getText().toString());
+            }
+        });
         list.setAdapter(adapter);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
