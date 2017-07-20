@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.fp.androidapp.StudentMainFragment"
+    tools:context="com.example.fp.androidapp.RestaurantEditFragment"
     android:orientation="vertical">
 
     <ImageView
-        android:id="@+id/stu_image"
+        android:id="@+id/stu_edit_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:gravity="center"
@@ -28,7 +28,7 @@
             android:textSize="18sp" />
 
         <EditText
-            android:id="@+id/mainNameTv"
+            android:id="@+id/editNameTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="7dp"/>
@@ -48,7 +48,7 @@
             android:layout_margin="7dp"/>
 
         <EditText
-            android:id="@+id/mainIdTv"
+            android:id="@+id/editIdTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="7dp"/>
@@ -67,7 +67,7 @@
             android:layout_margin="7dp"/>
 
         <EditText
-            android:id="@+id/mainPhoneTv"
+            android:id="@+id/editPhoneTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="7dp"/>
@@ -86,13 +86,13 @@
             android:layout_margin="7dp"/>
 
         <EditText
-            android:id="@+id/mainAddressTv"
+            android:id="@+id/editAddressTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="7dp"/>
     </LinearLayout>
     <CheckBox
-        android:id="@+id/mainCbTv"
+        android:id="@+id/editCbTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:scaleX="1.5"
@@ -114,7 +114,7 @@
             android:layout_margin="7dp"/>
 
         <com.example.fp.androidapp.MyDatePicker
-            android:id="@+id/mainBirthDateTv"
+            android:id="@+id/editBirthDateTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="7dp"/>
@@ -133,7 +133,7 @@
             android:layout_margin="7dp"/>
 
         <com.example.fp.androidapp.MyTimePicker
-            android:id="@+id/mainBirthTimeTv"
+            android:id="@+id/editBirthTimeTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="7dp"/>
@@ -144,7 +144,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/mainSaveBtn"
+            android:id="@+id/editSaveBtn"
             android:layout_width="1dp"
             android:layout_height="wrap_content"
             android:text="SAVE"
@@ -152,7 +152,15 @@
             android:layout_margin="7dp"
             android:layout_weight="1"/>
         <Button
-            android:id="@+id/mainCancelBtn"
+            android:id="@+id/editDeleteBtn"
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:text="DELETE"
+            android:gravity="center"
+            android:layout_margin="7dp"
+            android:layout_weight="1"/>
+        <Button
+            android:id="@+id/editCancelBtn"
             android:layout_width="1dp"
             android:layout_height="wrap_content"
             android:text="CANCEL"
@@ -162,4 +170,5 @@
 
 
     </LinearLayout>
+
 </LinearLayout>

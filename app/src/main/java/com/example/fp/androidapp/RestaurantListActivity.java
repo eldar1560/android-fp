@@ -12,18 +12,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.example.fp.androidapp.model.Model;
 import com.example.fp.androidapp.model.Student;
 
 import java.util.List;
 
-public class StudentsListActivity extends Activity implements StudentListFragment.StudentListFragmentListener {
-    StudentListFragment studentListFragment;
+public class RestaurantListActivity extends Activity implements RestaurantListFragment.StudentListFragmentListener {
+    RestaurantListFragment restaurantListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_students_list);
+        setContentView(R.layout.activity_restaurant_list);
         ActionBar bar = getActionBar();
         bar.setTitle("Students List");
 
@@ -33,16 +32,16 @@ public class StudentsListActivity extends Activity implements StudentListFragmen
         if(getFragmentManager().findFragmentById(R.id.list_fragment_container) != null){
             
             FragmentTransaction tran = getFragmentManager().beginTransaction();
-            studentListFragment = StudentListFragment.newInstance("");
-            tran.replace(R.id.list_fragment_container , studentListFragment);
+            restaurantListFragment = RestaurantListFragment.newInstance("");
+            tran.replace(R.id.list_fragment_container , restaurantListFragment);
             tran.commit();
         }else {
             Log.d("TAG" , "fragment is null");
 
-            studentListFragment = StudentListFragment.newInstance("");
+            restaurantListFragment = RestaurantListFragment.newInstance("");
 
             FragmentTransaction tran = getFragmentManager().beginTransaction();
-            tran.add(R.id.list_fragment_container, studentListFragment, "tag");
+            tran.add(R.id.list_fragment_container, restaurantListFragment, "tag");
             tran.commit();
         }
 
@@ -61,12 +60,12 @@ public class StudentsListActivity extends Activity implements StudentListFragmen
                 //FrameLayout fl = (FrameLayout)findViewById(R.id.list_fragment_container);
                 //fl.invalidate();
                 /*FragmentTransaction tran = getFragmentManager().beginTransaction();
-                studentListFragment = StudentListFragment.newInstance("");
-                tran.replace(R.id.list_fragment_container , studentListFragment);
+                restaurantListFragment = RestaurantListFragment.newInstance("");
+                tran.replace(R.id.list_fragment_container , restaurantListFragment);
                 tran.commit();*/
                 FragmentTransaction tran = getFragmentManager().beginTransaction();
-                tran.detach(studentListFragment);
-                tran.attach(studentListFragment);
+                tran.detach(restaurantListFragment);
+                tran.attach(restaurantListFragment);
                 tran.commit();
             }else{
                 Log.d("TAG","operation fail");
@@ -90,7 +89,7 @@ public class StudentsListActivity extends Activity implements StudentListFragmen
         // Handle item selection
         switch (item.getItemId()) {
             case 0:
-                Intent intent = new Intent(StudentsListActivity.this,MainActivity.class);
+                Intent intent = new Intent(RestaurantListActivity.this,MainActivity.class);
                 startActivityForResult(intent,REQUEST_ID);
                 return true;
             case android.R.id.home:
@@ -104,7 +103,7 @@ public class StudentsListActivity extends Activity implements StudentListFragmen
     @Override
     public void onSelect(AdapterView<?> parent, View view, int position, long id , List<Student> data) {
         Log.d("TAG", "row item was clicked at position: " + position);
-        Intent intent = new Intent(StudentsListActivity.this,StudentDetailsActivity.class);
+        Intent intent = new Intent(RestaurantListActivity.this,RestaurantDetailsActivity.class);
         intent.putExtra("STID",data.get(position).id);
         Log.d("TAG","student id selected = " + data.get(position).id);
         startActivityForResult(intent , REQUEST_ID);
@@ -113,8 +112,8 @@ public class StudentsListActivity extends Activity implements StudentListFragmen
     @Override
     public void onSearch(String restName) {
         FragmentTransaction tran = getFragmentManager().beginTransaction();
-        studentListFragment = StudentListFragment.newInstance(restName);
-        tran.replace(R.id.list_fragment_container , studentListFragment);
+        restaurantListFragment = RestaurantListFragment.newInstance(restName);
+        tran.replace(R.id.list_fragment_container , restaurantListFragment);
         tran.commit();
         Log.d("Mife" , "the string is :" +restName);
     }

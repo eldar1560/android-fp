@@ -13,11 +13,11 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 
-public class StudentMainFragment extends Fragment {
+public class RestaurantMainFragment extends Fragment {
 
 
-    public static StudentMainFragment newInstance(){
-        StudentMainFragment fragment = new StudentMainFragment();
+    public static RestaurantMainFragment newInstance(){
+        RestaurantMainFragment fragment = new RestaurantMainFragment();
         return fragment;
     }
 
@@ -63,7 +63,7 @@ public class StudentMainFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View contentView = inflater.inflate(R.layout.fragment_student_main, container, false);
+        View contentView = inflater.inflate(R.layout.fragment_restaurant_main, container, false);
         final EditText nameEt = (EditText) contentView.findViewById(R.id.mainNameTv);
         final EditText idEt= (EditText) contentView.findViewById(R.id.mainIdTv);
         final EditText phoneEt= (EditText) contentView.findViewById(R.id.mainPhoneTv);

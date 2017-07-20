@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -24,7 +23,7 @@ import com.example.fp.androidapp.model.Student;
 import java.util.List;
 
 
-public class StudentListFragment extends Fragment {
+public class RestaurantListFragment extends Fragment {
 
     List<Student> data;
     LayoutInflater inflater;
@@ -32,8 +31,8 @@ public class StudentListFragment extends Fragment {
     StudentsListAdapter adapter;
     private static final String ARG_PARAM1 = "param1";
     private String name;
-    public static StudentListFragment newInstance(String param1){
-        StudentListFragment fragment = new StudentListFragment();
+    public static RestaurantListFragment newInstance(String param1){
+        RestaurantListFragment fragment = new RestaurantListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1 , param1);
         fragment.setArguments(args);
@@ -114,7 +113,7 @@ public class StudentListFragment extends Fragment {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             if (convertView == null){
-                convertView = inflater.inflate(R.layout.students_list_row,null);
+                convertView = inflater.inflate(R.layout.restaurants_list_row,null);
                 CheckBox cb = (CheckBox) convertView.findViewById(R.id.strow_cb);
                 cb.setOnClickListener(listener);
             }
@@ -137,7 +136,7 @@ public class StudentListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         this.inflater = inflater;
-        View contentView = inflater.inflate(R.layout.fragment_student_list, container, false);
+        View contentView = inflater.inflate(R.layout.fragment_restaurant_list, container, false);
         list = (ListView) contentView.findViewById(R.id.stlist_list);
         if(name.equals(""))
             data = Model.instace.getAllStudents();

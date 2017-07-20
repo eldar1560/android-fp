@@ -15,19 +15,19 @@ import android.widget.EditText;
 import com.example.fp.androidapp.model.Model;
 import com.example.fp.androidapp.model.Student;
 
-public class StudentEditActivity extends Activity implements StudentEditFragment.StudentEditFragmentListener {
+public class RestaurantEditActivity extends Activity implements RestaurantEditFragment.StudentEditFragmentListener {
 
     final static int RESAULT_SUCCESS_SAVE = 0;
     final static int RESAULT_SUCCESS_DELETE = 2;
     final static int RESAULT_FAIL = 1;
     Student st_edit;
 
-    StudentEditFragment studentEditFragment;
+    RestaurantEditFragment restaurantEditFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_student_edit);
+        setContentView(R.layout.activity_restaurant_edit);
         setResult(RESAULT_FAIL);
 
         ActionBar bar = getActionBar();
@@ -39,17 +39,17 @@ public class StudentEditActivity extends Activity implements StudentEditFragment
         final String stId = intent.getStringExtra("STID");
 
         if(getFragmentManager().findFragmentById(R.id.edit_fragment_container) != null){
-            studentEditFragment = StudentEditFragment.newInstance(stId);
+            restaurantEditFragment = RestaurantEditFragment.newInstance(stId);
 
             FragmentTransaction tran = getFragmentManager().beginTransaction();
-            tran.replace(R.id.edit_fragment_container,studentEditFragment);
+            tran.replace(R.id.edit_fragment_container, restaurantEditFragment);
             tran.commit();
 
         }else {
-            studentEditFragment = StudentEditFragment.newInstance(stId);
+            restaurantEditFragment = RestaurantEditFragment.newInstance(stId);
 
             FragmentTransaction tran = getFragmentManager().beginTransaction();
-            tran.add(R.id.edit_fragment_container, studentEditFragment, "tag");
+            tran.add(R.id.edit_fragment_container, restaurantEditFragment, "tag");
             tran.commit();
         }
 
@@ -75,7 +75,7 @@ public class StudentEditActivity extends Activity implements StudentEditFragment
     @Override
     public void onSave(EditText idEt , EditText nameEt , EditText phoneEt , EditText addressEt , CheckBox cbEt , MyTimePicker bt , MyDatePicker bd) {
         if(idEt.getText().toString().equals("") || nameEt.getText().toString().equals("") || phoneEt.getText().toString().equals("") || addressEt.getText().toString().equals("") || bt.getText().toString().equals("") || bd.getText().toString().equals("")) {
-            new AlertDialog.Builder(StudentEditActivity.this)
+            new AlertDialog.Builder(RestaurantEditActivity.this)
                     .setTitle("Edit Student")
                     .setMessage("Do not leave a field empty!")
                     .setIcon(android.R.drawable.ic_dialog_alert)
@@ -83,7 +83,7 @@ public class StudentEditActivity extends Activity implements StudentEditFragment
             return;
         }
         /*if(Model.instace.getStudent(idEt.getText().toString()) != null && (!idEt.getText().toString().equals(st_edit.id))) {
-            new AlertDialog.Builder(StudentEditActivity.this)
+            new AlertDialog.Builder(RestaurantEditActivity.this)
                     .setTitle("Edit Student")
                     .setMessage("Id is already exist!")
                     .setIcon(android.R.drawable.ic_dialog_alert)
@@ -91,7 +91,7 @@ public class StudentEditActivity extends Activity implements StudentEditFragment
             return;
         }*/
         if(!idEt.getText().toString().equals(st_edit.id)){
-            new AlertDialog.Builder(StudentEditActivity.this)
+            new AlertDialog.Builder(RestaurantEditActivity.this)
                     .setTitle("Edit Student")
                     .setMessage("Cannot change ID!")
                     .setIcon(android.R.drawable.ic_dialog_alert)
@@ -107,7 +107,7 @@ public class StudentEditActivity extends Activity implements StudentEditFragment
         st_edit.birthTime = bt.getText().toString();
         st_edit.birthDate = bd.getText().toString();
         Model.instace.addStudent(st_edit);
-        new AlertDialog.Builder(StudentEditActivity.this)
+        new AlertDialog.Builder(RestaurantEditActivity.this)
                 .setTitle("Edit Student")
                 .setMessage("The save operation was completed successfully.")
                 .setIcon(android.R.drawable.ic_dialog_info)
@@ -118,7 +118,7 @@ public class StudentEditActivity extends Activity implements StudentEditFragment
     @Override
     public void onDelete() {
         Model.instace.deleteStudent(st_edit);
-        new AlertDialog.Builder(StudentEditActivity.this)
+        new AlertDialog.Builder(RestaurantEditActivity.this)
                 .setTitle("Edit Student")
                 .setMessage("The delete operation was completed successfully.")
                 .setIcon(android.R.drawable.ic_dialog_info)

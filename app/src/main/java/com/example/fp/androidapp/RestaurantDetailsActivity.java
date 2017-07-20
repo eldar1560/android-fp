@@ -13,19 +13,19 @@ import android.view.MenuItem;
 import com.example.fp.androidapp.model.Model;
 import com.example.fp.androidapp.model.Student;
 
-public class StudentDetailsActivity extends Activity{
+public class RestaurantDetailsActivity extends Activity{
 
     final static int RESAULT_SUCCESS = 0;
     final static int RESAULT_FAIL = 1;
 
-    StudentDetailsFragment studentDetailsFragment;
+    RestaurantDetailsFragment restaurantDetailsFragment;
 
     Student st;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_student_details);
+        setContentView(R.layout.activity_restaurant_details);
         setResult(RESAULT_FAIL);
 
         ActionBar bar = getActionBar();
@@ -37,10 +37,10 @@ public class StudentDetailsActivity extends Activity{
         final String stId = intent.getStringExtra("STID");
         st = Model.instace.getStudent(stId);
 
-        studentDetailsFragment = StudentDetailsFragment.newInstance(st.id);
+        restaurantDetailsFragment = RestaurantDetailsFragment.newInstance(st.id);
 
         FragmentTransaction tran = getFragmentManager().beginTransaction();
-        tran.add(R.id.details_fragment_container,studentDetailsFragment,"tag");
+        tran.add(R.id.details_fragment_container, restaurantDetailsFragment,"tag");
         tran.commit();
 
 
@@ -53,19 +53,19 @@ public class StudentDetailsActivity extends Activity{
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_ID){
-            if (resultCode == StudentEditActivity.RESAULT_SUCCESS_SAVE){
+            if (resultCode == RestaurantEditActivity.RESAULT_SUCCESS_SAVE){
                 //operation success save
                 Log.d("TAG","operation success save");
                 setResult(RESAULT_SUCCESS);
 
                 FragmentTransaction tran = getFragmentManager().beginTransaction();
-                tran.remove(studentDetailsFragment);
-                studentDetailsFragment = StudentDetailsFragment.newInstance(st.id);
-                tran.add(R.id.details_fragment_container,studentDetailsFragment,"tag");
+                tran.remove(restaurantDetailsFragment);
+                restaurantDetailsFragment = RestaurantDetailsFragment.newInstance(st.id);
+                tran.add(R.id.details_fragment_container, restaurantDetailsFragment,"tag");
                 tran.commit();
 
 
-            }else if(resultCode == StudentEditActivity.RESAULT_SUCCESS_DELETE) {
+            }else if(resultCode == RestaurantEditActivity.RESAULT_SUCCESS_DELETE) {
                 //operation success delete
                 Log.d("TAG","operation success delete");
                 setResult(RESAULT_SUCCESS);
@@ -92,7 +92,7 @@ public class StudentDetailsActivity extends Activity{
         // Handle item selection
         switch (item.getItemId()) {
             case 0:
-                Intent intent = new Intent(StudentDetailsActivity.this,StudentEditActivity.class);
+                Intent intent = new Intent(RestaurantDetailsActivity.this,RestaurantEditActivity.class);
                 intent.putExtra("STID",st.id);
                 startActivityForResult(intent,REQUEST_ID);
                 return true;

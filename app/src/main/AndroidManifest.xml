@@ -11,15 +11,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name="com.example.fp.androidapp.MainActivity" android:configChanges="orientation|keyboardHidden|screenSize"/>
-        <activity android:name="com.example.fp.androidapp.StudentsListActivity" android:configChanges="orientation|keyboardHidden|screenSize">
+        <activity android:name="com.example.fp.androidapp.RestaurantListActivity" android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.fp.androidapp.StudentDetailsActivity" android:configChanges="orientation|keyboardHidden|screenSize"/>
-        <activity android:name="com.example.fp.androidapp.StudentEditActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
+        <activity android:name="com.example.fp.androidapp.RestaurantDetailsActivity" android:configChanges="orientation|keyboardHidden|screenSize"/>
+        <activity android:name="com.example.fp.androidapp.RestaurantEditActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

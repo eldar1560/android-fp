@@ -17,15 +17,15 @@ import com.example.fp.androidapp.model.Model;
 import com.example.fp.androidapp.model.Student;
 
 
-public class StudentEditFragment extends Fragment {
+public class RestaurantEditFragment extends Fragment {
 
     Student st_edit;
 
     private static final String ARG_PARAM1 = "param1";
     private String stId;
 
-    public static StudentEditFragment newInstance(String param1){
-        StudentEditFragment fragment = new StudentEditFragment();
+    public static RestaurantEditFragment newInstance(String param1){
+        RestaurantEditFragment fragment = new RestaurantEditFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1 , param1);
         fragment.setArguments(args);
@@ -76,7 +76,7 @@ public class StudentEditFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View contentView = inflater.inflate(R.layout.fragment_student_edit, container, false);
+        View contentView = inflater.inflate(R.layout.fragment_restaurant_edit, container, false);
 
         Log.d("TAG","stId : " + stId);
         st_edit = Model.instace.getStudent(stId);

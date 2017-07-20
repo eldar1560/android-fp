@@ -14,7 +14,7 @@ import com.example.fp.androidapp.model.Model;
 import com.example.fp.androidapp.model.Student;
 
 
-public class StudentDetailsFragment extends Fragment {
+public class RestaurantDetailsFragment extends Fragment {
 
     TextView stu_name , stu_phone , stu_address ,stu_id , stu_bt , stu_bd;
     CheckBox stu_cb;
@@ -22,8 +22,8 @@ public class StudentDetailsFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private String stId;
 
-    public static StudentDetailsFragment newInstance(String param1){
-        StudentDetailsFragment fragment = new StudentDetailsFragment();
+    public static RestaurantDetailsFragment newInstance(String param1){
+        RestaurantDetailsFragment fragment = new RestaurantDetailsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1 , param1);
         fragment.setArguments(args);
@@ -41,7 +41,7 @@ public class StudentDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View contentView = inflater.inflate(R.layout.fragment_student_details, container, false);
+        View contentView = inflater.inflate(R.layout.fragment_restaurant_details, container, false);
 
         Log.d("TAG","stid = " + stId);
         stu_id = (TextView) contentView.findViewById(R.id.stu_id);

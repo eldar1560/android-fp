@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/list_ll"
-    tools:context="com.example.fp.androidapp.StudentsListActivity">
+    tools:context="com.example.fp.androidapp.RestaurantListActivity">
 
     <FrameLayout
         android:id="@+id/list_fragment_container"

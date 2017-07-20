@@ -16,11 +16,11 @@ import com.example.fp.androidapp.model.Student;
 
 
 
-public class MainActivity extends Activity implements StudentMainFragment.StudentMainFragmentListener{
+public class MainActivity extends Activity implements RestaurantMainFragment.StudentMainFragmentListener{
     final static int RESAULT_SUCCESS = 0;
     final static int RESAULT_FAIL = 1;
 
-    StudentMainFragment studentMainFragment;
+    RestaurantMainFragment restaurantMainFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,16 +33,16 @@ public class MainActivity extends Activity implements StudentMainFragment.Studen
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         if(getFragmentManager().findFragmentById(R.id.main_fragment_container) != null){
-            studentMainFragment = StudentMainFragment.newInstance();
+            restaurantMainFragment = RestaurantMainFragment.newInstance();
 
             FragmentTransaction tran = getFragmentManager().beginTransaction();
-            tran.replace(R.id.main_fragment_container,studentMainFragment);
+            tran.replace(R.id.main_fragment_container, restaurantMainFragment);
             tran.commit();
         }else {
-            studentMainFragment = StudentMainFragment.newInstance();
+            restaurantMainFragment = RestaurantMainFragment.newInstance();
 
             FragmentTransaction tran = getFragmentManager().beginTransaction();
-            tran.add(R.id.main_fragment_container, studentMainFragment, "tag");
+            tran.add(R.id.main_fragment_container, restaurantMainFragment, "tag");
             tran.commit();
         }
 
