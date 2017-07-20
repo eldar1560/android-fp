@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:gravity="center"
-            android:text="Name:"
+            android:text="Restaurant Name:"
             android:textSize="18sp" />
 
     </LinearLayout>
@@ -39,7 +39,7 @@
             android:id="@+id/stu_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ID:"
+            android:text="Food Name:"
             android:textSize="18sp"
             android:gravity="center"
             android:layout_margin="10dp"/>
@@ -54,7 +54,7 @@
             android:id="@+id/stu_phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Phone:"
+            android:text="User Name:"
             android:textSize="18sp"
             android:gravity="center"
             android:layout_margin="10dp"/>
@@ -68,7 +68,7 @@
             android:id="@+id/stu_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Address:"
+            android:text="Restaurant Address:"
             android:textSize="18sp"
             android:gravity="center"
             android:layout_margin="10dp"/>
@@ -82,6 +82,7 @@
         android:focusable="false"
         android:layout_margin="10dp"
         android:clickable="false"
+        android:text="delicious?"
         />
     <LinearLayout
         android:layout_width="match_parent"
@@ -92,7 +93,7 @@
             android:id="@+id/stu_bd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Birth date:"
+            android:text="Order date:"
             android:textSize="18sp"
             android:gravity="center"
             android:layout_margin="10dp"/>
@@ -106,7 +107,7 @@
             android:id="@+id/stu_bt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Birth time:"
+            android:text="Order time:"
             android:textSize="18sp"
             android:gravity="center"
             android:layout_margin="10dp"/>

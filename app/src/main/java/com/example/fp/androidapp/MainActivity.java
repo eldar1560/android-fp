@@ -28,7 +28,7 @@ public class MainActivity extends Activity implements RestaurantMainFragment.Stu
         setContentView(R.layout.activity_main);
         setResult(RESAULT_FAIL);
         ActionBar bar = getActionBar();
-        bar.setTitle("New Students");
+        bar.setTitle("New Restaurant");
         bar.setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -68,7 +68,7 @@ public class MainActivity extends Activity implements RestaurantMainFragment.Stu
         Log.d("Mife",bt.getText().toString() + " , " + bd.getText().toString());
         if(idEt.getText().toString().equals("") || nameEt.getText().toString().equals("") || phoneEt.getText().toString().equals("") || addressEt.getText().toString().equals("") || bt.getText().toString().equals("") || bd.getText().toString().equals("")) {
             new AlertDialog.Builder(MainActivity.this)
-                    .setTitle("New Student")
+                    .setTitle("New Restaurant")
                     .setMessage("Do not leave a field empty!")
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
@@ -76,7 +76,7 @@ public class MainActivity extends Activity implements RestaurantMainFragment.Stu
         }
         if(Model.instace.getStudent(idEt.getText().toString()) != null) {
             new AlertDialog.Builder(MainActivity.this)
-                    .setTitle("New Student")
+                    .setTitle("New Restaurant")
                     .setMessage("Id is already exist!")
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
@@ -85,7 +85,7 @@ public class MainActivity extends Activity implements RestaurantMainFragment.Stu
         Student new_student = new Student(idEt.getText().toString() , nameEt.getText().toString(), phoneEt.getText().toString() , addressEt.getText().toString() , cbEt.isChecked(),"" , bt.getText().toString() , bd.getText().toString());
         Model.instace.addStudent(new_student);
         new AlertDialog.Builder(MainActivity.this)
-                .setTitle("New Student")
+                .setTitle("New Restaurant")
                 .setMessage("The save operation was completed successfully.")
                 .setIcon(android.R.drawable.ic_dialog_info)
                 .show();

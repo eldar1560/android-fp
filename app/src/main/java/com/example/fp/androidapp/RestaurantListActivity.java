@@ -24,7 +24,7 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_list);
         ActionBar bar = getActionBar();
-        bar.setTitle("Students List");
+        bar.setTitle("Restaurants List");
 
         bar.setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
         getActionBar().setDisplayHomeAsUpEnabled(true);

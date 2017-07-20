@@ -45,25 +45,25 @@ public class RestaurantDetailsFragment extends Fragment {
 
         Log.d("TAG","stid = " + stId);
         stu_id = (TextView) contentView.findViewById(R.id.stu_id);
-        stu_id.setText("ID : " + stId);
+        stu_id.setText("Food Name : " + stId);
 
         st = Model.instace.getStudent(stId);
         Log.d("TAG","got student name: " + st.name);
 
         stu_name = (TextView) contentView.findViewById(R.id.stu_name);
-        stu_name.setText("Name : " + st.name);
+        stu_name.setText("Restaurant Name : " + st.name);
 
         stu_phone = (TextView) contentView.findViewById(R.id.stu_phone);
-        stu_phone.setText("Phone : " + st.phone);
+        stu_phone.setText("User Name : " + st.phone);
 
         stu_address = (TextView) contentView.findViewById(R.id.stu_address);
-        stu_address.setText("Address : " + st.address);
+        stu_address.setText("Restaurant Address : " + st.address);
 
         stu_bt = (TextView) contentView.findViewById(R.id.stu_bt);
-        stu_bt.setText("Birth time : "+st.birthTime);
+        stu_bt.setText("Order time : "+st.birthTime);
 
         stu_bd = (TextView) contentView.findViewById(R.id.stu_bd);
-        stu_bd.setText("Birth date : "+st.birthDate);
+        stu_bd.setText("Order date : "+st.birthDate);
 
         stu_cb = (CheckBox) contentView.findViewById(R.id.stu_cb);
         stu_cb.setChecked(st.checked);

@@ -31,7 +31,7 @@ public class RestaurantEditActivity extends Activity implements RestaurantEditFr
         setResult(RESAULT_FAIL);
 
         ActionBar bar = getActionBar();
-        bar.setTitle("Edit Students");
+        bar.setTitle("Edit Restaurant");
         bar.setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -76,7 +76,7 @@ public class RestaurantEditActivity extends Activity implements RestaurantEditFr
     public void onSave(EditText idEt , EditText nameEt , EditText phoneEt , EditText addressEt , CheckBox cbEt , MyTimePicker bt , MyDatePicker bd) {
         if(idEt.getText().toString().equals("") || nameEt.getText().toString().equals("") || phoneEt.getText().toString().equals("") || addressEt.getText().toString().equals("") || bt.getText().toString().equals("") || bd.getText().toString().equals("")) {
             new AlertDialog.Builder(RestaurantEditActivity.this)
-                    .setTitle("Edit Student")
+                    .setTitle("Edit Restaurant")
                     .setMessage("Do not leave a field empty!")
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
@@ -92,7 +92,7 @@ public class RestaurantEditActivity extends Activity implements RestaurantEditFr
         }*/
         if(!idEt.getText().toString().equals(st_edit.id)){
             new AlertDialog.Builder(RestaurantEditActivity.this)
-                    .setTitle("Edit Student")
+                    .setTitle("Edit Restaurant")
                     .setMessage("Cannot change ID!")
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
@@ -108,7 +108,7 @@ public class RestaurantEditActivity extends Activity implements RestaurantEditFr
         st_edit.birthDate = bd.getText().toString();
         Model.instace.addStudent(st_edit);
         new AlertDialog.Builder(RestaurantEditActivity.this)
-                .setTitle("Edit Student")
+                .setTitle("Edit Restaurant")
                 .setMessage("The save operation was completed successfully.")
                 .setIcon(android.R.drawable.ic_dialog_info)
                 .show();
@@ -119,7 +119,7 @@ public class RestaurantEditActivity extends Activity implements RestaurantEditFr
     public void onDelete() {
         Model.instace.deleteStudent(st_edit);
         new AlertDialog.Builder(RestaurantEditActivity.this)
-                .setTitle("Edit Student")
+                .setTitle("Edit Restaurant")
                 .setMessage("The delete operation was completed successfully.")
                 .setIcon(android.R.drawable.ic_dialog_info)
                 .setOnDismissListener(new DialogInterface.OnDismissListener() {

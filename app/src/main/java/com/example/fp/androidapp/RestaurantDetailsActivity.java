@@ -29,7 +29,7 @@ public class RestaurantDetailsActivity extends Activity{
         setResult(RESAULT_FAIL);
 
         ActionBar bar = getActionBar();
-        bar.setTitle("Students Details");
+        bar.setTitle("Restaurant Details");
         bar.setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
