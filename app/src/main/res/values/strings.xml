@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Class3Demo</string>
     <string-array name="restaurant_variables">
-        <item>Restaurant Name</item>
-        <item>Food Name</item>
-        <item>User Name</item>
+        <item>Restaurant Name:</item>
+        <item>Food Name:</item>
+        <item>User Name:</item>
     </string-array>
 </resources>

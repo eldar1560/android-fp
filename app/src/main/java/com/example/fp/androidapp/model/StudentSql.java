@@ -9,6 +9,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.example.fp.androidapp.MyApplication;
+import com.example.fp.androidapp.R;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -55,7 +58,7 @@ public class StudentSql {
         }
         return list;
     }
-    static List<Student> getAllStudentsByName(SQLiteDatabase db , String name) {
+    static List<Student> getAllStudentsByFilter(SQLiteDatabase db , String content , String field) {
         Cursor cursor = db.query("students", null, null, null, null, null, null);
         List<Student> list = new LinkedList<Student>();
         if (cursor.moveToFirst()) {
@@ -78,7 +81,20 @@ public class StudentSql {
                 st.phone = cursor.getString(phone );
                 st.birthTime = cursor.getString(time);
                 st.birthDate = cursor.getString(date);
-                if(st.name.equals(name))
+                String [] restaurant_variables = MyApplication.getMyContext().getResources().getStringArray(R.array.restaurant_variables);
+                if(restaurant_variables[0].equals(field)) {
+                    if (st.name.equals(content))
+                        list.add(st);
+                }
+                else if(restaurant_variables[1].equals(field)) {
+                    if (st.id.equals(content))
+                        list.add(st);
+                }
+                else if(restaurant_variables[2].equals(field)) {
+                    if (st.phone.equals(content))
+                        list.add(st);
+                }
+                else
                     list.add(st);
             } while (cursor.moveToNext());
         }

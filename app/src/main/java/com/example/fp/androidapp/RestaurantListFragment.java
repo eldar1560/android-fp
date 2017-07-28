@@ -35,11 +35,13 @@ public class RestaurantListFragment extends Fragment {
     ListView list;
     StudentsListAdapter adapter;
     private static final String ARG_PARAM1 = "param1";
-    private String name;
-    public static RestaurantListFragment newInstance(String param1){
+    private static final String ARG_PARAM2 = "param2";
+    private String content , field;
+    public static RestaurantListFragment newInstance(String param1 , String param2){
         RestaurantListFragment fragment = new RestaurantListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1 , param1);
+        args.putString(ARG_PARAM2 , param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -47,13 +49,15 @@ public class RestaurantListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getArguments() != null)
-            name = getArguments().getString(ARG_PARAM1);
+        if(getArguments() != null) {
+            content = getArguments().getString(ARG_PARAM1);
+            field = getArguments().getString(ARG_PARAM2);
+        }
     }
 
     interface StudentListFragmentListener{
         void onSelect(AdapterView<?> parent, View view, int position, long id , List<Student> data);
-        void onSearch(String restName);
+        void onSearch(String content ,String field);
     }
 
     StudentListFragmentListener listener;
@@ -143,10 +147,10 @@ public class RestaurantListFragment extends Fragment {
         this.inflater = inflater;
         View contentView = inflater.inflate(R.layout.fragment_restaurant_list, container, false);
         list = (ListView) contentView.findViewById(R.id.stlist_list);
-        if(name.equals(""))
+        if(content.equals(""))
             data = Model.instace.getAllStudents();
         else
-            data = Model.instace.getAllStudentsByName(name);
+            data = Model.instace.getAllStudentsByFilter(content,field);
 
         adapter = new StudentsListAdapter();
         final EditText searchTxt = (EditText) contentView.findViewById(R.id.search);
@@ -157,8 +161,7 @@ public class RestaurantListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(listener != null)
-                    listener.onSearch(searchTxt.getText().toString());
-                Log.d("Mife","Spinner clicked:"+dropList.getSelectedItem().toString());
+                    listener.onSearch(searchTxt.getText().toString(),dropList.getSelectedItem().toString());
             }
         });
         list.setAdapter(adapter);

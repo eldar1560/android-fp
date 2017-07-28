@@ -23,9 +23,9 @@ public class Model {
 
     }
 
-    public List<Student> getAllStudentsByName(String name){
-        return StudentSql.getAllStudentsByName(
-                Sql.getReadableDatabase(),name);
+    public List<Student> getAllStudentsByFilter(String content , String field){
+        return StudentSql.getAllStudentsByFilter(
+                Sql.getReadableDatabase(),content,field);
 
     }
 

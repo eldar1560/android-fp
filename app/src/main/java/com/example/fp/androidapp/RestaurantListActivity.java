@@ -32,13 +32,14 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
         if(getFragmentManager().findFragmentById(R.id.list_fragment_container) != null){
             
             FragmentTransaction tran = getFragmentManager().beginTransaction();
-            restaurantListFragment = RestaurantListFragment.newInstance("");
+            restaurantListFragment = RestaurantListFragment.newInstance("" ,"");
             tran.replace(R.id.list_fragment_container , restaurantListFragment);
             tran.commit();
         }else {
             Log.d("TAG" , "fragment is null");
 
-            restaurantListFragment = RestaurantListFragment.newInstance("");
+            restaurantListFragment = RestaurantListFragment.newInstance("","");
+
 
             FragmentTransaction tran = getFragmentManager().beginTransaction();
             tran.add(R.id.list_fragment_container, restaurantListFragment, "tag");
@@ -80,6 +81,8 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
     {
         menu.add(0, 0, 0, "Add").setIcon(R.drawable.button_add)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        menu.add(0,1,0,"ShowAll").setIcon(R.drawable.show_all)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
         return true;
     }
@@ -91,6 +94,12 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
             case 0:
                 Intent intent = new Intent(RestaurantListActivity.this,MainActivity.class);
                 startActivityForResult(intent,REQUEST_ID);
+                return true;
+            case 1:
+                FragmentTransaction tran = getFragmentManager().beginTransaction();
+                restaurantListFragment = RestaurantListFragment.newInstance("","");
+                tran.replace(R.id.list_fragment_container , restaurantListFragment);
+                tran.commit();
                 return true;
             case android.R.id.home:
                 onBackPressed();
@@ -110,12 +119,12 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
     }
 
     @Override
-    public void onSearch(String restName) {
+    public void onSearch(String content ,String field) {
         FragmentTransaction tran = getFragmentManager().beginTransaction();
-        restaurantListFragment = RestaurantListFragment.newInstance(restName);
+        restaurantListFragment = RestaurantListFragment.newInstance(content,field);
         tran.replace(R.id.list_fragment_container , restaurantListFragment);
         tran.commit();
-        Log.d("Mife" , "the string is :" +restName);
+        Log.d("Mife" , "the string is :" +content + " , "+field);
     }
 
 
