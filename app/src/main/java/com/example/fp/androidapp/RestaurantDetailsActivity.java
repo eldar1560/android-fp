@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -12,6 +13,8 @@ import android.view.MenuItem;
 
 import com.example.fp.androidapp.model.Model;
 import com.example.fp.androidapp.model.Student;
+
+import java.util.Locale;
 
 public class RestaurantDetailsActivity extends Activity{
 
@@ -83,7 +86,7 @@ public class RestaurantDetailsActivity extends Activity{
     {
         menu.add(0, 0, 0, "Edit").setIcon(R.drawable.edit_button)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
+        menu.add(0,1,0,"Show On Map").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         return true;
     }
 
@@ -96,6 +99,11 @@ public class RestaurantDetailsActivity extends Activity{
                 intent.putExtra("STID",st.id);
                 startActivityForResult(intent,REQUEST_ID);
                 return true;
+            case 1:
+                st = Model.instace.getStudent(st.id);
+                String uri = String.format(Locale.ENGLISH, "geo:0,0?q=%s",st.address);
+                Intent intent2 = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                startActivity(intent2);
             case android.R.id.home:
                 onBackPressed();
                 return true;

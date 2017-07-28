@@ -98,7 +98,7 @@
         android:scaleX="1.5"
         android:scaleY="1.5"
         android:focusable="false"
-        android:layout_margin="7dp"
+        android:layout_margin="20dp"
         android:text="delicious?"
         />
     <LinearLayout
