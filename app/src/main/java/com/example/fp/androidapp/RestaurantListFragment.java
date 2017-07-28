@@ -18,6 +18,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.fp.androidapp.model.Model;
@@ -149,6 +150,7 @@ public class RestaurantListFragment extends Fragment {
 
         adapter = new StudentsListAdapter();
         final EditText searchTxt = (EditText) contentView.findViewById(R.id.search);
+        final Spinner dropList = (Spinner)  contentView.findViewById(R.id.spinner);
         ImageButton searchBtn = (ImageButton) contentView.findViewById(R.id.search_button);
 
         searchBtn.setOnClickListener(new View.OnClickListener() {
@@ -156,6 +158,7 @@ public class RestaurantListFragment extends Fragment {
             public void onClick(View v) {
                 if(listener != null)
                     listener.onSearch(searchTxt.getText().toString());
+                Log.d("Mife","Spinner clicked:"+dropList.getSelectedItem().toString());
             }
         });
         list.setAdapter(adapter);

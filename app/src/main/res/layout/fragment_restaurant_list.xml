@@ -13,11 +13,13 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
+        <Spinner
+            android:id="@+id/spinner"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Restaurant Name:"
-            android:textSize="20dp" />
+            android:drawSelectorOnTop="true"
+            android:entries="@array/restaurant_variables"
+            />
 
         <EditText
             android:id="@+id/search"
