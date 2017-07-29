@@ -17,6 +17,8 @@ import android.widget.ProgressBar;
 import com.example.fp.androidapp.model.Model;
 import com.example.fp.androidapp.model.Student;
 
+import java.util.Random;
+
 import static android.view.View.GONE;
 
 
@@ -68,9 +70,8 @@ public class MainActivity extends Activity implements RestaurantMainFragment.Stu
     }
 
     @Override
-    public void onSave(EditText nameEt , EditText idEt , EditText phoneEt , EditText addressEt , CheckBox cbEt , MyTimePicker bt , MyDatePicker bd , final ProgressBar progressBar , Bitmap imageBitmap) {
-        Log.d("Mife",bt.getText().toString() + " , " + bd.getText().toString());
-        if(idEt.getText().toString().equals("") || nameEt.getText().toString().equals("") || phoneEt.getText().toString().equals("") || addressEt.getText().toString().equals("") || bt.getText().toString().equals("") || bd.getText().toString().equals("")) {
+    public void onSave(EditText nameEt , EditText foodNameEt , EditText userNameEt , EditText addressEt , CheckBox cbEt , MyTimePicker ot , MyDatePicker od , final ProgressBar progressBar , Bitmap imageBitmap) {
+        if(foodNameEt.getText().toString().equals("") || nameEt.getText().toString().equals("") || userNameEt.getText().toString().equals("") || addressEt.getText().toString().equals("") || ot.getText().toString().equals("") || od.getText().toString().equals("")) {
             new AlertDialog.Builder(MainActivity.this)
                     .setTitle("New Restaurant")
                     .setMessage("Do not leave a field empty!")
@@ -79,9 +80,21 @@ public class MainActivity extends Activity implements RestaurantMainFragment.Stu
             return;
         }
         progressBar.setVisibility(View.VISIBLE);
-
+        int random_id;
+        String random_id_string = "";
+        boolean isFound = true;
+        while(isFound) {
+            Random rand = new Random();
+            random_id = rand.nextInt(2147483647);
+            Log.d("Mife", "random id : " + random_id);
+            random_id_string = String.valueOf(random_id);
+            if(Model.instace.getStudent(random_id_string) == null){
+                Log.d("Mife", "found new id");
+                isFound = false;
+            }
+        }
         Log.d("TAG","Btn Save click");
-        final Student st = new Student(idEt.getText().toString() , nameEt.getText().toString(), phoneEt.getText().toString() , addressEt.getText().toString() , cbEt.isChecked(),"" , bt.getText().toString() , bd.getText().toString());
+        final Student st = new Student(random_id_string , nameEt.getText().toString(), foodNameEt.getText().toString(), userNameEt.getText().toString() , addressEt.getText().toString() , cbEt.isChecked(),"" , ot.getText().toString() , od.getText().toString());
         if (imageBitmap != null) {
             Model.instace.saveImage(imageBitmap, st.id + ".jpeg", new Model.SaveImageListener() {
                 @Override

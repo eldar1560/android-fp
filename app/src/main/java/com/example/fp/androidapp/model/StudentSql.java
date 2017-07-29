@@ -20,29 +20,30 @@ import java.util.List;
  */
 
 public class StudentSql {
-    static final String STUDENT_TABLE = "students";
-    static final String STUDENT_PHONE="phone";
-    static final String STUDENT_DATE="date";
-    static final String STUDENT_TIME="time";
+    static final String RESTAURANT_TABLE = "restaurants";
+    static final String RESTAURANT_USERNAME="userName";
+    static final String RESTAURANT_DATE="date";
+    static final String RESTAURANT_TIME="time";
     static final String ADDRESS="address";
-    static final String STUDENT_ID = "stid";
-    static final String STUDENT_NAME = "name";
-    static final String STUDENT_CHECK = "checked";
-    static final String STUDENT_IMAGE_URL = "imageUrl";
+    static final String RESTAURANT_ID = "stid";
+    static final String RESTAURANT_NAME = "name";
+    static final String RESTAURANT_CHECK = "checked";
+    static final String RESTAURANT_IMAGE_URL = "imageUrl";
+    static final String RESTAURANT_FOOD_NAME = "foodName";
 
     static List<Student> getAllStudents(SQLiteDatabase db) {
-        Cursor cursor = db.query("students", null, null, null, null, null, null);
+        Cursor cursor = db.query("restaurants", null, null, null, null, null, null);
         List<Student> list = new LinkedList<Student>();
         if (cursor.moveToFirst()) {
-            int idIndex = cursor.getColumnIndex(STUDENT_ID);
-            int nameIndex = cursor.getColumnIndex(STUDENT_NAME);
-            int checkIndex = cursor.getColumnIndex(STUDENT_CHECK);
-            int imageUrlIndex = cursor.getColumnIndex(STUDENT_IMAGE_URL);
-            int phone =cursor.getColumnIndex(STUDENT_PHONE);
-            int time =cursor.getColumnIndex(STUDENT_TIME);
-            int date =cursor.getColumnIndex(STUDENT_DATE);
+            int idIndex = cursor.getColumnIndex(RESTAURANT_ID);
+            int nameIndex = cursor.getColumnIndex(RESTAURANT_NAME);
+            int checkIndex = cursor.getColumnIndex(RESTAURANT_CHECK);
+            int imageUrlIndex = cursor.getColumnIndex(RESTAURANT_IMAGE_URL);
+            int userName =cursor.getColumnIndex(RESTAURANT_USERNAME);
+            int time =cursor.getColumnIndex(RESTAURANT_TIME);
+            int date =cursor.getColumnIndex(RESTAURANT_DATE);
             int address =cursor.getColumnIndex(ADDRESS);
-
+            int foodName = cursor.getColumnIndex(RESTAURANT_FOOD_NAME);
             do {
                 Student st = new Student();
                 st.id = cursor.getString(idIndex);
@@ -50,27 +51,28 @@ public class StudentSql {
                 st.checked = (cursor.getInt(checkIndex) == 1);
                 st.imageUrl = cursor.getString(imageUrlIndex);
                 st.address=cursor.getString(address);
-                st.phone = cursor.getString(phone );
-                st.birthTime = cursor.getString(time);
-                st.birthDate = cursor.getString(date);
+                st.userName = cursor.getString(userName );
+                st.orderTime = cursor.getString(time);
+                st.orderDate = cursor.getString(date);
+                st.foodName = cursor.getString(foodName);
                 list.add(st);
             } while (cursor.moveToNext());
         }
         return list;
     }
     static List<Student> getAllStudentsByFilter(SQLiteDatabase db , String content , String field) {
-        Cursor cursor = db.query("students", null, null, null, null, null, null);
+        Cursor cursor = db.query("restaurants", null, null, null, null, null, null);
         List<Student> list = new LinkedList<Student>();
         if (cursor.moveToFirst()) {
-            int idIndex = cursor.getColumnIndex(STUDENT_ID);
-            int nameIndex = cursor.getColumnIndex(STUDENT_NAME);
-            int checkIndex = cursor.getColumnIndex(STUDENT_CHECK);
-            int imageUrlIndex = cursor.getColumnIndex(STUDENT_IMAGE_URL);
-            int phone =cursor.getColumnIndex(STUDENT_PHONE);
-            int time =cursor.getColumnIndex(STUDENT_TIME);
-            int date =cursor.getColumnIndex(STUDENT_DATE);
+            int idIndex = cursor.getColumnIndex(RESTAURANT_ID);
+            int nameIndex = cursor.getColumnIndex(RESTAURANT_NAME);
+            int checkIndex = cursor.getColumnIndex(RESTAURANT_CHECK);
+            int imageUrlIndex = cursor.getColumnIndex(RESTAURANT_IMAGE_URL);
+            int userName =cursor.getColumnIndex(RESTAURANT_USERNAME);
+            int time =cursor.getColumnIndex(RESTAURANT_TIME);
+            int date =cursor.getColumnIndex(RESTAURANT_DATE);
             int address =cursor.getColumnIndex(ADDRESS);
-
+            int foodName =cursor.getColumnIndex(RESTAURANT_FOOD_NAME);
             do {
                 Student st = new Student();
                 st.id = cursor.getString(idIndex);
@@ -78,20 +80,21 @@ public class StudentSql {
                 st.checked = (cursor.getInt(checkIndex) == 1);
                 st.imageUrl = cursor.getString(imageUrlIndex);
                 st.address=cursor.getString(address);
-                st.phone = cursor.getString(phone );
-                st.birthTime = cursor.getString(time);
-                st.birthDate = cursor.getString(date);
+                st.userName = cursor.getString(userName );
+                st.orderTime = cursor.getString(time);
+                st.orderDate = cursor.getString(date);
+                st.foodName = cursor.getString(foodName);
                 String [] restaurant_variables = MyApplication.getMyContext().getResources().getStringArray(R.array.restaurant_variables);
                 if(restaurant_variables[0].equals(field)) {
                     if (st.name.equals(content))
                         list.add(st);
                 }
                 else if(restaurant_variables[1].equals(field)) {
-                    if (st.id.equals(content))
+                    if (st.foodName.equals(content))
                         list.add(st);
                 }
                 else if(restaurant_variables[2].equals(field)) {
-                    if (st.phone.equals(content))
+                    if (st.userName.equals(content))
                         list.add(st);
                 }
                 else
@@ -102,49 +105,52 @@ public class StudentSql {
     }
     static void addStudent(SQLiteDatabase db, Student st) {
         ContentValues values = new ContentValues();
-        values.put(STUDENT_ID, st.id);
-        values.put(STUDENT_PHONE, st.phone);
-        values.put(STUDENT_TIME, st.birthTime);
-        values.put(STUDENT_DATE, st.birthDate);
-        values.put(STUDENT_NAME, st.name);
+        values.put(RESTAURANT_ID, st.id);
+        values.put(RESTAURANT_USERNAME, st.userName);
+        values.put(RESTAURANT_TIME, st.orderTime);
+        values.put(RESTAURANT_DATE, st.orderDate);
+        values.put(RESTAURANT_NAME, st.name);
+        values.put(RESTAURANT_FOOD_NAME, st.foodName);
         values.put(ADDRESS, st.address);
 
         if (st.checked) {
-            values.put(STUDENT_CHECK, 1);
+            values.put(RESTAURANT_CHECK, 1);
         } else {
-            values.put(STUDENT_CHECK, 0);
+            values.put(RESTAURANT_CHECK, 0);
         }
-        values.put(STUDENT_IMAGE_URL, st.imageUrl);
-        db.insert(STUDENT_TABLE, STUDENT_ID, values);
+        values.put(RESTAURANT_IMAGE_URL, st.imageUrl);
+        db.insert(RESTAURANT_TABLE, RESTAURANT_ID, values);
     }
 
     static Student getStudent(SQLiteDatabase db, String stId) {
 
         if(stId!=null) {
-            Cursor cursor = db.query(STUDENT_TABLE, null, STUDENT_ID + "=?", new String[]{stId}, null, null, null);
+            Cursor cursor = db.query(RESTAURANT_TABLE, null, RESTAURANT_ID + "=?", new String[]{stId}, null, null, null);
             if (cursor.getCount() != 0) {
 
 
                 cursor.moveToFirst();
 
-                int idIndex = cursor.getColumnIndex(STUDENT_ID);
-                int nameIndex = cursor.getColumnIndex(STUDENT_NAME);
-                int checkIndex = cursor.getColumnIndex(STUDENT_CHECK);
-                int imageUrlIndex = cursor.getColumnIndex(STUDENT_IMAGE_URL);
-                int phone = cursor.getColumnIndex(STUDENT_PHONE);
-                int time = cursor.getColumnIndex(STUDENT_TIME);
-                int date = cursor.getColumnIndex(STUDENT_DATE);
+                int idIndex = cursor.getColumnIndex(RESTAURANT_ID);
+                int nameIndex = cursor.getColumnIndex(RESTAURANT_NAME);
+                int checkIndex = cursor.getColumnIndex(RESTAURANT_CHECK);
+                int imageUrlIndex = cursor.getColumnIndex(RESTAURANT_IMAGE_URL);
+                int userName = cursor.getColumnIndex(RESTAURANT_USERNAME);
+                int time = cursor.getColumnIndex(RESTAURANT_TIME);
+                int date = cursor.getColumnIndex(RESTAURANT_DATE);
                 int address =cursor.getColumnIndex(ADDRESS);
+                int foodName = cursor.getColumnIndex(RESTAURANT_FOOD_NAME);
 
                 Student st = new Student();
                 st.id = cursor.getString(idIndex);
                 st.name = cursor.getString(nameIndex);
                 st.checked = (cursor.getInt(checkIndex) == 1);
                 st.imageUrl = cursor.getString(imageUrlIndex);
-                st.phone = cursor.getString(phone);
-                st.birthTime = cursor.getString(time);
+                st.userName = cursor.getString(userName);
+                st.orderTime = cursor.getString(time);
                 st.address= cursor.getString(address);
-                st.birthDate = cursor.getString(date);
+                st.orderDate = cursor.getString(date);
+                st.foodName = cursor.getString(foodName);
                 return st;
             }
 
@@ -154,53 +160,54 @@ public class StudentSql {
     }
 
     static public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table " + STUDENT_TABLE +
+        db.execSQL("create table " + RESTAURANT_TABLE +
                 " (" +
-                STUDENT_ID + " TEXT PRIMARY KEY, " +
-                STUDENT_NAME + " TEXT, " +
-                STUDENT_CHECK + " NUMBER, " +
-                STUDENT_IMAGE_URL + " TEXT, "+
-                STUDENT_PHONE+" TEXT, "
-                +STUDENT_DATE+" TEXT, "
-                +STUDENT_TIME+" TEXT, " +
+                RESTAURANT_ID + " TEXT PRIMARY KEY, " +
+                RESTAURANT_NAME + " TEXT, " +
+                RESTAURANT_FOOD_NAME + " TEXT, " +
+                RESTAURANT_CHECK + " NUMBER, " +
+                RESTAURANT_IMAGE_URL + " TEXT, "+
+                RESTAURANT_USERNAME+" TEXT, "
+                +RESTAURANT_DATE+" TEXT, "
+                +RESTAURANT_TIME+" TEXT, " +
                 ADDRESS+" TEXT);");
     }
 
     static public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("drop " + STUDENT_TABLE + ";");
+        db.execSQL("drop " + RESTAURANT_TABLE + ";");
         onCreate(db);
     }
     static public void deleteStudent(SQLiteDatabase db, Student st)
     {
-        db.delete(STUDENT_TABLE,STUDENT_ID+"=?",new String[]{st.id});
+        db.delete(RESTAURANT_TABLE,RESTAURANT_ID+"=?",new String[]{st.id});
     }
     static public void updateStudent(SQLiteDatabase db, Student st)
     {
         deleteStudent(db,st);
         addStudent(db,st);
         /*ContentValues values = new ContentValues();
-        values.put(STUDENT_ID, st.id);
-        values.put(STUDENT_PHONE, st.phone);
-        values.put(STUDENT_TIME, st.birthTime);
-        values.put(STUDENT_DATE, st.birthDate);
-        values.put(STUDENT_NAME, st.name);
+        values.put(RESTAURANT_ID, st.id);
+        values.put(RESTAURANT_USERNAME, st.userName);
+        values.put(RESTAURANT_TIME, st.orderTime);
+        values.put(RESTAURANT_DATE, st.orderDate);
+        values.put(RESTAURANT_NAME, st.name);
         values.put(ADDRESS, st.address);
 
         if (st.checked) {
-            values.put(STUDENT_CHECK, 1);
+            values.put(RESTAURANT_CHECK, 1);
         } else {
-            values.put(STUDENT_CHECK, 0);
+            values.put(RESTAURANT_CHECK, 0);
         }
-        values.put(STUDENT_IMAGE_URL, st.imageUrl);
+        values.put(RESTAURANT_IMAGE_URL, st.imageUrl);
         Log.d("Mife",st.id);
-        db.update(STUDENT_TABLE, values, st.id+"="+STUDENT_ID, null);*/
+        db.update(RESTAURANT_TABLE, values, st.id+"="+RESTAURANT_ID, null);*/
         /*int checked;
         if(st.checked)
             checked = 1;
         else
             checked = 0;
-        String strSQL = "UPDATE "+STUDENT_TABLE+" SET "+STUDENT_ID+" = "+st.id+" , "+STUDENT_PHONE+" = "+st.phone+" , "+STUDENT_TIME+" = "+st.birthTime+" , "+STUDENT_DATE+
-                " = "+st.birthDate+" , "+STUDENT_NAME+" = "+st.name+" , "+ADDRESS+" = "+st.address+" , "+STUDENT_CHECK+" = "+checked+" WHERE "+STUDENT_ID+" = "+ st.id;
+        String strSQL = "UPDATE "+RESTAURANT_TABLE+" SET "+RESTAURANT_ID+" = "+st.id+" , "+RESTAURANT_USERNAME+" = "+st.userName+" , "+RESTAURANT_TIME+" = "+st.orderTime+" , "+RESTAURANT_DATE+
+                " = "+st.orderDate+" , "+RESTAURANT_NAME+" = "+st.name+" , "+ADDRESS+" = "+st.address+" , "+RESTAURANT_CHECK+" = "+checked+" WHERE "+RESTAURANT_ID+" = "+ st.id;
 
         db.execSQL(strSQL);*/
     }

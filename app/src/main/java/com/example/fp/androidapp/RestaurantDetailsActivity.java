@@ -42,22 +42,20 @@ public class RestaurantDetailsActivity extends Activity{
             @Override
             public void onComplete(Student student) {
                 RestaurantDetailsActivity.this.st = student;
-                Log.d("TAG","got student name: " + student.name);
+                Log.d("Mife","got student name: " + student.name);
+                restaurantDetailsFragment = RestaurantDetailsFragment.newInstance(st.id);
+
+                FragmentTransaction tran = getFragmentManager().beginTransaction();
+                tran.add(R.id.details_fragment_container, restaurantDetailsFragment,"tag");
+                tran.commit();
             }
 
             @Override
             public void onCancel() {
-                Log.d("TAG","get student cancell" );
+                Log.d("Mife","get student cancell" );
 
             }
         });
-
-        restaurantDetailsFragment = RestaurantDetailsFragment.newInstance(st.id);
-
-        FragmentTransaction tran = getFragmentManager().beginTransaction();
-        tran.add(R.id.details_fragment_container, restaurantDetailsFragment,"tag");
-        tran.commit();
-
 
 
     }

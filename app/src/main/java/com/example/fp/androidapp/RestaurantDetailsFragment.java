@@ -1,13 +1,17 @@
 package com.example.fp.androidapp;
 
 import android.app.Fragment;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.fp.androidapp.model.Model;
@@ -16,7 +20,9 @@ import com.example.fp.androidapp.model.Student;
 
 public class RestaurantDetailsFragment extends Fragment {
 
-    TextView stu_name , stu_phone , stu_address ,stu_id , stu_bt , stu_bd;
+    TextView stu_name , stu_userName , stu_address ,stu_foodName , stu_ot , stu_od;
+    ImageView imageView;
+    ProgressBar progressBar;
     CheckBox stu_cb;
     Student st;
     private static final String ARG_PARAM1 = "param1";
@@ -41,17 +47,52 @@ public class RestaurantDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View contentView = inflater.inflate(R.layout.fragment_restaurant_details, container, false);
+        final View contentView = inflater.inflate(R.layout.fragment_restaurant_details, container, false);
 
         Log.d("TAG","stid = " + stId);
-        stu_id = (TextView) contentView.findViewById(R.id.stu_id);
-        stu_id.setText("Food Name : " + stId);
+
 
         Model.instace.getStudent(stId, new Model.GetStudentCallback() {
             @Override
             public void onComplete(Student student) {
                 RestaurantDetailsFragment.this.st = student;
                 Log.d("TAG","got student name: " + student.name);
+                stu_foodName = (TextView) contentView.findViewById(R.id.stu_foodName);
+                stu_foodName.setText("Food Name : " + st.foodName);
+                stu_name = (TextView) contentView.findViewById(R.id.stu_name);
+                stu_name.setText("Restaurant Name : " + st.name);
+
+                stu_userName = (TextView) contentView.findViewById(R.id.stu_userName);
+                stu_userName.setText("User Name : " + st.userName);
+
+                stu_address = (TextView) contentView.findViewById(R.id.stu_address);
+                stu_address.setText("Restaurant Address : " + st.address);
+
+                stu_ot = (TextView) contentView.findViewById(R.id.stu_ot);
+                stu_ot.setText("Order time : "+st.orderTime);
+
+                stu_od = (TextView) contentView.findViewById(R.id.stu_od);
+                stu_od.setText("Order date : "+st.orderDate);
+
+                stu_cb = (CheckBox) contentView.findViewById(R.id.stu_cb);
+                stu_cb.setChecked(st.checked);
+                imageView = (ImageView) contentView.findViewById(R.id.stu_image);
+                progressBar = (ProgressBar) contentView.findViewById(R.id.stu_progressBar);
+                if (st.imageUrl != null && !st.imageUrl.isEmpty() && !st.imageUrl.equals("")){
+                    progressBar.setVisibility(View.VISIBLE);
+                    Model.instace.getImage(st.imageUrl, new Model.GetImageListener() {
+                        @Override
+                        public void onSuccess(Bitmap image) {
+                                imageView.setImageBitmap(image);
+                                progressBar.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onFail() {
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    });
+                }
             }
 
             @Override
@@ -60,26 +101,7 @@ public class RestaurantDetailsFragment extends Fragment {
 
             }
         });
-        Log.d("TAG","got student name: " + st.name);
 
-        stu_name = (TextView) contentView.findViewById(R.id.stu_name);
-        stu_name.setText("Restaurant Name : " + st.name);
-
-        stu_phone = (TextView) contentView.findViewById(R.id.stu_phone);
-        stu_phone.setText("User Name : " + st.phone);
-
-        stu_address = (TextView) contentView.findViewById(R.id.stu_address);
-        stu_address.setText("Restaurant Address : " + st.address);
-
-        stu_bt = (TextView) contentView.findViewById(R.id.stu_bt);
-        stu_bt.setText("Order time : "+st.birthTime);
-
-        stu_bd = (TextView) contentView.findViewById(R.id.stu_bd);
-        stu_bd.setText("Order date : "+st.birthDate);
-
-        stu_cb = (CheckBox) contentView.findViewById(R.id.stu_cb);
-        stu_cb.setChecked(st.checked);
-        Log.d("Mife","state:"+st.checked);
 
         return contentView;
     }

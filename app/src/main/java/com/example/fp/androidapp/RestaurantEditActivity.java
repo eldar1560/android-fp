@@ -86,8 +86,8 @@ public class RestaurantEditActivity extends Activity implements RestaurantEditFr
     }
 
     @Override
-    public void onSave(EditText idEt , EditText nameEt , EditText phoneEt , EditText addressEt , CheckBox cbEt , MyTimePicker bt , MyDatePicker bd) {
-        if(idEt.getText().toString().equals("") || nameEt.getText().toString().equals("") || phoneEt.getText().toString().equals("") || addressEt.getText().toString().equals("") || bt.getText().toString().equals("") || bd.getText().toString().equals("")) {
+    public void onSave(EditText foodNameEt , EditText nameEt , EditText userNameEt , EditText addressEt , CheckBox cbEt , MyTimePicker ot , MyDatePicker od) {
+        if(foodNameEt.getText().toString().equals("") || nameEt.getText().toString().equals("") || userNameEt.getText().toString().equals("") || addressEt.getText().toString().equals("") || ot.getText().toString().equals("") || od.getText().toString().equals("")) {
             new AlertDialog.Builder(RestaurantEditActivity.this)
                     .setTitle("Edit Restaurant")
                     .setMessage("Do not leave a field empty!")
@@ -95,30 +95,14 @@ public class RestaurantEditActivity extends Activity implements RestaurantEditFr
                     .show();
             return;
         }
-        /*if(Model.instace.getStudent(idEt.getText().toString()) != null && (!idEt.getText().toString().equals(st_edit.id))) {
-            new AlertDialog.Builder(RestaurantEditActivity.this)
-                    .setTitle("Edit Student")
-                    .setMessage("Id is already exist!")
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
-            return;
-        }*/
-        if(!idEt.getText().toString().equals(st_edit.id)){
-            new AlertDialog.Builder(RestaurantEditActivity.this)
-                    .setTitle("Edit Restaurant")
-                    .setMessage("Cannot change ID!")
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
-            return;
-        }
         Model.instace.deleteStudent(st_edit);
-        st_edit.id = idEt.getText().toString();
+        st_edit.foodName = foodNameEt.getText().toString();
         st_edit.name = nameEt.getText().toString();
-        st_edit.phone = phoneEt.getText().toString();
+        st_edit.userName = userNameEt.getText().toString();
         st_edit.address = addressEt.getText().toString();
         st_edit.checked = cbEt.isChecked();
-        st_edit.birthTime = bt.getText().toString();
-        st_edit.birthDate = bd.getText().toString();
+        st_edit.orderTime = ot.getText().toString();
+        st_edit.orderDate = od.getText().toString();
         Model.instace.addStudent(st_edit);
         new AlertDialog.Builder(RestaurantEditActivity.this)
                 .setTitle("Edit Restaurant")

@@ -57,12 +57,15 @@ public class Model {
         //StudentSql.addStudent(modelSql.getWritableDatabase(),st);
         modelFirebase.addStudent(st);
     }
-    public  void deleteStudent(Student st){StudentSql.deleteStudent(Sql.getWritableDatabase(),st); }
+    public  void deleteStudent(Student st){
+        //StudentSql.deleteStudent(Sql.getWritableDatabase(),st);
+        modelFirebase.deleteStudent(st);
+    }
     public  void updateStudent(Student st){StudentSql.updateStudent(Sql.getWritableDatabase(),st); }
-    /*public Student getStudent(String stId) {
+    public Student getStudent(String stId) {
         return StudentSql.getStudent(Sql.getReadableDatabase(),stId);
 
-    }*/
+    }
     public void getStudent(String stId, final GetStudentCallback callback) {
         //return StudentSql.getStudent(modelSql.getReadableDatabase(),stId);
         modelFirebase.getStudent(stId, new ModelFirebase.GetStudentCallback() {
@@ -104,9 +107,28 @@ public class Model {
                     prefEd.commit();
                     Log.d("TAG","StudnetsLastUpdateDate: " + student.lastUpdateDate);
                 }
-
+                Log.d("Mife","posting");
                 EventBus.getDefault().post(new UpdateStudentEvent(student));
             }
+
+            @Override
+            public void onStudentDeleted(Student student) {
+                //3. update the local db
+                StudentSql.deleteStudent(Sql.getWritableDatabase(),student);
+                //4. update the lastUpdateTade
+                SharedPreferences pref = MyApplication.getMyContext().getSharedPreferences("TAG", Context.MODE_PRIVATE);
+                final double lastUpdateDate = pref.getFloat("StudnetsLastUpdateDate",0);
+                if (lastUpdateDate < student.lastUpdateDate){
+                    SharedPreferences.Editor prefEd = MyApplication.getMyContext().getSharedPreferences("TAG",
+                            Context.MODE_PRIVATE).edit();
+                    prefEd.putFloat("StudnetsLastUpdateDate", (float) student.lastUpdateDate);
+                    prefEd.commit();
+                    Log.d("TAG","StudnetsLastUpdateDate: " + student.lastUpdateDate);
+                }
+                Log.d("Mife","posting");
+                EventBus.getDefault().post(new DeleteStudentEvent(student));
+            }
+
         });
     }
     public interface SaveImageListener {
@@ -171,6 +193,12 @@ public class Model {
     public class UpdateStudentEvent {
         public final Student student;
         public UpdateStudentEvent(Student student) {
+            this.student = student;
+        }
+    }
+    public class DeleteStudentEvent {
+        public final Student student;
+        public DeleteStudentEvent(Student student) {
             this.student = student;
         }
     }

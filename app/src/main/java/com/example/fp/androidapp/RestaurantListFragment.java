@@ -61,6 +61,7 @@ public class RestaurantListFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Model.UpdateStudentEvent event) {
         Toast.makeText(MyApplication.getMyContext(), "got new student event", Toast.LENGTH_SHORT).show();
+        Log.d("Mife","got new restaurant");
         boolean exist = false;
         for (Student st: data){
             if (st.id.equals(event.student.id)){
@@ -71,6 +72,25 @@ public class RestaurantListFragment extends Fragment {
         }
         if (!exist){
             data.add(event.student);
+        }
+        adapter.notifyDataSetChanged();
+        list.setSelection(adapter.getCount() - 1);
+
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(Model.DeleteStudentEvent event) {
+        Toast.makeText(MyApplication.getMyContext(), "got delete student event", Toast.LENGTH_SHORT).show();
+        Log.d("Mife","got delete restaurant");
+        boolean exist = false;
+        for (Student st: data){
+            if (st.id.equals(event.student.id)){
+                st = event.student;
+                exist = true;
+                break;
+            }
+        }
+        if (exist){
+            data.remove(event.student);
         }
         adapter.notifyDataSetChanged();
         list.setSelection(adapter.getCount() - 1);
@@ -156,13 +176,13 @@ public class RestaurantListFragment extends Fragment {
             }
 
             TextView name = (TextView) convertView.findViewById(R.id.strow_name);
-            TextView id = (TextView) convertView.findViewById(R.id.strow_id);
+            TextView foodName = (TextView) convertView.findViewById(R.id.strow_foodName);
             CheckBox cb = (CheckBox) convertView.findViewById(R.id.strow_cb);
             final ImageView imageView = (ImageView) convertView.findViewById(R.id.strow_image);
             final ProgressBar progressBar = (ProgressBar) convertView.findViewById(R.id.strow_progressBar);
             final Student st = data.get(position);
             name.setText(st.name);
-            id.setText(st.id);
+            foodName.setText(st.foodName);
             cb.setChecked(st.checked);
             cb.setTag(position);
 
@@ -198,8 +218,8 @@ public class RestaurantListFragment extends Fragment {
         // Inflate the layout for this fragment
         this.inflater = inflater;
         View contentView = inflater.inflate(R.layout.fragment_restaurant_list, container, false);
-        list = (ListView) contentView.findViewById(R.id.stlist_list);
-        if(EventBus.getDefault().isRegistered(this)){
+        list = (ListView) contentView.findViewById(R.id.reslist_list);
+        if(!EventBus.getDefault().isRegistered(this)){
             EventBus.getDefault().register(this);
         }
         if(content.equals("")) {

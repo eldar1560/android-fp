@@ -57,7 +57,7 @@
             android:layout_margin="7dp"/>
 
         <EditText
-            android:id="@+id/mainIdTv"
+            android:id="@+id/mainFoodNameTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="7dp"/>
@@ -76,7 +76,7 @@
             android:layout_margin="7dp"/>
 
         <EditText
-            android:id="@+id/mainPhoneTv"
+            android:id="@+id/mainUserNameTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="7dp"/>
@@ -124,7 +124,7 @@
             android:layout_margin="7dp"/>
 
         <com.example.fp.androidapp.MyDatePicker
-            android:id="@+id/mainBirthDateTv"
+            android:id="@+id/mainOrderDateTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="7dp"/>
@@ -143,7 +143,7 @@
             android:layout_margin="7dp"/>
 
         <com.example.fp.androidapp.MyTimePicker
-            android:id="@+id/mainBirthTimeTv"
+            android:id="@+id/mainOrderTimeTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="7dp"/>
