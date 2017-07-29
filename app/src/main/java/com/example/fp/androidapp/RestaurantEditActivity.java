@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -53,7 +54,19 @@ public class RestaurantEditActivity extends Activity implements RestaurantEditFr
             tran.commit();
         }
 
-        st_edit = Model.instace.getStudent(stId);
+        Model.instace.getStudent(stId, new Model.GetStudentCallback() {
+            @Override
+            public void onComplete(Student student) {
+                RestaurantEditActivity.this.st_edit = student;
+                Log.d("TAG","got student name: " + student.name);
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d("TAG","get student cancell" );
+
+            }
+        });
 
     }
     @Override

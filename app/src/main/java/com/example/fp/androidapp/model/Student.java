@@ -10,6 +10,7 @@ public class Student {
     public String address;
     public String birthTime;
     public String birthDate;
+    public double lastUpdateDate;
 
     public Student(){}
     public Student (String id , String name , String phone , String address , Boolean checked , String imageUrl , String birthTime , String birthDate){

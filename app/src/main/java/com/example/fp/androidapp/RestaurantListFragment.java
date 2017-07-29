@@ -4,8 +4,12 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,12 +21,19 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.fp.androidapp.model.Model;
 import com.example.fp.androidapp.model.Student;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 import java.util.zip.Inflater;
@@ -45,7 +56,26 @@ public class RestaurantListFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+    // This method will be called when a MessageEvent is posted
+    // (in the UI thread for Toast)
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(Model.UpdateStudentEvent event) {
+        Toast.makeText(MyApplication.getMyContext(), "got new student event", Toast.LENGTH_SHORT).show();
+        boolean exist = false;
+        for (Student st: data){
+            if (st.id.equals(event.student.id)){
+                st = event.student;
+                exist = true;
+                break;
+            }
+        }
+        if (!exist){
+            data.add(event.student);
+        }
+        adapter.notifyDataSetChanged();
+        list.setSelection(adapter.getCount() - 1);
 
+    }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +119,7 @@ public class RestaurantListFragment extends Fragment {
     }
 
     class StudentsListAdapter extends BaseAdapter {
-
+        //LayoutInflater inflater = getActivity().getLayoutInflater();
         @Override
         public int getCount() {
             return data.size();
@@ -110,9 +140,7 @@ public class RestaurantListFragment extends Fragment {
             public void onClick(View v) {
                 int pos = (int)v.getTag();
                 Student st = data.get(pos);
-                Log.d("Mife","before:"+st.checked);
                 st.checked = !st.checked;
-                Log.d("Mife","after:"+st.checked);
                 Model.instace.updateStudent(st);
             }
         }
@@ -130,16 +158,40 @@ public class RestaurantListFragment extends Fragment {
             TextView name = (TextView) convertView.findViewById(R.id.strow_name);
             TextView id = (TextView) convertView.findViewById(R.id.strow_id);
             CheckBox cb = (CheckBox) convertView.findViewById(R.id.strow_cb);
-
-            Student st = data.get(position);
+            final ImageView imageView = (ImageView) convertView.findViewById(R.id.strow_image);
+            final ProgressBar progressBar = (ProgressBar) convertView.findViewById(R.id.strow_progressBar);
+            final Student st = data.get(position);
             name.setText(st.name);
             id.setText(st.id);
             cb.setChecked(st.checked);
             cb.setTag(position);
 
+            imageView.setTag(st.imageUrl);
+            //imageView.setImageDrawable(MyApplication.getMyContext().getDrawable(R.drawable.avatar));
+
+            if (st.imageUrl != null && !st.imageUrl.isEmpty() && !st.imageUrl.equals("")){
+                progressBar.setVisibility(View.VISIBLE);
+                Model.instace.getImage(st.imageUrl, new Model.GetImageListener() {
+                    @Override
+                    public void onSuccess(Bitmap image) {
+                        String tagUrl = imageView.getTag().toString();
+                        if (tagUrl.equals(st.imageUrl)) {
+                            imageView.setImageBitmap(image);
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    }
+
+                    @Override
+                    public void onFail() {
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
+            }
+
             return convertView;
         }
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
@@ -147,8 +199,24 @@ public class RestaurantListFragment extends Fragment {
         this.inflater = inflater;
         View contentView = inflater.inflate(R.layout.fragment_restaurant_list, container, false);
         list = (ListView) contentView.findViewById(R.id.stlist_list);
-        if(content.equals(""))
-            data = Model.instace.getAllStudents();
+        if(EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        }
+        if(content.equals("")) {
+            //data = Model.instace.getAllStudents();
+            Model.instace.getAllStudents(new Model.GetAllStudentsAndObserveCallback() {
+                @Override
+                public void onComplete(List<Student> list) {
+                    data = list;
+                    //adapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onCancel() {
+
+                }
+            });
+        }
         else
             data = Model.instace.getAllStudentsByFilter(content,field);
 
@@ -177,5 +245,9 @@ public class RestaurantListFragment extends Fragment {
 
         return contentView;
     }
-
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
 }

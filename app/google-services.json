@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "809835579291",
+    "firebase_url": "https://rest-5c5cf.firebaseio.com",
+    "project_id": "rest-5c5cf",
+    "storage_bucket": "rest-5c5cf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:809835579291:android:a23f434c6098be55",
+        "android_client_info": {
+          "package_name": "com.example.fp.androidapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "809835579291-jhdn91t9dnk7pvhdie86hd80nu7vloot.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1OtKYOz9qLgK1bmGeBBNmEjGRSTKXFm4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

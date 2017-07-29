@@ -3,7 +3,10 @@ package com.example.fp.androidapp;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,11 +14,18 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+
+import static android.app.Activity.RESULT_OK;
+import static android.view.View.GONE;
 
 
 public class RestaurantMainFragment extends Fragment {
 
-
+    ImageView imageView;
+    Bitmap imageBitmap;
+    ProgressBar progressBar;
     public static RestaurantMainFragment newInstance(){
         RestaurantMainFragment fragment = new RestaurantMainFragment();
         return fragment;
@@ -27,7 +37,7 @@ public class RestaurantMainFragment extends Fragment {
     }
 
     interface StudentMainFragmentListener{
-        void onSave(EditText nameEt , EditText idEt , EditText phoneEt , EditText addressEt , CheckBox cbEt , MyTimePicker bt , MyDatePicker bd);
+        void onSave(EditText nameEt , EditText idEt , EditText phoneEt , EditText addressEt , CheckBox cbEt , MyTimePicker bt , MyDatePicker bd , final ProgressBar progressBar , Bitmap imageBitmap);
         void onCancel();
     }
 
@@ -75,12 +85,13 @@ public class RestaurantMainFragment extends Fragment {
         Button saveBtn = (Button) contentView.findViewById(R.id.mainSaveBtn);
         Button cancelBtn = (Button) contentView.findViewById(R.id.mainCancelBtn);
 
-
+        progressBar = (ProgressBar) contentView.findViewById(R.id.mainProgressBar);
+        progressBar.setVisibility(GONE);
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(listener != null)
-                    listener.onSave(nameEt,idEt,phoneEt,addressEt,cbEt , bt , bd);
+                    listener.onSave(nameEt,idEt,phoneEt,addressEt,cbEt , bt , bd , progressBar , imageBitmap);
             }
         });
         cancelBtn.setOnClickListener(new View.OnClickListener() {
@@ -90,6 +101,28 @@ public class RestaurantMainFragment extends Fragment {
                     listener.onCancel();
             }
         });
+        imageView = (ImageView) contentView.findViewById(R.id.mainImageView);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dispatchTakePictureIntent();
+            }
+        });
         return contentView;
+    }
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(MyApplication.getMyContext().getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            imageBitmap = (Bitmap) extras.get("data");
+            imageView.setImageBitmap(imageBitmap);
+        }
     }
 }

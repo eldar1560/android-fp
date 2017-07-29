@@ -4,8 +4,11 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +16,8 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import com.example.fp.androidapp.model.Student;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -28,6 +33,13 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
 
         bar.setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
         getActionBar().setDisplayHomeAsUpEnabled(true);
+        boolean hasPermission = (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                PackageManager.PERMISSION_GRANTED);
+        if (!hasPermission) {
+            ActivityCompat.requestPermissions(this,new String[]{
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_STORAGE);
+        }
 
         if(getFragmentManager().findFragmentById(R.id.list_fragment_container) != null){
             
@@ -49,7 +61,7 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
     }
 
     static final int REQUEST_ID = 1;
-
+    static final int REQUEST_WRITE_STORAGE = 11;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -72,6 +84,10 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
                 Log.d("TAG","operation fail");
             }
 
+        } else{
+            if (resultCode == REQUEST_WRITE_STORAGE){
+                Log.d("TAG", "REQUEST_WRITE_STORAGE");
+            }
         }
     }
 

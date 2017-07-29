@@ -38,7 +38,19 @@ public class RestaurantDetailsActivity extends Activity{
 
         Intent intent = getIntent();
         final String stId = intent.getStringExtra("STID");
-        st = Model.instace.getStudent(stId);
+        Model.instace.getStudent(stId, new Model.GetStudentCallback() {
+            @Override
+            public void onComplete(Student student) {
+                RestaurantDetailsActivity.this.st = student;
+                Log.d("TAG","got student name: " + student.name);
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d("TAG","get student cancell" );
+
+            }
+        });
 
         restaurantDetailsFragment = RestaurantDetailsFragment.newInstance(st.id);
 
@@ -100,7 +112,19 @@ public class RestaurantDetailsActivity extends Activity{
                 startActivityForResult(intent,REQUEST_ID);
                 return true;
             case 1:
-                st = Model.instace.getStudent(st.id);
+                Model.instace.getStudent(st.id, new Model.GetStudentCallback() {
+                    @Override
+                    public void onComplete(Student student) {
+                        RestaurantDetailsActivity.this.st = student;
+                        Log.d("TAG","got student name: " + student.name);
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        Log.d("TAG","get student cancell" );
+
+                    }
+                });
                 String uri = String.format(Locale.ENGLISH, "geo:0,0?q=%s",st.address);
                 Intent intent2 = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                 startActivity(intent2);

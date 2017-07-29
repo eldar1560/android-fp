@@ -79,7 +79,19 @@ public class RestaurantEditFragment extends Fragment {
         View contentView = inflater.inflate(R.layout.fragment_restaurant_edit, container, false);
 
         Log.d("TAG","stId : " + stId);
-        st_edit = Model.instace.getStudent(stId);
+        Model.instace.getStudent(stId, new Model.GetStudentCallback() {
+            @Override
+            public void onComplete(Student student) {
+                RestaurantEditFragment.this.st_edit = student;
+                Log.d("TAG","got student name: " + student.name);
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d("TAG","get student cancell" );
+
+            }
+        });
 
         final EditText nameEt = (EditText) contentView.findViewById(R.id.editNameTv);
         nameEt.setText(st_edit.name);

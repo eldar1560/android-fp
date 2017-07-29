@@ -47,7 +47,19 @@ public class RestaurantDetailsFragment extends Fragment {
         stu_id = (TextView) contentView.findViewById(R.id.stu_id);
         stu_id.setText("Food Name : " + stId);
 
-        st = Model.instace.getStudent(stId);
+        Model.instace.getStudent(stId, new Model.GetStudentCallback() {
+            @Override
+            public void onComplete(Student student) {
+                RestaurantDetailsFragment.this.st = student;
+                Log.d("TAG","got student name: " + student.name);
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d("TAG","get student cancell" );
+
+            }
+        });
         Log.d("TAG","got student name: " + st.name);
 
         stu_name = (TextView) contentView.findViewById(R.id.stu_name);
