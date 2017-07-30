@@ -171,6 +171,11 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
     @Override
     public void onSignIn(String email, String password) {
         mAuth = FirebaseAuth.getInstance();
+        if(email.equals("") || password.equals("")){
+            Toast.makeText(MyApplication.getMyContext(), "Do not leave a field empty",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -187,7 +192,7 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("Mife", "signInWithEmail:failure", task.getException());
-                            Toast.makeText(MyApplication.getMyContext(), "Authentication failed.",
+                            Toast.makeText(MyApplication.getMyContext(), "Authentication failed : "+task.getException().getMessage(),
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -197,6 +202,11 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
     @Override
     public void onSignUp(String email, String password) {
         mAuth = FirebaseAuth.getInstance();
+        if(email.equals("") || password.equals("")){
+            Toast.makeText(MyApplication.getMyContext(), "Do not leave a field empty",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -213,7 +223,7 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("Mife", "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(MyApplication.getMyContext(), "Authentication failed.",
+                            Toast.makeText(MyApplication.getMyContext(), "Authentication failed : "+task.getException().getMessage(),
                                     Toast.LENGTH_SHORT).show();
                         }
 
