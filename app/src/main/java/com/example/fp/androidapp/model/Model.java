@@ -61,7 +61,9 @@ public class Model {
         //StudentSql.deleteStudent(Sql.getWritableDatabase(),st);
         modelFirebase.deleteStudent(st);
     }
-    public  void updateStudent(Student st){StudentSql.updateStudent(Sql.getWritableDatabase(),st); }
+    public  void updateStudent(Student st){
+        //StudentSql.updateStudent(Sql.getWritableDatabase(),st);
+        modelFirebase.addStudent(st);} //same functionallity as update
     public Student getStudent(String stId) {
         return StudentSql.getStudent(Sql.getReadableDatabase(),stId);
 
@@ -107,7 +109,6 @@ public class Model {
                     prefEd.commit();
                     Log.d("TAG","StudnetsLastUpdateDate: " + student.lastUpdateDate);
                 }
-                Log.d("Mife","posting");
                 EventBus.getDefault().post(new UpdateStudentEvent(student));
             }
 
@@ -125,8 +126,24 @@ public class Model {
                     prefEd.commit();
                     Log.d("TAG","StudnetsLastUpdateDate: " + student.lastUpdateDate);
                 }
-                Log.d("Mife","posting");
                 EventBus.getDefault().post(new DeleteStudentEvent(student));
+            }
+
+            @Override
+            public void onStudentChanged(Student student) {
+                //3. update the local db
+                StudentSql.updateStudent(Sql.getWritableDatabase(),student);
+                //4. update the lastUpdateTade
+                SharedPreferences pref = MyApplication.getMyContext().getSharedPreferences("TAG", Context.MODE_PRIVATE);
+                final double lastUpdateDate = pref.getFloat("StudnetsLastUpdateDate",0);
+                if (lastUpdateDate < student.lastUpdateDate){
+                    SharedPreferences.Editor prefEd = MyApplication.getMyContext().getSharedPreferences("TAG",
+                            Context.MODE_PRIVATE).edit();
+                    prefEd.putFloat("StudnetsLastUpdateDate", (float) student.lastUpdateDate);
+                    prefEd.commit();
+                    Log.d("TAG","StudnetsLastUpdateDate: " + student.lastUpdateDate);
+                }
+                EventBus.getDefault().post(new UpdateStudentEvent(student));
             }
 
         });

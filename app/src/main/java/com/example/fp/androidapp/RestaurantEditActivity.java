@@ -6,15 +6,20 @@ import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.example.fp.androidapp.model.Model;
 import com.example.fp.androidapp.model.Student;
+
+import static android.view.View.GONE;
 
 public class RestaurantEditActivity extends Activity implements RestaurantEditFragment.StudentEditFragmentListener {
 
@@ -86,7 +91,7 @@ public class RestaurantEditActivity extends Activity implements RestaurantEditFr
     }
 
     @Override
-    public void onSave(EditText foodNameEt , EditText nameEt , EditText userNameEt , EditText addressEt , CheckBox cbEt , MyTimePicker ot , MyDatePicker od) {
+    public void onSave(EditText foodNameEt , EditText nameEt , EditText userNameEt , EditText addressEt , CheckBox cbEt , MyTimePicker ot , MyDatePicker od , final ProgressBar progressBar , Bitmap imageBitmap) {
         if(foodNameEt.getText().toString().equals("") || nameEt.getText().toString().equals("") || userNameEt.getText().toString().equals("") || addressEt.getText().toString().equals("") || ot.getText().toString().equals("") || od.getText().toString().equals("")) {
             new AlertDialog.Builder(RestaurantEditActivity.this)
                     .setTitle("Edit Restaurant")
@@ -95,7 +100,8 @@ public class RestaurantEditActivity extends Activity implements RestaurantEditFr
                     .show();
             return;
         }
-        Model.instace.deleteStudent(st_edit);
+        progressBar.setVisibility(View.VISIBLE);
+        //Model.instace.deleteStudent(st_edit);
         st_edit.foodName = foodNameEt.getText().toString();
         st_edit.name = nameEt.getText().toString();
         st_edit.userName = userNameEt.getText().toString();
@@ -103,13 +109,55 @@ public class RestaurantEditActivity extends Activity implements RestaurantEditFr
         st_edit.checked = cbEt.isChecked();
         st_edit.orderTime = ot.getText().toString();
         st_edit.orderDate = od.getText().toString();
-        Model.instace.addStudent(st_edit);
+        //Model.instace.addStudent(st_edit);
+        if (imageBitmap != null) {
+            Model.instace.saveImage(imageBitmap, st_edit.id + ".jpeg", new Model.SaveImageListener() {
+                @Override
+                public void complete(String url) {
+                    st_edit.imageUrl = url;
+                    Model.instace.updateStudent(st_edit);
+                    new AlertDialog.Builder(RestaurantEditActivity.this)
+                            .setTitle("Edit Restaurant")
+                            .setMessage("The save operation was completed successfully.")
+                            .setIcon(android.R.drawable.ic_dialog_info)
+                            .show();
+                    setResult(RESAULT_SUCCESS_SAVE);
+                    progressBar.setVisibility(GONE);
+                    //finish();
+                }
+
+                @Override
+                public void fail() {
+                    //notify operation fail,...
+                    Model.instace.updateStudent(st_edit);
+                    new AlertDialog.Builder(RestaurantEditActivity.this)
+                            .setTitle("Edit Restaurant")
+                            .setMessage("The save operation was completed , without image...")
+                            .setIcon(android.R.drawable.ic_dialog_info)
+                            .show();
+                    setResult(RESAULT_SUCCESS_SAVE);
+                    progressBar.setVisibility(GONE);
+                    //finish();
+                }
+            });
+        }else{
+            Model.instace.updateStudent(st_edit);
+            new AlertDialog.Builder(RestaurantEditActivity.this)
+                    .setTitle("Edit Restaurant")
+                    .setMessage("The save operation was completed successfully.")
+                    .setIcon(android.R.drawable.ic_dialog_info)
+                    .show();
+            setResult(RESAULT_SUCCESS_SAVE);
+            progressBar.setVisibility(GONE);
+            //finish();
+        }
+        /*Model.instace.updateStudent(st_edit);
         new AlertDialog.Builder(RestaurantEditActivity.this)
                 .setTitle("Edit Restaurant")
                 .setMessage("The save operation was completed successfully.")
                 .setIcon(android.R.drawable.ic_dialog_info)
                 .show();
-        setResult(RESAULT_SUCCESS_SAVE);
+        setResult(RESAULT_SUCCESS_SAVE);*/
     }
 
     @Override

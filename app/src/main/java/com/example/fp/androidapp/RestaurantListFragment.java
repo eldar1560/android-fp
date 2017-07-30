@@ -60,8 +60,8 @@ public class RestaurantListFragment extends Fragment {
     // (in the UI thread for Toast)
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Model.UpdateStudentEvent event) {
-        Toast.makeText(MyApplication.getMyContext(), "got new student event", Toast.LENGTH_SHORT).show();
-        Log.d("Mife","got new restaurant");
+        //Toast.makeText(MyApplication.getMyContext(), "someone added or edited restaurant", Toast.LENGTH_SHORT).show();
+        Log.d("Mife","got new/edit restaurant");
         boolean exist = false;
         for (Student st: data){
             if (st.id.equals(event.student.id)){
@@ -77,10 +77,27 @@ public class RestaurantListFragment extends Fragment {
         list.setSelection(adapter.getCount() - 1);
 
     }
+    /*//for changing value of already created item
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(Model.ChangeStudentEvent event) {
+        Toast.makeText(MyApplication.getMyContext(), "got changing student event", Toast.LENGTH_SHORT).show();
+        Log.d("Mife","got changing restaurant");
+        for (Student st: data){
+            if (st.id.equals(event.student.id)){
+                data.remove(st);
+                data.add(event.student);
+                break;
+            }
+        }
+        adapter.notifyDataSetChanged();
+        list.setSelection(adapter.getCount() - 1);
+
+    }*/
+    //for deletion
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Model.DeleteStudentEvent event) {
-        Toast.makeText(MyApplication.getMyContext(), "got delete student event", Toast.LENGTH_SHORT).show();
-        Log.d("Mife","got delete restaurant");
+        Toast.makeText(MyApplication.getMyContext(), "someone deleted restaurant", Toast.LENGTH_SHORT).show();
+        //Log.d("Mife","got delete restaurant");
         boolean exist = false;
         for (Student st: data){
             if (st.id.equals(event.student.id)){

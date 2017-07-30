@@ -3,8 +3,10 @@ package com.example.fp.androidapp;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,14 +21,18 @@ import android.widget.ProgressBar;
 import com.example.fp.androidapp.model.Model;
 import com.example.fp.androidapp.model.Student;
 
+import static android.app.Activity.RESULT_OK;
+import static android.view.View.GONE;
+
 
 public class RestaurantEditFragment extends Fragment {
 
     Student st_edit;
-
+    Bitmap imageBitmap;
     private static final String ARG_PARAM1 = "param1";
     private String stId;
-
+    ImageView imageView;
+    ProgressBar progressBar;
     public static RestaurantEditFragment newInstance(String param1){
         RestaurantEditFragment fragment = new RestaurantEditFragment();
         Bundle args = new Bundle();
@@ -42,7 +48,7 @@ public class RestaurantEditFragment extends Fragment {
             stId = getArguments().getString(ARG_PARAM1);
     }
     interface StudentEditFragmentListener{
-        void onSave(EditText foodNameEt , EditText nameEt , EditText userNameEt , EditText addressEt , CheckBox cbEt , MyTimePicker ot , MyDatePicker od);
+        void onSave(EditText foodNameEt , EditText nameEt , EditText userNameEt , EditText addressEt , CheckBox cbEt , MyTimePicker ot , MyDatePicker od , final ProgressBar progressBar , Bitmap imageBitmap);
         void onCancel();
         void onDelete();
     }
@@ -89,9 +95,9 @@ public class RestaurantEditFragment extends Fragment {
         final MyTimePicker ot= (MyTimePicker) contentView.findViewById(R.id.editOrderTimeTv);
         final MyDatePicker od = (MyDatePicker) contentView.findViewById(R.id.editOrderDateTv);
         final CheckBox cbEt= (CheckBox) contentView.findViewById(R.id.editCbTv);
-        final ImageView imageView = (ImageView) contentView.findViewById(R.id.stu_edit_image);
-        final ProgressBar progressBar = (ProgressBar) contentView.findViewById(R.id.stu_edit_progressBar);
-
+        progressBar = (ProgressBar) contentView.findViewById(R.id.stu_edit_progressBar);
+        progressBar.setVisibility(GONE);
+        imageView = (ImageView) contentView.findViewById(R.id.stu_edit_image);
         Model.instace.getStudent(stId, new Model.GetStudentCallback() {
             @Override
             public void onComplete(Student student) {
@@ -138,7 +144,7 @@ public class RestaurantEditFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(listener!=null)
-                    listener.onSave(foodNameEt ,nameEt , userNameEt ,addressEt ,cbEt , ot , od);
+                    listener.onSave(foodNameEt ,nameEt , userNameEt ,addressEt ,cbEt , ot , od ,progressBar,imageBitmap);
 
             }
         });
@@ -158,7 +164,27 @@ public class RestaurantEditFragment extends Fragment {
 
             }
         });
-
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dispatchTakePictureIntent();
+            }
+        });
         return contentView;
+    }
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(MyApplication.getMyContext().getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            imageBitmap = (Bitmap) extras.get("data");
+            imageView.setImageBitmap(imageBitmap);
+        }
     }
 }

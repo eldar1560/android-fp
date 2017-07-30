@@ -154,6 +154,7 @@ public class ModelFirebase {
     interface RegisterStudentsUpdatesCallback{
         void onStudentUpdate(Student student);
         void onStudentDeleted(Student student);
+        void onStudentChanged(Student student);
     }
     public void registerStudentsUpdates(double lastUpdateDate,
                                         final RegisterStudentsUpdatesCallback callback) {
@@ -171,8 +172,9 @@ public class ModelFirebase {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Log.d("Mife","onChildChanged called");
                 Student student = dataSnapshot.getValue(Student.class);
-                callback.onStudentUpdate(student);
+                callback.onStudentChanged(student);
             }
 
             @Override
