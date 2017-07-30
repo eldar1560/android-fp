@@ -1,7 +1,7 @@
 package com.example.fp.androidapp.model;
 
 
-public class Student {
+public class Restaurant {
     public String id;
     public String foodName;
     public String name;
@@ -13,8 +13,8 @@ public class Student {
     public String orderDate;
     public double lastUpdateDate;
 
-    public Student(){}
-    public Student (String id , String name ,String foodName, String userName , String address , Boolean checked , String imageUrl , String orderTime , String orderDate){
+    public Restaurant(){}
+    public Restaurant(String id , String name , String foodName, String userName , String address , Boolean checked , String imageUrl , String orderTime , String orderDate){
         this.id = id;
         this.foodName = foodName;
         this.name = name;

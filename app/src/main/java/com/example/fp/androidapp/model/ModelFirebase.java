@@ -24,14 +24,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by menachi on 24/05/2017.
- */
+
 
 public class ModelFirebase {
 
     List<ChildEventListener> listeners = new LinkedList<ChildEventListener>();
-    public void addStudent(Student st) {
+    public void addRestaurant(Restaurant st) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("restaurants");
         Map<String, Object> value = new HashMap<>();
@@ -49,25 +47,25 @@ public class ModelFirebase {
     }
 
 
-    public void deleteStudent (Student st){
+    public void deleteRestaurant (Restaurant st){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("restaurants");
         myRef.child(st.id).removeValue();
     }
-    interface GetStudentCallback {
-        void onComplete(Student student);
+    interface getRestaurantCallback {
+        void onComplete(Restaurant restaurant);
 
         void onCancel();
     }
 
-    public void getStudent(String stId, final GetStudentCallback callback) {
+    public void getRestaurant(String stId, final getRestaurantCallback callback) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("restaurants");
         myRef.child(stId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Student student = dataSnapshot.getValue(Student.class);
-                callback.onComplete(student);
+                Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
+                callback.onComplete(restaurant);
             }
 
             @Override
@@ -77,20 +75,20 @@ public class ModelFirebase {
         });
     }
 
-    interface GetAllStudentsAndObserveCallback {
-        void onComplete(List<Student> list);
+    interface getAllRestaurantsAndObserveCallback {
+        void onComplete(List<Restaurant> list);
         void onCancel();
     }
-    public void getAllStudentsAndObserve(final GetAllStudentsAndObserveCallback callback) {
+    public void getAllRestaurantsAndObserve(final getAllRestaurantsAndObserveCallback callback) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("restaurants");
         ValueEventListener listener = myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                List<Student> list = new LinkedList<Student>();
+                List<Restaurant> list = new LinkedList<Restaurant>();
                 for (DataSnapshot snap : dataSnapshot.getChildren()) {
-                    Student student = snap.getValue(Student.class);
-                    list.add(student);
+                    Restaurant restaurant = snap.getValue(Restaurant.class);
+                    list.add(restaurant);
                 }
                 callback.onComplete(list);
             }
@@ -151,13 +149,13 @@ public class ModelFirebase {
     }
 
 
-    interface RegisterStudentsUpdatesCallback{
-        void onStudentUpdate(Student student);
-        void onStudentDeleted(Student student);
-        void onStudentChanged(Student student);
+    interface RegisterRestaurantsUpdatesCallback{
+        void onRestaurantUpdate(Restaurant restaurant);
+        void onRestaurantDeleted(Restaurant restaurant);
+        void onRestaurantChanged(Restaurant restaurant);
     }
-    public void registerStudentsUpdates(double lastUpdateDate,
-                                        final RegisterStudentsUpdatesCallback callback) {
+    public void registerRestaurantsUpdates(double lastUpdateDate,
+                                        final RegisterRestaurantsUpdatesCallback callback) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("restaurants");
         myRef.orderByChild("lastUpdateDate").startAt(lastUpdateDate);
@@ -166,28 +164,28 @@ public class ModelFirebase {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Log.d("Mife","onChildAdded called");
-                Student student = dataSnapshot.getValue(Student.class);
-                callback.onStudentUpdate(student);
+                Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
+                callback.onRestaurantUpdate(restaurant);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Log.d("Mife","onChildChanged called");
-                Student student = dataSnapshot.getValue(Student.class);
-                callback.onStudentChanged(student);
+                Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
+                callback.onRestaurantChanged(restaurant);
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 Log.d("Mife","onChildremoved called");
-                Student student = dataSnapshot.getValue(Student.class);
-                callback.onStudentDeleted(student);
+                Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
+                callback.onRestaurantDeleted(restaurant);
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                Student student = dataSnapshot.getValue(Student.class);
-                callback.onStudentUpdate(student);
+                Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
+                callback.onRestaurantUpdate(restaurant);
             }
 
             @Override
@@ -197,8 +195,8 @@ public class ModelFirebase {
         });
         listeners.add(listener);
     }
-//    public void getAllStudentsAndObserve(double lastUpdateDate,
-//                                         final GetAllStudentsAndObserveCallback callback) {
+//    public void getAllRestaurantsAndObserve(double lastUpdateDate,
+//                                         final getAllRestaurantsAndObserveCallback callback) {
 //        FirebaseDatabase database = FirebaseDatabase.getInstance();
 //        DatabaseReference myRef = database.getReference("students");
 //
@@ -206,10 +204,10 @@ public class ModelFirebase {
 //                .addListenerForSingleValueEvent(new ValueEventListener() {
 //                    @Override
 //                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                        List<Student> list = new LinkedList<Student>();
+//                        List<Restaurant> list = new LinkedList<Restaurant>();
 //                        for (DataSnapshot snap : dataSnapshot.getChildren()) {
-//                            Student student = snap.getValue(Student.class);
-//                            list.add(student);
+//                            Restaurant restaurant = snap.getValue(Restaurant.class);
+//                            list.add(restaurant);
 //                        }
 //                        callback.onComplete(list);
 //                    }

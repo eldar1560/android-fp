@@ -17,16 +17,16 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.example.fp.androidapp.model.Model;
-import com.example.fp.androidapp.model.Student;
+import com.example.fp.androidapp.model.Restaurant;
 
 import static android.view.View.GONE;
 
-public class RestaurantEditActivity extends Activity implements RestaurantEditFragment.StudentEditFragmentListener {
+public class RestaurantEditActivity extends Activity implements RestaurantEditFragment.RestaurantEditFragmentListener {
 
     final static int RESAULT_SUCCESS_SAVE = 0;
     final static int RESAULT_SUCCESS_DELETE = 2;
     final static int RESAULT_FAIL = 1;
-    Student st_edit;
+    Restaurant st_edit;
 
     RestaurantEditFragment restaurantEditFragment;
 
@@ -59,16 +59,16 @@ public class RestaurantEditActivity extends Activity implements RestaurantEditFr
             tran.commit();
         }
 
-        Model.instace.getStudent(stId, new Model.GetStudentCallback() {
+        Model.instace.getRestaurant(stId, new Model.getRestaurantCallback() {
             @Override
-            public void onComplete(Student student) {
-                RestaurantEditActivity.this.st_edit = student;
-                Log.d("TAG","got student name: " + student.name);
+            public void onComplete(Restaurant restaurant) {
+                RestaurantEditActivity.this.st_edit = restaurant;
+                Log.d("TAG","got restaurant name: " + restaurant.name);
             }
 
             @Override
             public void onCancel() {
-                Log.d("TAG","get student cancell" );
+                Log.d("TAG","get restaurant cancell" );
 
             }
         });
@@ -101,20 +101,20 @@ public class RestaurantEditActivity extends Activity implements RestaurantEditFr
             return;
         }
         progressBar.setVisibility(View.VISIBLE);
-        //Model.instace.deleteStudent(st_edit);
+        //Model.instace.deleteRestaurant(st_edit);
         st_edit.foodName = foodNameEt.getText().toString();
         st_edit.name = nameEt.getText().toString();
         st_edit.address = addressEt.getText().toString();
         st_edit.checked = cbEt.isChecked();
         st_edit.orderTime = ot.getText().toString();
         st_edit.orderDate = od.getText().toString();
-        //Model.instace.addStudent(st_edit);
+        //Model.instace.addRestaurant(st_edit);
         if (imageBitmap != null) {
             Model.instace.saveImage(imageBitmap, st_edit.id + ".jpeg", new Model.SaveImageListener() {
                 @Override
                 public void complete(String url) {
                     st_edit.imageUrl = url;
-                    Model.instace.updateStudent(st_edit);
+                    Model.instace.updateRestaurant(st_edit);
                     new AlertDialog.Builder(RestaurantEditActivity.this)
                             .setTitle("Edit Restaurant")
                             .setMessage("The save operation was completed successfully.")
@@ -128,7 +128,7 @@ public class RestaurantEditActivity extends Activity implements RestaurantEditFr
                 @Override
                 public void fail() {
                     //notify operation fail,...
-                    Model.instace.updateStudent(st_edit);
+                    Model.instace.updateRestaurant(st_edit);
                     new AlertDialog.Builder(RestaurantEditActivity.this)
                             .setTitle("Edit Restaurant")
                             .setMessage("The save operation was completed , without image...")
@@ -140,7 +140,7 @@ public class RestaurantEditActivity extends Activity implements RestaurantEditFr
                 }
             });
         }else{
-            Model.instace.updateStudent(st_edit);
+            Model.instace.updateRestaurant(st_edit);
             new AlertDialog.Builder(RestaurantEditActivity.this)
                     .setTitle("Edit Restaurant")
                     .setMessage("The save operation was completed successfully.")
@@ -150,7 +150,7 @@ public class RestaurantEditActivity extends Activity implements RestaurantEditFr
             progressBar.setVisibility(GONE);
             //finish();
         }
-        /*Model.instace.updateStudent(st_edit);
+        /*Model.instace.updateRestaurant(st_edit);
         new AlertDialog.Builder(RestaurantEditActivity.this)
                 .setTitle("Edit Restaurant")
                 .setMessage("The save operation was completed successfully.")
@@ -161,7 +161,7 @@ public class RestaurantEditActivity extends Activity implements RestaurantEditFr
 
     @Override
     public void onDelete() {
-        Model.instace.deleteStudent(st_edit);
+        Model.instace.deleteRestaurant(st_edit);
         new AlertDialog.Builder(RestaurantEditActivity.this)
                 .setTitle("Edit Restaurant")
                 .setMessage("The delete operation was completed successfully.")

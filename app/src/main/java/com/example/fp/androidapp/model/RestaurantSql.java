@@ -1,13 +1,10 @@
 package com.example.fp.androidapp.model;
 
-/**
- * Created by Aviv Gold on 6/11/2017.
- */
+
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.example.fp.androidapp.MyApplication;
 import com.example.fp.androidapp.R;
@@ -15,11 +12,8 @@ import com.example.fp.androidapp.R;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by menachi on 17/05/2017.
- */
 
-public class StudentSql {
+public class RestaurantSql {
     static final String RESTAURANT_TABLE = "restaurants";
     static final String RESTAURANT_USERNAME="userName";
     static final String RESTAURANT_DATE="date";
@@ -31,9 +25,9 @@ public class StudentSql {
     static final String RESTAURANT_IMAGE_URL = "imageUrl";
     static final String RESTAURANT_FOOD_NAME = "foodName";
 
-    static List<Student> getAllStudents(SQLiteDatabase db) {
+    static List<Restaurant> getAllRestaurants(SQLiteDatabase db) {
         Cursor cursor = db.query("restaurants", null, null, null, null, null, null);
-        List<Student> list = new LinkedList<Student>();
+        List<Restaurant> list = new LinkedList<Restaurant>();
         if (cursor.moveToFirst()) {
             int idIndex = cursor.getColumnIndex(RESTAURANT_ID);
             int nameIndex = cursor.getColumnIndex(RESTAURANT_NAME);
@@ -45,7 +39,7 @@ public class StudentSql {
             int address =cursor.getColumnIndex(ADDRESS);
             int foodName = cursor.getColumnIndex(RESTAURANT_FOOD_NAME);
             do {
-                Student st = new Student();
+                Restaurant st = new Restaurant();
                 st.id = cursor.getString(idIndex);
                 st.name = cursor.getString(nameIndex);
                 st.checked = (cursor.getInt(checkIndex) == 1);
@@ -60,9 +54,9 @@ public class StudentSql {
         }
         return list;
     }
-    static List<Student> getAllStudentsByFilter(SQLiteDatabase db , String content , String field) {
+    static List<Restaurant> getAllRestaurantsByFilter(SQLiteDatabase db , String content , String field) {
         Cursor cursor = db.query("restaurants", null, null, null, null, null, null);
-        List<Student> list = new LinkedList<Student>();
+        List<Restaurant> list = new LinkedList<Restaurant>();
         if (cursor.moveToFirst()) {
             int idIndex = cursor.getColumnIndex(RESTAURANT_ID);
             int nameIndex = cursor.getColumnIndex(RESTAURANT_NAME);
@@ -74,7 +68,7 @@ public class StudentSql {
             int address =cursor.getColumnIndex(ADDRESS);
             int foodName =cursor.getColumnIndex(RESTAURANT_FOOD_NAME);
             do {
-                Student st = new Student();
+                Restaurant st = new Restaurant();
                 st.id = cursor.getString(idIndex);
                 st.name = cursor.getString(nameIndex);
                 st.checked = (cursor.getInt(checkIndex) == 1);
@@ -103,7 +97,7 @@ public class StudentSql {
         }
         return list;
     }
-    static void addStudent(SQLiteDatabase db, Student st) {
+    static void addRestaurant(SQLiteDatabase db, Restaurant st) {
         ContentValues values = new ContentValues();
         values.put(RESTAURANT_ID, st.id);
         values.put(RESTAURANT_USERNAME, st.userName);
@@ -122,7 +116,7 @@ public class StudentSql {
         db.insert(RESTAURANT_TABLE, RESTAURANT_ID, values);
     }
 
-    static Student getStudent(SQLiteDatabase db, String stId) {
+    static Restaurant getRestaurant(SQLiteDatabase db, String stId) {
 
         if(stId!=null) {
             Cursor cursor = db.query(RESTAURANT_TABLE, null, RESTAURANT_ID + "=?", new String[]{stId}, null, null, null);
@@ -141,7 +135,7 @@ public class StudentSql {
                 int address =cursor.getColumnIndex(ADDRESS);
                 int foodName = cursor.getColumnIndex(RESTAURANT_FOOD_NAME);
 
-                Student st = new Student();
+                Restaurant st = new Restaurant();
                 st.id = cursor.getString(idIndex);
                 st.name = cursor.getString(nameIndex);
                 st.checked = (cursor.getInt(checkIndex) == 1);
@@ -177,14 +171,14 @@ public class StudentSql {
         db.execSQL("drop " + RESTAURANT_TABLE + ";");
         onCreate(db);
     }
-    static public void deleteStudent(SQLiteDatabase db, Student st)
+    static public void deleteRestaurant(SQLiteDatabase db, Restaurant st)
     {
         db.delete(RESTAURANT_TABLE,RESTAURANT_ID+"=?",new String[]{st.id});
     }
-    static public void updateStudent(SQLiteDatabase db, Student st)
+    static public void updateRestaurant(SQLiteDatabase db, Restaurant st)
     {
-        deleteStudent(db,st);
-        addStudent(db,st);
+        deleteRestaurant(db,st);
+        addRestaurant(db,st);
         /*ContentValues values = new ContentValues();
         values.put(RESTAURANT_ID, st.id);
         values.put(RESTAURANT_USERNAME, st.userName);

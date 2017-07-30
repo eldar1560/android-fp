@@ -14,9 +14,7 @@ import java.util.List;
 
 import static com.example.fp.androidapp.model.ModelFiles.saveImageToFile;
 
-/**
- * Created by menachi on 19/04/2017.
- */
+
 
 public class Model {
    ModelSql Sql;
@@ -27,53 +25,53 @@ public class Model {
     {
         Sql = new ModelSql(MyApplication.getMyContext());
         modelFirebase = new ModelFirebase();
-        synchStudentsDbAndregisterStudentsUpdates();
+        synchRestaurantsDbAndregisterRestaurantsUpdates();
     }
-    /*public List<Student> getAllStudents(){
-        //StudentSql.onUpgrade(Sql.getReadableDatabase(),0,0);
-        return StudentSql.getAllStudents(
+    /*public List<Restaurant> getAllRestaurants(){
+        //RestaurantSql.onUpgrade(Sql.getReadableDatabase(),0,0);
+        return RestaurantSql.getAllRestaurants(
                 Sql.getReadableDatabase());
 
     }*/
-    public void getAllStudents(final GetAllStudentsAndObserveCallback callback){
+    public void getAllRestaurants(final getAllRestaurantsAndObserveCallback callback){
 
         //5. read from local db
-        List<Student> data = StudentSql.getAllStudents(Sql.getReadableDatabase());
+        List<Restaurant> data = RestaurantSql.getAllRestaurants(Sql.getReadableDatabase());
 
         //6. return list of students
         callback.onComplete(data);
 
     }
-    public List<Student> getAllStudentsByFilter(String content , String field){
-        return StudentSql.getAllStudentsByFilter(
+    public List<Restaurant> getAllRestaurantsByFilter(String content , String field){
+        return RestaurantSql.getAllRestaurantsByFilter(
                 Sql.getReadableDatabase(),content,field);
 
     }
-    public interface GetAllStudentsAndObserveCallback {
-        void onComplete(List<Student> list);
+    public interface getAllRestaurantsAndObserveCallback {
+        void onComplete(List<Restaurant> list);
         void onCancel();
     }
-    public void addStudent(Student st) {
-        //StudentSql.addStudent(modelSql.getWritableDatabase(),st);
-        modelFirebase.addStudent(st);
+    public void addRestaurant(Restaurant st) {
+        //RestaurantSql.addRestaurant(modelSql.getWritableDatabase(),st);
+        modelFirebase.addRestaurant(st);
     }
-    public  void deleteStudent(Student st){
-        //StudentSql.deleteStudent(Sql.getWritableDatabase(),st);
-        modelFirebase.deleteStudent(st);
+    public  void deleteRestaurant(Restaurant st){
+        //RestaurantSql.deleteRestaurant(Sql.getWritableDatabase(),st);
+        modelFirebase.deleteRestaurant(st);
     }
-    public  void updateStudent(Student st){
-        //StudentSql.updateStudent(Sql.getWritableDatabase(),st);
-        modelFirebase.addStudent(st);} //same functionallity as update
-    public Student getStudent(String stId) {
-        return StudentSql.getStudent(Sql.getReadableDatabase(),stId);
+    public  void updateRestaurant(Restaurant st){
+        //RestaurantSql.updateRestaurant(Sql.getWritableDatabase(),st);
+        modelFirebase.addRestaurant(st);} //same functionallity as update
+    public Restaurant getRestaurant(String stId) {
+        return RestaurantSql.getRestaurant(Sql.getReadableDatabase(),stId);
 
     }
-    public void getStudent(String stId, final GetStudentCallback callback) {
-        //return StudentSql.getStudent(modelSql.getReadableDatabase(),stId);
-        modelFirebase.getStudent(stId, new ModelFirebase.GetStudentCallback() {
+    public void getRestaurant(String stId, final getRestaurantCallback callback) {
+        //return RestaurantSql.getRestaurant(modelSql.getReadableDatabase(),stId);
+        modelFirebase.getRestaurant(stId, new ModelFirebase.getRestaurantCallback() {
             @Override
-            public void onComplete(Student student) {
-                callback.onComplete(student);
+            public void onComplete(Restaurant restaurant) {
+                callback.onComplete(restaurant);
             }
 
             @Override
@@ -83,67 +81,67 @@ public class Model {
         });
 
     }
-    public interface GetStudentCallback {
-        void onComplete(Student student);
+    public interface getRestaurantCallback {
+        void onComplete(Restaurant restaurant);
 
         void onCancel();
     }
-    private void synchStudentsDbAndregisterStudentsUpdates() {
+    private void synchRestaurantsDbAndregisterRestaurantsUpdates() {
         //1. get local lastUpdateTade
         SharedPreferences pref = MyApplication.getMyContext().getSharedPreferences("TAG", Context.MODE_PRIVATE);
         final double lastUpdateDate = pref.getFloat("StudnetsLastUpdateDate",0);
         Log.d("TAG","lastUpdateDate: " + lastUpdateDate);
 
-        modelFirebase.registerStudentsUpdates(lastUpdateDate,new ModelFirebase.RegisterStudentsUpdatesCallback() {
+        modelFirebase.registerRestaurantsUpdates(lastUpdateDate,new ModelFirebase.RegisterRestaurantsUpdatesCallback() {
             @Override
-            public void onStudentUpdate(Student student) {
+            public void onRestaurantUpdate(Restaurant restaurant) {
                 //3. update the local db
-                StudentSql.addStudent(Sql.getWritableDatabase(),student);
+                RestaurantSql.addRestaurant(Sql.getWritableDatabase(), restaurant);
                 //4. update the lastUpdateTade
                 SharedPreferences pref = MyApplication.getMyContext().getSharedPreferences("TAG", Context.MODE_PRIVATE);
                 final double lastUpdateDate = pref.getFloat("StudnetsLastUpdateDate",0);
-                if (lastUpdateDate < student.lastUpdateDate){
+                if (lastUpdateDate < restaurant.lastUpdateDate){
                     SharedPreferences.Editor prefEd = MyApplication.getMyContext().getSharedPreferences("TAG",
                             Context.MODE_PRIVATE).edit();
-                    prefEd.putFloat("StudnetsLastUpdateDate", (float) student.lastUpdateDate);
+                    prefEd.putFloat("StudnetsLastUpdateDate", (float) restaurant.lastUpdateDate);
                     prefEd.commit();
-                    Log.d("TAG","StudnetsLastUpdateDate: " + student.lastUpdateDate);
+                    Log.d("TAG","StudnetsLastUpdateDate: " + restaurant.lastUpdateDate);
                 }
-                EventBus.getDefault().post(new UpdateStudentEvent(student));
+                EventBus.getDefault().post(new UpdateRestaurantEvent(restaurant));
             }
 
             @Override
-            public void onStudentDeleted(Student student) {
+            public void onRestaurantDeleted(Restaurant restaurant) {
                 //3. update the local db
-                StudentSql.deleteStudent(Sql.getWritableDatabase(),student);
+                RestaurantSql.deleteRestaurant(Sql.getWritableDatabase(), restaurant);
                 //4. update the lastUpdateTade
                 SharedPreferences pref = MyApplication.getMyContext().getSharedPreferences("TAG", Context.MODE_PRIVATE);
                 final double lastUpdateDate = pref.getFloat("StudnetsLastUpdateDate",0);
-                if (lastUpdateDate < student.lastUpdateDate){
+                if (lastUpdateDate < restaurant.lastUpdateDate){
                     SharedPreferences.Editor prefEd = MyApplication.getMyContext().getSharedPreferences("TAG",
                             Context.MODE_PRIVATE).edit();
-                    prefEd.putFloat("StudnetsLastUpdateDate", (float) student.lastUpdateDate);
+                    prefEd.putFloat("StudnetsLastUpdateDate", (float) restaurant.lastUpdateDate);
                     prefEd.commit();
-                    Log.d("TAG","StudnetsLastUpdateDate: " + student.lastUpdateDate);
+                    Log.d("TAG","StudnetsLastUpdateDate: " + restaurant.lastUpdateDate);
                 }
-                EventBus.getDefault().post(new DeleteStudentEvent(student));
+                EventBus.getDefault().post(new DeleteRestaurantEvent(restaurant));
             }
 
             @Override
-            public void onStudentChanged(Student student) {
+            public void onRestaurantChanged(Restaurant restaurant) {
                 //3. update the local db
-                StudentSql.updateStudent(Sql.getWritableDatabase(),student);
+                RestaurantSql.updateRestaurant(Sql.getWritableDatabase(), restaurant);
                 //4. update the lastUpdateTade
                 SharedPreferences pref = MyApplication.getMyContext().getSharedPreferences("TAG", Context.MODE_PRIVATE);
                 final double lastUpdateDate = pref.getFloat("StudnetsLastUpdateDate",0);
-                if (lastUpdateDate < student.lastUpdateDate){
+                if (lastUpdateDate < restaurant.lastUpdateDate){
                     SharedPreferences.Editor prefEd = MyApplication.getMyContext().getSharedPreferences("TAG",
                             Context.MODE_PRIVATE).edit();
-                    prefEd.putFloat("StudnetsLastUpdateDate", (float) student.lastUpdateDate);
+                    prefEd.putFloat("StudnetsLastUpdateDate", (float) restaurant.lastUpdateDate);
                     prefEd.commit();
-                    Log.d("TAG","StudnetsLastUpdateDate: " + student.lastUpdateDate);
+                    Log.d("TAG","StudnetsLastUpdateDate: " + restaurant.lastUpdateDate);
                 }
-                EventBus.getDefault().post(new UpdateStudentEvent(student));
+                EventBus.getDefault().post(new UpdateRestaurantEvent(restaurant));
             }
 
         });
@@ -207,16 +205,16 @@ public class Model {
         });
     }
 
-    public class UpdateStudentEvent {
-        public final Student student;
-        public UpdateStudentEvent(Student student) {
-            this.student = student;
+    public class UpdateRestaurantEvent {
+        public final Restaurant restaurant;
+        public UpdateRestaurantEvent(Restaurant restaurant) {
+            this.restaurant = restaurant;
         }
     }
-    public class DeleteStudentEvent {
-        public final Student student;
-        public DeleteStudentEvent(Student student) {
-            this.student = student;
+    public class DeleteRestaurantEvent {
+        public final Restaurant restaurant;
+        public DeleteRestaurantEvent(Restaurant restaurant) {
+            this.restaurant = restaurant;
         }
     }
 }

@@ -3,7 +3,6 @@ package com.example.fp.androidapp;
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,7 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.fp.androidapp.model.Model;
-import com.example.fp.androidapp.model.Student;
+import com.example.fp.androidapp.model.Restaurant;
 
 
 public class RestaurantDetailsFragment extends Fragment {
@@ -24,7 +23,7 @@ public class RestaurantDetailsFragment extends Fragment {
     ImageView imageView;
     ProgressBar progressBar;
     CheckBox stu_cb;
-    Student st;
+    Restaurant st;
     private static final String ARG_PARAM1 = "param1";
     private String stId;
 
@@ -52,11 +51,11 @@ public class RestaurantDetailsFragment extends Fragment {
         Log.d("TAG","stid = " + stId);
 
 
-        Model.instace.getStudent(stId, new Model.GetStudentCallback() {
+        Model.instace.getRestaurant(stId, new Model.getRestaurantCallback() {
             @Override
-            public void onComplete(Student student) {
-                RestaurantDetailsFragment.this.st = student;
-                Log.d("TAG","got student name: " + student.name);
+            public void onComplete(Restaurant restaurant) {
+                RestaurantDetailsFragment.this.st = restaurant;
+                Log.d("TAG","got restaurant name: " + restaurant.name);
                 stu_foodName = (TextView) contentView.findViewById(R.id.stu_foodName);
                 stu_foodName.setText("Food Name : " + st.foodName);
                 stu_name = (TextView) contentView.findViewById(R.id.stu_name);
@@ -97,7 +96,7 @@ public class RestaurantDetailsFragment extends Fragment {
 
             @Override
             public void onCancel() {
-                Log.d("TAG","get student cancell" );
+                Log.d("TAG","get restaurant cancell" );
 
             }
         });

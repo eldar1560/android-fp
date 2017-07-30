@@ -42,31 +42,31 @@ public class AuthUIFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    interface StudentAuthFragmentListener{
+    interface RestaurantAuthFragmentListener{
         void onSignIn(String email,String password);
         void onSignUp(String email,String password);
         void onAlreadyLoggedIn();
     }
 
-    StudentAuthFragmentListener listener;
+    RestaurantAuthFragmentListener listener;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if(activity instanceof StudentAuthFragmentListener){
-            listener = (StudentAuthFragmentListener) activity;
+        if(activity instanceof RestaurantAuthFragmentListener){
+            listener = (RestaurantAuthFragmentListener) activity;
         }else{
-            throw new RuntimeException(activity.toString() + " must implement StudentAuthFragmentListener");
+            throw new RuntimeException(activity.toString() + " must implement RestaurantAuthFragmentListener");
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof StudentAuthFragmentListener){
-            listener = (StudentAuthFragmentListener) context;
+        if(context instanceof RestaurantAuthFragmentListener){
+            listener = (RestaurantAuthFragmentListener) context;
         }else{
-            throw new RuntimeException(context.toString() + " must implement StudentAuthFragmentListener");
+            throw new RuntimeException(context.toString() + " must implement RestaurantAuthFragmentListener");
         }
     }
 

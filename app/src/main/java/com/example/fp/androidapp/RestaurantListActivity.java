@@ -18,18 +18,16 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
-import com.example.fp.androidapp.model.Student;
+import com.example.fp.androidapp.model.Restaurant;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.List;
 
-public class RestaurantListActivity extends Activity implements RestaurantListFragment.StudentListFragmentListener,AuthUIFragment.StudentAuthFragmentListener {
+public class RestaurantListActivity extends Activity implements RestaurantListFragment.RestaurantListFragmentListener,AuthUIFragment.RestaurantAuthFragmentListener {
     RestaurantListFragment restaurantListFragment;
     AuthUIFragment authUIFragment;
     private FirebaseAuth mAuth;
@@ -151,11 +149,11 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
     }
 
     @Override
-    public void onSelect(AdapterView<?> parent, View view, int position, long id , List<Student> data) {
+    public void onSelect(AdapterView<?> parent, View view, int position, long id , List<Restaurant> data) {
         Log.d("TAG", "row item was clicked at position: " + position);
         Intent intent = new Intent(RestaurantListActivity.this,RestaurantDetailsActivity.class);
         intent.putExtra("STID",data.get(position).id);
-        Log.d("TAG","student id selected = " + data.get(position).id);
+        Log.d("TAG","restaurant id selected = " + data.get(position).id);
         startActivityForResult(intent , REQUEST_ID);
     }
 

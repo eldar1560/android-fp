@@ -12,7 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.fp.androidapp.model.Model;
-import com.example.fp.androidapp.model.Student;
+import com.example.fp.androidapp.model.Restaurant;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Locale;
@@ -24,7 +24,7 @@ public class RestaurantDetailsActivity extends Activity{
 
     RestaurantDetailsFragment restaurantDetailsFragment;
 
-    Student st;
+    Restaurant st;
     String stId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +39,11 @@ public class RestaurantDetailsActivity extends Activity{
 
         Intent intent = getIntent();
         stId = intent.getStringExtra("STID");
-        Model.instace.getStudent(stId, new Model.GetStudentCallback() {
+        Model.instace.getRestaurant(stId, new Model.getRestaurantCallback() {
             @Override
-            public void onComplete(Student student) {
-                RestaurantDetailsActivity.this.st = student;
-                Log.d("Mife","got student name: " + student.name);
+            public void onComplete(Restaurant restaurant) {
+                RestaurantDetailsActivity.this.st = restaurant;
+                Log.d("Mife","got restaurant name: " + restaurant.name);
                 restaurantDetailsFragment = RestaurantDetailsFragment.newInstance(st.id);
 
                 FragmentTransaction tran = getFragmentManager().beginTransaction();
@@ -53,7 +53,7 @@ public class RestaurantDetailsActivity extends Activity{
 
             @Override
             public void onCancel() {
-                Log.d("Mife","get student cancell" );
+                Log.d("Mife","get restaurant cancell" );
 
             }
         });
@@ -95,10 +95,10 @@ public class RestaurantDetailsActivity extends Activity{
     @Override
     public boolean onCreateOptionsMenu(final Menu menu)
     {
-        Model.instace.getStudent(stId, new Model.GetStudentCallback() {
+        Model.instace.getRestaurant(stId, new Model.getRestaurantCallback() {
             @Override
-            public void onComplete(Student student) {
-                RestaurantDetailsActivity.this.st = student;
+            public void onComplete(Restaurant restaurant) {
+                RestaurantDetailsActivity.this.st = restaurant;
                 menu.add(0,0,0,"Show On Map").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
                 if(st.userName.equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())){
                     menu.add(0, 1, 0, "Edit").setIcon(R.drawable.edit_button)
@@ -108,7 +108,7 @@ public class RestaurantDetailsActivity extends Activity{
 
             @Override
             public void onCancel() {
-                Log.d("TAG","get student cancell" );
+                Log.d("TAG","get restaurant cancell" );
             }
         });
 
@@ -120,10 +120,10 @@ public class RestaurantDetailsActivity extends Activity{
         // Handle item selection
         switch (item.getItemId()) {
             case 0:
-                Model.instace.getStudent(stId, new Model.GetStudentCallback() {
+                Model.instace.getRestaurant(stId, new Model.getRestaurantCallback() {
                     @Override
-                    public void onComplete(Student student) {
-                        RestaurantDetailsActivity.this.st = student;
+                    public void onComplete(Restaurant restaurant) {
+                        RestaurantDetailsActivity.this.st = restaurant;
                         String uri = String.format(Locale.ENGLISH, "geo:0,0?q=%s",st.address);
                         Intent intent2 = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                         startActivity(intent2);
@@ -131,7 +131,7 @@ public class RestaurantDetailsActivity extends Activity{
 
                     @Override
                     public void onCancel() {
-                        Log.d("TAG","get student cancell" );
+                        Log.d("TAG","get restaurant cancell" );
 
                     }
                 });

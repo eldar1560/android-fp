@@ -36,30 +36,30 @@ public class RestaurantMainFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    interface StudentMainFragmentListener{
+    interface RestaurantMainFragmentListener{
         void onSave(EditText nameEt , EditText foodNameEt , EditText addressEt , CheckBox cbEt , MyTimePicker ot , MyDatePicker od , final ProgressBar progressBar , Bitmap imageBitmap);
         void onCancel();
     }
 
-    StudentMainFragmentListener listener;
+    RestaurantMainFragmentListener listener;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if(activity instanceof StudentMainFragmentListener){
-            listener = (StudentMainFragmentListener) activity;
+        if(activity instanceof RestaurantMainFragmentListener){
+            listener = (RestaurantMainFragmentListener) activity;
         }else{
-            throw new RuntimeException(activity.toString() + " must implement StudentMainFragmentListener");
+            throw new RuntimeException(activity.toString() + " must implement RestaurantMainFragmentListener");
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof StudentMainFragmentListener){
-            listener = (StudentMainFragmentListener) context;
+        if(context instanceof RestaurantMainFragmentListener){
+            listener = (RestaurantMainFragmentListener) context;
         }else{
-            throw new RuntimeException(context.toString() + " must implement StudentMainFragmentListener");
+            throw new RuntimeException(context.toString() + " must implement RestaurantMainFragmentListener");
         }
     }
 

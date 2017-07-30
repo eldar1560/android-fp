@@ -1,8 +1,6 @@
 package com.example.fp.androidapp.model;
 
-/**
- * Created by Aviv Gold on 6/11/2017.
- */
+
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -16,12 +14,12 @@ public class ModelSql extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        StudentSql.onCreate(db);
+        RestaurantSql.onCreate(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        StudentSql.onUpgrade(db, oldVersion, newVersion);
+        RestaurantSql.onUpgrade(db, oldVersion, newVersion);
     }
 
 }

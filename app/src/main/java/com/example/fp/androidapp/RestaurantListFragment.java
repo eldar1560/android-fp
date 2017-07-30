@@ -3,17 +3,11 @@ package com.example.fp.androidapp;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -26,25 +20,23 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.fp.androidapp.model.Model;
-import com.example.fp.androidapp.model.Student;
+import com.example.fp.androidapp.model.Restaurant;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
-import java.util.zip.Inflater;
 
 
 public class RestaurantListFragment extends Fragment {
 
-    List<Student> data;
+    List<Restaurant> data;
     LayoutInflater inflater;
     ListView list;
-    StudentsListAdapter adapter;
+    RestaurantsListAdapter adapter;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private String content , field;
@@ -59,19 +51,19 @@ public class RestaurantListFragment extends Fragment {
     // This method will be called when a MessageEvent is posted
     // (in the UI thread for Toast)
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(Model.UpdateStudentEvent event) {
+    public void onMessageEvent(Model.UpdateRestaurantEvent event) {
         //Toast.makeText(MyApplication.getMyContext(), "someone added or edited restaurant", Toast.LENGTH_SHORT).show();
         Log.d("Mife","got new/edit restaurant");
         boolean exist = false;
-        for (Student st: data){
-            if (st.id.equals(event.student.id)){
-                st = event.student;
+        for (Restaurant st: data){
+            if (st.id.equals(event.restaurant.id)){
+                st = event.restaurant;
                 exist = true;
                 break;
             }
         }
         if (!exist){
-            data.add(event.student);
+            data.add(event.restaurant);
         }
         adapter.notifyDataSetChanged();
         list.setSelection(adapter.getCount() - 1);
@@ -80,12 +72,12 @@ public class RestaurantListFragment extends Fragment {
     /*//for changing value of already created item
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Model.ChangeStudentEvent event) {
-        Toast.makeText(MyApplication.getMyContext(), "got changing student event", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MyApplication.getMyContext(), "got changing restaurant event", Toast.LENGTH_SHORT).show();
         Log.d("Mife","got changing restaurant");
-        for (Student st: data){
-            if (st.id.equals(event.student.id)){
+        for (Restaurant st: data){
+            if (st.id.equals(event.restaurant.id)){
                 data.remove(st);
-                data.add(event.student);
+                data.add(event.restaurant);
                 break;
             }
         }
@@ -95,19 +87,19 @@ public class RestaurantListFragment extends Fragment {
     }*/
     //for deletion
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(Model.DeleteStudentEvent event) {
+    public void onMessageEvent(Model.DeleteRestaurantEvent event) {
         //Toast.makeText(MyApplication.getMyContext(), "someone deleted restaurant", Toast.LENGTH_SHORT).show();
         Log.d("Mife","got delete restaurant");
         boolean exist = false;
-        for (Student st: data){
-            if (st.id.equals(event.student.id)){
-                st = event.student;
+        for (Restaurant st: data){
+            if (st.id.equals(event.restaurant.id)){
+                st = event.restaurant;
                 exist = true;
                 break;
             }
         }
         if (exist){
-            data.remove(event.student);
+            data.remove(event.restaurant);
         }
         adapter.notifyDataSetChanged();
         list.setSelection(adapter.getCount() - 1);
@@ -122,30 +114,30 @@ public class RestaurantListFragment extends Fragment {
         }
     }
 
-    interface StudentListFragmentListener{
-        void onSelect(AdapterView<?> parent, View view, int position, long id , List<Student> data);
+    interface RestaurantListFragmentListener{
+        void onSelect(AdapterView<?> parent, View view, int position, long id , List<Restaurant> data);
         void onSearch(String content ,String field);
     }
 
-    StudentListFragmentListener listener;
+    RestaurantListFragmentListener listener;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if(activity instanceof StudentListFragmentListener ){
-            listener = (StudentListFragmentListener) activity;
+        if(activity instanceof RestaurantListFragmentListener ){
+            listener = (RestaurantListFragmentListener) activity;
         }else{
-            throw new RuntimeException(activity.toString() + " must implement StudentListFragmentListener");
+            throw new RuntimeException(activity.toString() + " must implement RestaurantListFragmentListener");
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof StudentListFragmentListener ){
-            listener = (StudentListFragmentListener) context;
+        if(context instanceof RestaurantListFragmentListener ){
+            listener = (RestaurantListFragmentListener) context;
         }else{
-            throw new RuntimeException(context.toString() + " must implement StudentListFragmentListener");
+            throw new RuntimeException(context.toString() + " must implement RestaurantListFragmentListener");
         }
     }
 
@@ -155,7 +147,7 @@ public class RestaurantListFragment extends Fragment {
         listener = null;
     }
 
-    class StudentsListAdapter extends BaseAdapter {
+    class RestaurantsListAdapter extends BaseAdapter {
         //LayoutInflater inflater = getActivity().getLayoutInflater();
         @Override
         public int getCount() {
@@ -172,24 +164,24 @@ public class RestaurantListFragment extends Fragment {
             return 0;
         }
 
-        class CBListener implements View.OnClickListener{
+        /*class CBListener implements View.OnClickListener{
             @Override
             public void onClick(View v) {
                 int pos = (int)v.getTag();
-                Student st = data.get(pos);
+                Restaurant st = data.get(pos);
                 st.checked = !st.checked;
-                Model.instace.updateStudent(st);
+                Model.instace.updateRestaurant(st);
             }
         }
 
-        CBListener listener = new  CBListener();
+        CBListener listener = new  CBListener();*/
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             if (convertView == null){
                 convertView = inflater.inflate(R.layout.restaurants_list_row,null);
-                CheckBox cb = (CheckBox) convertView.findViewById(R.id.strow_cb);
-                cb.setOnClickListener(listener);
+                //CheckBox cb = (CheckBox) convertView.findViewById(R.id.strow_cb);
+                //cb.setOnClickListener(listener);
             }
 
             TextView name = (TextView) convertView.findViewById(R.id.strow_name);
@@ -197,7 +189,7 @@ public class RestaurantListFragment extends Fragment {
             CheckBox cb = (CheckBox) convertView.findViewById(R.id.strow_cb);
             final ImageView imageView = (ImageView) convertView.findViewById(R.id.strow_image);
             final ProgressBar progressBar = (ProgressBar) convertView.findViewById(R.id.strow_progressBar);
-            final Student st = data.get(position);
+            final Restaurant st = data.get(position);
             name.setText(st.name);
             foodName.setText(st.foodName);
             cb.setChecked(st.checked);
@@ -240,10 +232,10 @@ public class RestaurantListFragment extends Fragment {
             EventBus.getDefault().register(this);
         }
         if(content.equals("")) {
-            //data = Model.instace.getAllStudents();
-            Model.instace.getAllStudents(new Model.GetAllStudentsAndObserveCallback() {
+            //data = Model.instace.getAllRestaurants();
+            Model.instace.getAllRestaurants(new Model.getAllRestaurantsAndObserveCallback() {
                 @Override
-                public void onComplete(List<Student> list) {
+                public void onComplete(List<Restaurant> list) {
                     data = list;
                     //adapter.notifyDataSetChanged();
                 }
@@ -255,9 +247,9 @@ public class RestaurantListFragment extends Fragment {
             });
         }
         else
-            data = Model.instace.getAllStudentsByFilter(content,field);
+            data = Model.instace.getAllRestaurantsByFilter(content,field);
 
-        adapter = new StudentsListAdapter();
+        adapter = new RestaurantsListAdapter();
         final EditText searchTxt = (EditText) contentView.findViewById(R.id.search);
         final Spinner dropList = (Spinner)  contentView.findViewById(R.id.spinner);
         ImageButton searchBtn = (ImageButton) contentView.findViewById(R.id.search_button);

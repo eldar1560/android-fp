@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.example.fp.androidapp.model.Model;
-import com.example.fp.androidapp.model.Student;
+import com.example.fp.androidapp.model.Restaurant;
 
 import static android.app.Activity.RESULT_OK;
 import static android.view.View.GONE;
@@ -27,7 +27,7 @@ import static android.view.View.GONE;
 
 public class RestaurantEditFragment extends Fragment {
 
-    Student st_edit;
+    Restaurant st_edit;
     Bitmap imageBitmap;
     private static final String ARG_PARAM1 = "param1";
     private String stId;
@@ -47,31 +47,31 @@ public class RestaurantEditFragment extends Fragment {
         if(getArguments() != null)
             stId = getArguments().getString(ARG_PARAM1);
     }
-    interface StudentEditFragmentListener{
+    interface RestaurantEditFragmentListener{
         void onSave(EditText foodNameEt , EditText nameEt , EditText addressEt , CheckBox cbEt , MyTimePicker ot , MyDatePicker od , final ProgressBar progressBar , Bitmap imageBitmap);
         void onCancel();
         void onDelete();
     }
 
-    StudentEditFragmentListener listener;
+    RestaurantEditFragmentListener listener;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if(activity instanceof StudentEditFragmentListener){
-            listener = (StudentEditFragmentListener) activity;
+        if(activity instanceof RestaurantEditFragmentListener){
+            listener = (RestaurantEditFragmentListener) activity;
         }else{
-            throw new RuntimeException(activity.toString() + " must implement StudentEditFragmentListener");
+            throw new RuntimeException(activity.toString() + " must implement RestaurantEditFragmentListener");
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof StudentEditFragmentListener){
-            listener = (StudentEditFragmentListener) context;
+        if(context instanceof RestaurantEditFragmentListener){
+            listener = (RestaurantEditFragmentListener) context;
         }else{
-            throw new RuntimeException(context.toString() + " must implement StudentEditFragmentListener");
+            throw new RuntimeException(context.toString() + " must implement RestaurantEditFragmentListener");
         }
     }
 
@@ -97,11 +97,11 @@ public class RestaurantEditFragment extends Fragment {
         progressBar = (ProgressBar) contentView.findViewById(R.id.stu_edit_progressBar);
         progressBar.setVisibility(GONE);
         imageView = (ImageView) contentView.findViewById(R.id.stu_edit_image);
-        Model.instace.getStudent(stId, new Model.GetStudentCallback() {
+        Model.instace.getRestaurant(stId, new Model.getRestaurantCallback() {
             @Override
-            public void onComplete(Student student) {
-                RestaurantEditFragment.this.st_edit = student;
-                Log.d("TAG","got student name: " + student.name);
+            public void onComplete(Restaurant restaurant) {
+                RestaurantEditFragment.this.st_edit = restaurant;
+                Log.d("TAG","got restaurant name: " + restaurant.name);
                 nameEt.setText(st_edit.name);
                 foodNameEt.setText(st_edit.foodName);
                 addressEt.setText(st_edit.address);
@@ -127,7 +127,7 @@ public class RestaurantEditFragment extends Fragment {
 
             @Override
             public void onCancel() {
-                Log.d("TAG","get student cancell" );
+                Log.d("TAG","get restaurant cancell" );
 
             }
         });
