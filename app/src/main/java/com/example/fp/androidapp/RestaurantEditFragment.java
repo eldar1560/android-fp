@@ -48,7 +48,7 @@ public class RestaurantEditFragment extends Fragment {
             stId = getArguments().getString(ARG_PARAM1);
     }
     interface StudentEditFragmentListener{
-        void onSave(EditText foodNameEt , EditText nameEt , EditText userNameEt , EditText addressEt , CheckBox cbEt , MyTimePicker ot , MyDatePicker od , final ProgressBar progressBar , Bitmap imageBitmap);
+        void onSave(EditText foodNameEt , EditText nameEt , EditText addressEt , CheckBox cbEt , MyTimePicker ot , MyDatePicker od , final ProgressBar progressBar , Bitmap imageBitmap);
         void onCancel();
         void onDelete();
     }
@@ -90,7 +90,6 @@ public class RestaurantEditFragment extends Fragment {
         Log.d("TAG","stId : " + stId);
         final EditText nameEt = (EditText) contentView.findViewById(R.id.editNameTv);
         final EditText foodNameEt= (EditText) contentView.findViewById(R.id.editFoodNameTv);
-        final EditText userNameEt= (EditText) contentView.findViewById(R.id.editUserNameTv);
         final EditText addressEt= (EditText) contentView.findViewById(R.id.editAddressTv);
         final MyTimePicker ot= (MyTimePicker) contentView.findViewById(R.id.editOrderTimeTv);
         final MyDatePicker od = (MyDatePicker) contentView.findViewById(R.id.editOrderDateTv);
@@ -105,7 +104,6 @@ public class RestaurantEditFragment extends Fragment {
                 Log.d("TAG","got student name: " + student.name);
                 nameEt.setText(st_edit.name);
                 foodNameEt.setText(st_edit.foodName);
-                userNameEt.setText(st_edit.userName);
                 addressEt.setText(st_edit.address);
                 ot.onTimeSet(Integer.valueOf(st_edit.orderTime.substring(0,st_edit.orderTime.indexOf(":"))),Integer.valueOf(st_edit.orderTime.substring(st_edit.orderTime.indexOf(":")+1)));
                 od.onDateSet(Integer.valueOf(st_edit.orderDate.substring(st_edit.orderDate.lastIndexOf("/")+1)) , Integer.valueOf(st_edit.orderDate.substring(st_edit.orderDate.indexOf("/")+1,st_edit.orderDate.lastIndexOf("/")))-1 , Integer.valueOf(st_edit.orderDate.substring(0,st_edit.orderDate.indexOf("/"))));
@@ -144,7 +142,7 @@ public class RestaurantEditFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(listener!=null)
-                    listener.onSave(foodNameEt ,nameEt , userNameEt ,addressEt ,cbEt , ot , od ,progressBar,imageBitmap);
+                    listener.onSave(foodNameEt ,nameEt ,addressEt ,cbEt , ot , od ,progressBar,imageBitmap);
 
             }
         });

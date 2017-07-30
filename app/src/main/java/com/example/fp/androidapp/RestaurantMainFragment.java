@@ -37,7 +37,7 @@ public class RestaurantMainFragment extends Fragment {
     }
 
     interface StudentMainFragmentListener{
-        void onSave(EditText nameEt , EditText foodNameEt , EditText userNameEt , EditText addressEt , CheckBox cbEt , MyTimePicker ot , MyDatePicker od , final ProgressBar progressBar , Bitmap imageBitmap);
+        void onSave(EditText nameEt , EditText foodNameEt , EditText addressEt , CheckBox cbEt , MyTimePicker ot , MyDatePicker od , final ProgressBar progressBar , Bitmap imageBitmap);
         void onCancel();
     }
 
@@ -76,7 +76,6 @@ public class RestaurantMainFragment extends Fragment {
         View contentView = inflater.inflate(R.layout.fragment_restaurant_main, container, false);
         final EditText nameEt = (EditText) contentView.findViewById(R.id.mainNameTv);
         final EditText foodNameEt= (EditText) contentView.findViewById(R.id.mainFoodNameTv);
-        final EditText userNameEt= (EditText) contentView.findViewById(R.id.mainUserNameTv);
         final EditText addressEt= (EditText) contentView.findViewById(R.id.mainAddressTv);
         final CheckBox cbEt= (CheckBox) contentView.findViewById(R.id.mainCbTv);
         final MyTimePicker ot = (MyTimePicker) contentView.findViewById(R.id.mainOrderTimeTv);
@@ -91,7 +90,7 @@ public class RestaurantMainFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(listener != null)
-                    listener.onSave(nameEt,foodNameEt,userNameEt,addressEt,cbEt , ot , od , progressBar , imageBitmap);
+                    listener.onSave(nameEt,foodNameEt,addressEt,cbEt , ot , od , progressBar , imageBitmap);
             }
         });
         cancelBtn.setOnClickListener(new View.OnClickListener() {

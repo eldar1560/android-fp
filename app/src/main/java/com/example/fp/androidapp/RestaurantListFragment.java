@@ -96,8 +96,8 @@ public class RestaurantListFragment extends Fragment {
     //for deletion
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Model.DeleteStudentEvent event) {
-        Toast.makeText(MyApplication.getMyContext(), "someone deleted restaurant", Toast.LENGTH_SHORT).show();
-        //Log.d("Mife","got delete restaurant");
+        //Toast.makeText(MyApplication.getMyContext(), "someone deleted restaurant", Toast.LENGTH_SHORT).show();
+        Log.d("Mife","got delete restaurant");
         boolean exist = false;
         for (Student st: data){
             if (st.id.equals(event.student.id)){

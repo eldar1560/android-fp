@@ -13,6 +13,7 @@ import android.view.MenuItem;
 
 import com.example.fp.androidapp.model.Model;
 import com.example.fp.androidapp.model.Student;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Locale;
 
@@ -24,7 +25,7 @@ public class RestaurantDetailsActivity extends Activity{
     RestaurantDetailsFragment restaurantDetailsFragment;
 
     Student st;
-
+    String stId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +38,7 @@ public class RestaurantDetailsActivity extends Activity{
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
-        final String stId = intent.getStringExtra("STID");
+        stId = intent.getStringExtra("STID");
         Model.instace.getStudent(stId, new Model.GetStudentCallback() {
             @Override
             public void onComplete(Student student) {
@@ -92,11 +93,25 @@ public class RestaurantDetailsActivity extends Activity{
         }
     }
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
+    public boolean onCreateOptionsMenu(final Menu menu)
     {
-        menu.add(0, 0, 0, "Edit").setIcon(R.drawable.edit_button)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        menu.add(0,1,0,"Show On Map").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        Model.instace.getStudent(stId, new Model.GetStudentCallback() {
+            @Override
+            public void onComplete(Student student) {
+                RestaurantDetailsActivity.this.st = student;
+                menu.add(0,0,0,"Show On Map").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                if(st.userName.equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())){
+                    menu.add(0, 1, 0, "Edit").setIcon(R.drawable.edit_button)
+                            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                }
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d("TAG","get student cancell" );
+            }
+        });
+
         return true;
     }
 
@@ -105,16 +120,13 @@ public class RestaurantDetailsActivity extends Activity{
         // Handle item selection
         switch (item.getItemId()) {
             case 0:
-                Intent intent = new Intent(RestaurantDetailsActivity.this,RestaurantEditActivity.class);
-                intent.putExtra("STID",st.id);
-                startActivityForResult(intent,REQUEST_ID);
-                return true;
-            case 1:
-                Model.instace.getStudent(st.id, new Model.GetStudentCallback() {
+                Model.instace.getStudent(stId, new Model.GetStudentCallback() {
                     @Override
                     public void onComplete(Student student) {
                         RestaurantDetailsActivity.this.st = student;
-                        Log.d("TAG","got student name: " + student.name);
+                        String uri = String.format(Locale.ENGLISH, "geo:0,0?q=%s",st.address);
+                        Intent intent2 = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                        startActivity(intent2);
                     }
 
                     @Override
@@ -123,9 +135,12 @@ public class RestaurantDetailsActivity extends Activity{
 
                     }
                 });
-                String uri = String.format(Locale.ENGLISH, "geo:0,0?q=%s",st.address);
-                Intent intent2 = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                startActivity(intent2);
+                return true;
+            case 1:
+                Intent intent = new Intent(RestaurantDetailsActivity.this,RestaurantEditActivity.class);
+                intent.putExtra("STID",st.id);
+                startActivityForResult(intent,REQUEST_ID);
+                return true;
             case android.R.id.home:
                 onBackPressed();
                 return true;

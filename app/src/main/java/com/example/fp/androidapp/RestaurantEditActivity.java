@@ -91,8 +91,8 @@ public class RestaurantEditActivity extends Activity implements RestaurantEditFr
     }
 
     @Override
-    public void onSave(EditText foodNameEt , EditText nameEt , EditText userNameEt , EditText addressEt , CheckBox cbEt , MyTimePicker ot , MyDatePicker od , final ProgressBar progressBar , Bitmap imageBitmap) {
-        if(foodNameEt.getText().toString().equals("") || nameEt.getText().toString().equals("") || userNameEt.getText().toString().equals("") || addressEt.getText().toString().equals("") || ot.getText().toString().equals("") || od.getText().toString().equals("")) {
+    public void onSave(EditText foodNameEt , EditText nameEt , EditText addressEt , CheckBox cbEt , MyTimePicker ot , MyDatePicker od , final ProgressBar progressBar , Bitmap imageBitmap) {
+        if(foodNameEt.getText().toString().equals("") || nameEt.getText().toString().equals("") ||  addressEt.getText().toString().equals("") || ot.getText().toString().equals("") || od.getText().toString().equals("")) {
             new AlertDialog.Builder(RestaurantEditActivity.this)
                     .setTitle("Edit Restaurant")
                     .setMessage("Do not leave a field empty!")
@@ -104,7 +104,6 @@ public class RestaurantEditActivity extends Activity implements RestaurantEditFr
         //Model.instace.deleteStudent(st_edit);
         st_edit.foodName = foodNameEt.getText().toString();
         st_edit.name = nameEt.getText().toString();
-        st_edit.userName = userNameEt.getText().toString();
         st_edit.address = addressEt.getText().toString();
         st_edit.checked = cbEt.isChecked();
         st_edit.orderTime = ot.getText().toString();

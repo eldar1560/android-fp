@@ -2,11 +2,13 @@ package com.example.fp.androidapp;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -14,16 +16,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.example.fp.androidapp.model.Student;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
-public class RestaurantListActivity extends Activity implements RestaurantListFragment.StudentListFragmentListener {
+public class RestaurantListActivity extends Activity implements RestaurantListFragment.StudentListFragmentListener,AuthUIFragment.StudentAuthFragmentListener {
     RestaurantListFragment restaurantListFragment;
-
+    AuthUIFragment authUIFragment;
+    private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,20 +51,24 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
         }
 
         if(getFragmentManager().findFragmentById(R.id.list_fragment_container) != null){
-            
             FragmentTransaction tran = getFragmentManager().beginTransaction();
+            authUIFragment = AuthUIFragment.newInstance();
+            tran.replace(R.id.list_fragment_container , authUIFragment);
+            tran.commit();
+            /*FragmentTransaction tran = getFragmentManager().beginTransaction();
             restaurantListFragment = RestaurantListFragment.newInstance("" ,"");
             tran.replace(R.id.list_fragment_container , restaurantListFragment);
-            tran.commit();
+            tran.commit();*/
         }else {
             Log.d("TAG" , "fragment is null");
-
-            restaurantListFragment = RestaurantListFragment.newInstance("","");
-
-
+            authUIFragment = AuthUIFragment.newInstance();
+            FragmentTransaction tran = getFragmentManager().beginTransaction();
+            tran.add(R.id.list_fragment_container, authUIFragment, "tag");
+            tran.commit();
+            /*restaurantListFragment = RestaurantListFragment.newInstance("","");
             FragmentTransaction tran = getFragmentManager().beginTransaction();
             tran.add(R.id.list_fragment_container, restaurantListFragment, "tag");
-            tran.commit();
+            tran.commit();*/
         }
 
     }
@@ -95,27 +108,39 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        menu.add(0, 0, 0, "Add").setIcon(R.drawable.button_add)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        menu.add(0,1,0,"ShowAll").setIcon(R.drawable.show_all)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
+        Fragment rlf;
+        rlf = getFragmentManager().findFragmentById(R.id.list_fragment_container);
+        if(rlf instanceof RestaurantListFragment) {
+            menu.add(0, 0, 0, "Add").setIcon(R.drawable.button_add)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            menu.add(0, 1, 0, "ShowAll").setIcon(R.drawable.show_all)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            menu.add(0,2,0,"Log Off")
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
+        FragmentTransaction tran = getFragmentManager().beginTransaction();
         switch (item.getItemId()) {
             case 0:
                 Intent intent = new Intent(RestaurantListActivity.this,MainActivity.class);
                 startActivityForResult(intent,REQUEST_ID);
                 return true;
             case 1:
-                FragmentTransaction tran = getFragmentManager().beginTransaction();
                 restaurantListFragment = RestaurantListFragment.newInstance("","");
                 tran.replace(R.id.list_fragment_container , restaurantListFragment);
                 tran.commit();
+                return true;
+            case 2:
+                FirebaseAuth.getInstance().signOut();
+                authUIFragment = AuthUIFragment.newInstance();
+                tran.replace(R.id.list_fragment_container , authUIFragment);
+                tran.commit();
+                RestaurantListActivity.this.invalidateOptionsMenu();
                 return true;
             case android.R.id.home:
                 onBackPressed();
@@ -140,10 +165,71 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
         restaurantListFragment = RestaurantListFragment.newInstance(content,field);
         tran.replace(R.id.list_fragment_container , restaurantListFragment);
         tran.commit();
-        Log.d("Mife" , "the string is :" +content + " , "+field);
     }
 
 
+    @Override
+    public void onSignIn(String email, String password) {
+        mAuth = FirebaseAuth.getInstance();
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("Mife", "signInWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            FragmentTransaction tran = getFragmentManager().beginTransaction();
+                            restaurantListFragment = RestaurantListFragment.newInstance("","");
+                            tran.replace(R.id.list_fragment_container , restaurantListFragment);
+                            tran.commit();
+                            RestaurantListActivity.this.invalidateOptionsMenu();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("Mife", "signInWithEmail:failure", task.getException());
+                            Toast.makeText(MyApplication.getMyContext(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void onSignUp(String email, String password) {
+        mAuth = FirebaseAuth.getInstance();
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("Mife", "createUserWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            FragmentTransaction tran = getFragmentManager().beginTransaction();
+                            restaurantListFragment = RestaurantListFragment.newInstance("","");
+                            tran.replace(R.id.list_fragment_container , restaurantListFragment);
+                            tran.commit();
+                            RestaurantListActivity.this.invalidateOptionsMenu();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("Mife", "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(MyApplication.getMyContext(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
+    }
+
+    @Override
+    public void onAlreadyLoggedIn() {
+        mAuth = FirebaseAuth.getInstance();
+        FragmentTransaction tran = getFragmentManager().beginTransaction();
+        restaurantListFragment = RestaurantListFragment.newInstance("" ,"");
+        tran.replace(R.id.list_fragment_container , restaurantListFragment);
+        tran.commit();
+        RestaurantListActivity.this.invalidateOptionsMenu();
+    }
 }
 
 

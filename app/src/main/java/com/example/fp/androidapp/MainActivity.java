@@ -16,6 +16,9 @@ import android.widget.ProgressBar;
 
 import com.example.fp.androidapp.model.Model;
 import com.example.fp.androidapp.model.Student;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 import java.util.Random;
 
@@ -70,8 +73,8 @@ public class MainActivity extends Activity implements RestaurantMainFragment.Stu
     }
 
     @Override
-    public void onSave(EditText nameEt , EditText foodNameEt , EditText userNameEt , EditText addressEt , CheckBox cbEt , MyTimePicker ot , MyDatePicker od , final ProgressBar progressBar , Bitmap imageBitmap) {
-        if(foodNameEt.getText().toString().equals("") || nameEt.getText().toString().equals("") || userNameEt.getText().toString().equals("") || addressEt.getText().toString().equals("") || ot.getText().toString().equals("") || od.getText().toString().equals("")) {
+    public void onSave(EditText nameEt , EditText foodNameEt , EditText addressEt , CheckBox cbEt , MyTimePicker ot , MyDatePicker od , final ProgressBar progressBar , Bitmap imageBitmap) {
+        if(foodNameEt.getText().toString().equals("") || nameEt.getText().toString().equals("") || addressEt.getText().toString().equals("") || ot.getText().toString().equals("") || od.getText().toString().equals("")) {
             new AlertDialog.Builder(MainActivity.this)
                     .setTitle("New Restaurant")
                     .setMessage("Do not leave a field empty!")
@@ -94,7 +97,8 @@ public class MainActivity extends Activity implements RestaurantMainFragment.Stu
             }
         }
         Log.d("TAG","Btn Save click");
-        final Student st = new Student(random_id_string , nameEt.getText().toString(), foodNameEt.getText().toString(), userNameEt.getText().toString() , addressEt.getText().toString() , cbEt.isChecked(),"" , ot.getText().toString() , od.getText().toString());
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final Student st = new Student(random_id_string , nameEt.getText().toString(), foodNameEt.getText().toString(), user.getEmail() , addressEt.getText().toString() , cbEt.isChecked(),"" , ot.getText().toString() , od.getText().toString());
         if (imageBitmap != null) {
             Model.instace.saveImage(imageBitmap, st.id + ".jpeg", new Model.SaveImageListener() {
                 @Override
