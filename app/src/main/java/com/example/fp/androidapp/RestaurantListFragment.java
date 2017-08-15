@@ -39,12 +39,14 @@ public class RestaurantListFragment extends Fragment {
     RestaurantsListAdapter adapter;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private String content , field;
-    public static RestaurantListFragment newInstance(String param1 , String param2){
+    private static final String ARG_PARAM3 = "param3";
+    private String content , field , isAll;
+    public static RestaurantListFragment newInstance(String param1 , String param2 , String param3){
         RestaurantListFragment fragment = new RestaurantListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1 , param1);
         args.putString(ARG_PARAM2 , param2);
+        args.putString(ARG_PARAM3 , param3);
         fragment.setArguments(args);
         return fragment;
     }
@@ -111,6 +113,7 @@ public class RestaurantListFragment extends Fragment {
         if(getArguments() != null) {
             content = getArguments().getString(ARG_PARAM1);
             field = getArguments().getString(ARG_PARAM2);
+            isAll = getArguments().getString(ARG_PARAM3);
         }
     }
 
@@ -231,7 +234,7 @@ public class RestaurantListFragment extends Fragment {
         if(!EventBus.getDefault().isRegistered(this)){
             EventBus.getDefault().register(this);
         }
-        if(content.equals("")) {
+        if(isAll.equals("true")) {
             //data = Model.instace.getAllRestaurants();
             Model.instace.getAllRestaurants(new Model.getAllRestaurantsAndObserveCallback() {
                 @Override

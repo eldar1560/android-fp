@@ -31,6 +31,7 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
     RestaurantListFragment restaurantListFragment;
     AuthUIFragment authUIFragment;
     private FirebaseAuth mAuth;
+    boolean isOnSearch = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +54,7 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
             authUIFragment = AuthUIFragment.newInstance();
             tran.replace(R.id.list_fragment_container , authUIFragment);
             tran.commit();
+            RestaurantListActivity.this.invalidateOptionsMenu();
             /*FragmentTransaction tran = getFragmentManager().beginTransaction();
             restaurantListFragment = RestaurantListFragment.newInstance("" ,"");
             tran.replace(R.id.list_fragment_container , restaurantListFragment);
@@ -111,8 +113,9 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
         if(rlf instanceof RestaurantListFragment) {
             menu.add(0, 0, 0, "Add").setIcon(R.drawable.button_add)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-            menu.add(0, 1, 0, "ShowAll").setIcon(R.drawable.show_all)
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            if(isOnSearch)
+                menu.add(0, 1, 0, "ShowAll").setIcon(R.drawable.show_all)
+                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
             menu.add(0,2,0,"Log Off")
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         }
@@ -129,9 +132,11 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
                 startActivityForResult(intent,REQUEST_ID);
                 return true;
             case 1:
-                restaurantListFragment = RestaurantListFragment.newInstance("","");
+                isOnSearch = false;
+                restaurantListFragment = RestaurantListFragment.newInstance("","","true");
                 tran.replace(R.id.list_fragment_container , restaurantListFragment);
                 tran.commit();
+                RestaurantListActivity.this.invalidateOptionsMenu();
                 return true;
             case 2:
                 FirebaseAuth.getInstance().signOut();
@@ -159,10 +164,12 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
 
     @Override
     public void onSearch(String content ,String field) {
+        isOnSearch = true;
         FragmentTransaction tran = getFragmentManager().beginTransaction();
-        restaurantListFragment = RestaurantListFragment.newInstance(content,field);
+        restaurantListFragment = RestaurantListFragment.newInstance(content,field,"false");
         tran.replace(R.id.list_fragment_container , restaurantListFragment);
         tran.commit();
+        RestaurantListActivity.this.invalidateOptionsMenu();
     }
 
 
@@ -183,7 +190,8 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
                             Log.d("Mife", "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             FragmentTransaction tran = getFragmentManager().beginTransaction();
-                            restaurantListFragment = RestaurantListFragment.newInstance("","");
+                            restaurantListFragment = RestaurantListFragment.newInstance("","","true");
+                            isOnSearch = false;
                             tran.replace(R.id.list_fragment_container , restaurantListFragment);
                             tran.commit();
                             RestaurantListActivity.this.invalidateOptionsMenu();
@@ -214,7 +222,8 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
                             Log.d("Mife", "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             FragmentTransaction tran = getFragmentManager().beginTransaction();
-                            restaurantListFragment = RestaurantListFragment.newInstance("","");
+                            restaurantListFragment = RestaurantListFragment.newInstance("","","true");
+                            isOnSearch = false;
                             tran.replace(R.id.list_fragment_container , restaurantListFragment);
                             tran.commit();
                             RestaurantListActivity.this.invalidateOptionsMenu();
@@ -231,9 +240,10 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
 
     @Override
     public void onAlreadyLoggedIn() {
+        isOnSearch = false;
         mAuth = FirebaseAuth.getInstance();
         FragmentTransaction tran = getFragmentManager().beginTransaction();
-        restaurantListFragment = RestaurantListFragment.newInstance("" ,"");
+        restaurantListFragment = RestaurantListFragment.newInstance("" ,"","true");
         tran.replace(R.id.list_fragment_container , restaurantListFragment);
         tran.commit();
         RestaurantListActivity.this.invalidateOptionsMenu();

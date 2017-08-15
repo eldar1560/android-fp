@@ -80,11 +80,15 @@ public class RestaurantSql {
                 st.foodName = cursor.getString(foodName);
                 String [] restaurant_variables = MyApplication.getMyContext().getResources().getStringArray(R.array.restaurant_variables);
                 if(restaurant_variables[0].equals(field)) {
-                    if (st.name.equals(content))
+                    /*if (st.name.equals(content))
+                        list.add(st);*/
+                    if(st.name.toLowerCase().equals(content.toLowerCase()))
                         list.add(st);
                 }
                 else if(restaurant_variables[1].equals(field)) {
-                    if (st.foodName.equals(content))
+                    /*if (st.foodName.equals(content))
+                        list.add(st);*/
+                    if(st.foodName.toLowerCase().equals(content.toLowerCase()))
                         list.add(st);
                 }
                 else if(restaurant_variables[2].equals(field)) {

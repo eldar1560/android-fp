@@ -49,6 +49,7 @@
             android:textSize="18sp" />
 
         <EditText
+            android:inputType="textEmailAddress"
             android:id="@+id/authEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
