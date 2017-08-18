@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.fp.androidapp.model.Restaurant;
@@ -37,7 +39,7 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_list);
         ActionBar bar = getActionBar();
-        bar.setTitle("Restaurants List");
+        bar.setTitle("Restaurants World");
 
         bar.setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -55,20 +57,13 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
             tran.replace(R.id.list_fragment_container , authUIFragment);
             tran.commit();
             RestaurantListActivity.this.invalidateOptionsMenu();
-            /*FragmentTransaction tran = getFragmentManager().beginTransaction();
-            restaurantListFragment = RestaurantListFragment.newInstance("" ,"");
-            tran.replace(R.id.list_fragment_container , restaurantListFragment);
-            tran.commit();*/
         }else {
+
             Log.d("TAG" , "fragment is null");
             authUIFragment = AuthUIFragment.newInstance();
             FragmentTransaction tran = getFragmentManager().beginTransaction();
             tran.add(R.id.list_fragment_container, authUIFragment, "tag");
             tran.commit();
-            /*restaurantListFragment = RestaurantListFragment.newInstance("","");
-            FragmentTransaction tran = getFragmentManager().beginTransaction();
-            tran.add(R.id.list_fragment_container, restaurantListFragment, "tag");
-            tran.commit();*/
         }
 
     }
@@ -82,13 +77,6 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
             if (resultCode == MainActivity.RESAULT_SUCCESS){
                 //operation success
                 Log.d("TAG","operation success");
-
-                //FrameLayout fl = (FrameLayout)findViewById(R.id.list_fragment_container);
-                //fl.invalidate();
-                /*FragmentTransaction tran = getFragmentManager().beginTransaction();
-                restaurantListFragment = RestaurantListFragment.newInstance("");
-                tran.replace(R.id.list_fragment_container , restaurantListFragment);
-                tran.commit();*/
                 FragmentTransaction tran = getFragmentManager().beginTransaction();
                 tran.detach(restaurantListFragment);
                 tran.attach(restaurantListFragment);
@@ -143,7 +131,17 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
                 authUIFragment = AuthUIFragment.newInstance();
                 tran.replace(R.id.list_fragment_container , authUIFragment);
                 tran.commit();
-                RestaurantListActivity.this.invalidateOptionsMenu();
+                new CountDownTimer(500, 50) { //for the case the fragment is not replaced already
+
+                    public void onTick(long millisUntilFinished) {
+                        RestaurantListActivity.this.invalidateOptionsMenu();
+                    }
+
+                    public void onFinish() {
+                        RestaurantListActivity.this.invalidateOptionsMenu();
+                    }
+
+                }.start();
                 return true;
             case android.R.id.home:
                 onBackPressed();
@@ -174,17 +172,19 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
 
 
     @Override
-    public void onSignIn(String email, String password) {
+    public void onSignIn(String email, String password,final ProgressBar pb) {
         mAuth = FirebaseAuth.getInstance();
         if(email.equals("") || password.equals("")){
             Toast.makeText(MyApplication.getMyContext(), "Do not leave a field empty",
                     Toast.LENGTH_SHORT).show();
             return;
         }
+        pb.setVisibility(View.VISIBLE);
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        pb.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Mife", "signInWithEmail:success");
@@ -194,7 +194,17 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
                             isOnSearch = false;
                             tran.replace(R.id.list_fragment_container , restaurantListFragment);
                             tran.commit();
-                            RestaurantListActivity.this.invalidateOptionsMenu();
+                            new CountDownTimer(500, 50) { //for the case the fragment is not replaced already
+
+                                public void onTick(long millisUntilFinished) {
+                                    RestaurantListActivity.this.invalidateOptionsMenu();
+                                }
+
+                                public void onFinish() {
+                                    RestaurantListActivity.this.invalidateOptionsMenu();
+                                }
+
+                            }.start();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("Mife", "signInWithEmail:failure", task.getException());
@@ -206,17 +216,19 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
     }
 
     @Override
-    public void onSignUp(String email, String password) {
+    public void onSignUp(String email, String password , final ProgressBar pb) {
         mAuth = FirebaseAuth.getInstance();
         if(email.equals("") || password.equals("")){
             Toast.makeText(MyApplication.getMyContext(), "Do not leave a field empty",
                     Toast.LENGTH_SHORT).show();
             return;
         }
+        pb.setVisibility(View.VISIBLE);
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        pb.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Mife", "createUserWithEmail:success");
@@ -226,7 +238,17 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
                             isOnSearch = false;
                             tran.replace(R.id.list_fragment_container , restaurantListFragment);
                             tran.commit();
-                            RestaurantListActivity.this.invalidateOptionsMenu();
+                            new CountDownTimer(500, 50) { //for the case the fragment is not replaced already
+
+                                public void onTick(long millisUntilFinished) {
+                                    RestaurantListActivity.this.invalidateOptionsMenu();
+                                }
+
+                                public void onFinish() {
+                                    RestaurantListActivity.this.invalidateOptionsMenu();
+                                }
+
+                            }.start();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("Mife", "createUserWithEmail:failure", task.getException());
@@ -246,7 +268,17 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
         restaurantListFragment = RestaurantListFragment.newInstance("" ,"","true");
         tran.replace(R.id.list_fragment_container , restaurantListFragment);
         tran.commit();
-        RestaurantListActivity.this.invalidateOptionsMenu();
+        new CountDownTimer(500, 50) { //for the case the fragment is not replaced already
+
+            public void onTick(long millisUntilFinished) {
+                RestaurantListActivity.this.invalidateOptionsMenu();
+            }
+
+            public void onFinish() {
+                RestaurantListActivity.this.invalidateOptionsMenu();
+            }
+
+        }.start();
     }
 }
 

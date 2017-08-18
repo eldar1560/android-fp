@@ -3,31 +3,18 @@ package com.example.fp.androidapp;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import static android.app.Activity.RESULT_OK;
-import static android.view.View.GONE;
 
 
 public class AuthUIFragment extends Fragment {
@@ -43,8 +30,8 @@ public class AuthUIFragment extends Fragment {
     }
 
     interface RestaurantAuthFragmentListener{
-        void onSignIn(String email,String password);
-        void onSignUp(String email,String password);
+        void onSignIn(String email,String password,final ProgressBar pb);
+        void onSignUp(String email,String password,final ProgressBar pb);
         void onAlreadyLoggedIn();
     }
 
@@ -90,14 +77,15 @@ public class AuthUIFragment extends Fragment {
         }
         final EditText emailEt = (EditText) contentView.findViewById(R.id.authEmail);
         final EditText passwordEt= (EditText) contentView.findViewById(R.id.authPassword);
+        final ProgressBar progressBar = (ProgressBar) contentView.findViewById(R.id.authPb);
 
         Button signInBtn = (Button) contentView.findViewById(R.id.authSignIn);
         Button signUpBtn = (Button) contentView.findViewById(R.id.authSignUp);
         signInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            if(listener!=null)
-                listener.onSignIn(emailEt.getText().toString(),passwordEt.getText().toString());
+                if(listener!=null)
+                    listener.onSignIn(emailEt.getText().toString(), passwordEt.getText().toString(),progressBar);
 
             }
         });
@@ -105,7 +93,7 @@ public class AuthUIFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(listener!=null)
-                    listener.onSignUp(emailEt.getText().toString(),passwordEt.getText().toString());
+                    listener.onSignUp(emailEt.getText().toString(), passwordEt.getText().toString(),progressBar);
 
             }
         });

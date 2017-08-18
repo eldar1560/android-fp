@@ -3,10 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
     tools:context="com.example.fp.androidapp.AuthUIFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:paddingTop="10dp"
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp"
+    android:background="@color/red">
 
+    <ImageView android:src="@drawable/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_marginBottom="24dp"
+        android:layout_gravity="center_horizontal" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,38 +26,24 @@
             android:layout_height="match_parent"
             android:layout_margin="7dp"
             android:gravity="center"
-            android:text="Welcome to The Restaurants World!"
+            android:text="Welcome to The Restaurants World:"
             android:textSize="18sp" />
 
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/authPb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:visibility="gone"
+        />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="7dp"
-            android:text="Sign in with your existing account or just sign up to open a new one."
-            android:textSize="18sp"
-            android:textColor="@color/colorPrimaryDark"/>
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="7dp"
-            android:gravity="center"
-            android:text="Email:"
-            android:textSize="18sp" />
-
         <EditText
+            android:hint="Email"
             android:inputType="textEmailAddress"
             android:id="@+id/authEmail"
             android:layout_width="match_parent"
@@ -61,15 +56,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Password:"
-            android:textSize="18sp"
-            android:gravity="center"
-            android:layout_margin="7dp"/>
-
         <EditText
+            android:hint="Password"
             android:inputType="textPassword"
             android:id="@+id/authPassword"
             android:layout_width="match_parent"
