@@ -145,7 +145,8 @@
             android:text="SAVE"
             android:gravity="center"
             android:layout_margin="7dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:background="@color/lightorange"/>
         <Button
             android:id="@+id/editDeleteBtn"
             android:layout_width="1dp"
@@ -153,7 +154,8 @@
             android:text="DELETE"
             android:gravity="center"
             android:layout_margin="7dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:background="@color/lightorange"/>
         <Button
             android:id="@+id/editCancelBtn"
             android:layout_width="1dp"
@@ -161,7 +163,8 @@
             android:text="CANCEL"
             android:gravity="center"
             android:layout_margin="7dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:background="@color/lightorange"/>
 
 
     </LinearLayout>

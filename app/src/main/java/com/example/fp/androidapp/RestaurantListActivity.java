@@ -41,6 +41,7 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
         ActionBar bar = getActionBar();
         bar.setTitle("Restaurants World");
 
+
         bar.setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
         getActionBar().setDisplayHomeAsUpEnabled(true);
         boolean hasPermission = (ContextCompat.checkSelfPermission(this,
@@ -102,8 +103,10 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
             menu.add(0, 0, 0, "Add").setIcon(R.drawable.button_add)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
             if(isOnSearch)
-                menu.add(0, 1, 0, "ShowAll").setIcon(R.drawable.show_all)
+                menu.add(0, 1, 0, "Show All")
                         .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            menu.add(0, 3, 0, "My Uploads")
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
             menu.add(0,2,0,"Log Off")
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         }
@@ -142,6 +145,15 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
                     }
 
                 }.start();
+                return true;
+            case 3:
+                isOnSearch = true;
+                String [] restaurant_variables = MyApplication.getMyContext().getResources().getStringArray(R.array.restaurant_variables);
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                restaurantListFragment = RestaurantListFragment.newInstance(user.getEmail(),restaurant_variables[2],"false");
+                tran.replace(R.id.list_fragment_container , restaurantListFragment);
+                tran.commit();
+                RestaurantListActivity.this.invalidateOptionsMenu();
                 return true;
             case android.R.id.home:
                 onBackPressed();
