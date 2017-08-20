@@ -3,9 +3,15 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/MyAppTheme</item>
+
+        <item name="android:itemBackground">@color/bordo</item>
+        <item name="android:itemTextAppearance">@style/MenuTextStyle</item>
     </style>
     <!-- Base application theme. -->
     <style name="MyAppTheme" parent="@android:style/Widget.Holo.Light.ActionBar">
         <item name="android:background">#660000</item>
+    </style>
+    <style name="MenuTextStyle" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:textColor">#fff</item>
     </style>
 </resources>
