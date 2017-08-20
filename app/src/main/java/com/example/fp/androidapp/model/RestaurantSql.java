@@ -55,7 +55,7 @@ public class RestaurantSql {
         return list;
     }
     static List<Restaurant> getAllRestaurantsByFilter(SQLiteDatabase db , String content , String field) {
-        Cursor cursor = db.query("restaurants", null, null, null, null, null, null);
+        Cursor cursor = db.query("restaurants", null, null, null, null, null, null); //must implement that way becuase we check without case sensitive and cannot achieve this with regular query.
         List<Restaurant> list = new LinkedList<Restaurant>();
         if (cursor.moveToFirst()) {
             int idIndex = cursor.getColumnIndex(RESTAURANT_ID);
@@ -98,6 +98,7 @@ public class RestaurantSql {
                 else
                     list.add(st);
             } while (cursor.moveToNext());
+
         }
         return list;
     }
@@ -181,14 +182,13 @@ public class RestaurantSql {
     }
     static public void updateRestaurant(SQLiteDatabase db, Restaurant st)
     {
-        deleteRestaurant(db,st);
-        addRestaurant(db,st);
-        /*ContentValues values = new ContentValues();
+        ContentValues values = new ContentValues();
         values.put(RESTAURANT_ID, st.id);
         values.put(RESTAURANT_USERNAME, st.userName);
         values.put(RESTAURANT_TIME, st.orderTime);
         values.put(RESTAURANT_DATE, st.orderDate);
         values.put(RESTAURANT_NAME, st.name);
+        values.put(RESTAURANT_FOOD_NAME, st.foodName);
         values.put(ADDRESS, st.address);
 
         if (st.checked) {
@@ -197,8 +197,7 @@ public class RestaurantSql {
             values.put(RESTAURANT_CHECK, 0);
         }
         values.put(RESTAURANT_IMAGE_URL, st.imageUrl);
-        Log.d("Mife",st.id);
-        db.update(RESTAURANT_TABLE, values, st.id+"="+RESTAURANT_ID, null);*/
+        db.update(RESTAURANT_TABLE, values, RESTAURANT_ID+"=?",new String[]{st.id});
         /*int checked;
         if(st.checked)
             checked = 1;

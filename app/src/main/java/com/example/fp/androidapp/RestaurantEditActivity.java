@@ -95,20 +95,18 @@ public class RestaurantEditActivity extends Activity implements RestaurantEditFr
         if(foodNameEt.getText().toString().equals("") || nameEt.getText().toString().equals("") ||  addressEt.getText().toString().equals("") || ot.getText().toString().equals("") || od.getText().toString().equals("")) {
             new AlertDialog.Builder(RestaurantEditActivity.this)
                     .setTitle("Edit Restaurant")
-                    .setMessage("Do not leave a field empty!")
+                    .setMessage("Do not leave a field or image empty!")
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
             return;
         }
         progressBar.setVisibility(View.VISIBLE);
-        //Model.instace.deleteRestaurant(st_edit);
         st_edit.foodName = foodNameEt.getText().toString();
         st_edit.name = nameEt.getText().toString();
         st_edit.address = addressEt.getText().toString();
         st_edit.checked = cbEt.isChecked();
         st_edit.orderTime = ot.getText().toString();
         st_edit.orderDate = od.getText().toString();
-        //Model.instace.addRestaurant(st_edit);
         if (imageBitmap != null) {
             Model.instace.saveImage(imageBitmap, st_edit.id + ".jpeg", new Model.SaveImageListener() {
                 @Override
@@ -122,7 +120,6 @@ public class RestaurantEditActivity extends Activity implements RestaurantEditFr
                             .show();
                     setResult(RESAULT_SUCCESS_SAVE);
                     progressBar.setVisibility(GONE);
-                    //finish();
                 }
 
                 @Override
@@ -131,12 +128,11 @@ public class RestaurantEditActivity extends Activity implements RestaurantEditFr
                     Model.instace.updateRestaurant(st_edit);
                     new AlertDialog.Builder(RestaurantEditActivity.this)
                             .setTitle("Edit Restaurant")
-                            .setMessage("The save operation was completed , without image...")
+                            .setMessage("The save operation was completed , without the new image...")
                             .setIcon(android.R.drawable.ic_dialog_info)
                             .show();
                     setResult(RESAULT_SUCCESS_SAVE);
                     progressBar.setVisibility(GONE);
-                    //finish();
                 }
             });
         }else{
@@ -148,15 +144,7 @@ public class RestaurantEditActivity extends Activity implements RestaurantEditFr
                     .show();
             setResult(RESAULT_SUCCESS_SAVE);
             progressBar.setVisibility(GONE);
-            //finish();
         }
-        /*Model.instace.updateRestaurant(st_edit);
-        new AlertDialog.Builder(RestaurantEditActivity.this)
-                .setTitle("Edit Restaurant")
-                .setMessage("The save operation was completed successfully.")
-                .setIcon(android.R.drawable.ic_dialog_info)
-                .show();
-        setResult(RESAULT_SUCCESS_SAVE);*/
     }
 
     @Override

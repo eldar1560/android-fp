@@ -59,13 +59,15 @@ public class RestaurantListFragment extends Fragment {
         boolean exist = false;
         for (Restaurant st: data){
             if (st.id.equals(event.restaurant.id)){
+                data.remove(st); //for changed restaurant
+                data.add(event.restaurant);
                 st = event.restaurant;
                 exist = true;
                 break;
             }
         }
         if (!exist){
-            data.add(event.restaurant);
+            data.add(event.restaurant); //for new restaurant
         }
         adapter.notifyDataSetChanged();
         list.setSelection(adapter.getCount() - 1);

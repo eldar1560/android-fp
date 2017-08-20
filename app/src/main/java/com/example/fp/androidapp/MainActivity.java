@@ -73,10 +73,10 @@ public class MainActivity extends Activity implements RestaurantMainFragment.Res
 
     @Override
     public void onSave(EditText nameEt , EditText foodNameEt , EditText addressEt , CheckBox cbEt , MyTimePicker ot , MyDatePicker od , final ProgressBar progressBar , Bitmap imageBitmap) {
-        if(foodNameEt.getText().toString().equals("") || nameEt.getText().toString().equals("") || addressEt.getText().toString().equals("") || ot.getText().toString().equals("") || od.getText().toString().equals("")) {
+        if(foodNameEt.getText().toString().equals("") || nameEt.getText().toString().equals("") || addressEt.getText().toString().equals("") || ot.getText().toString().equals("") || od.getText().toString().equals("") || imageBitmap == null) {
             new AlertDialog.Builder(MainActivity.this)
                     .setTitle("New Restaurant")
-                    .setMessage("Do not leave a field empty!")
+                    .setMessage("Do not leave a field or image empty!")
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
             return;
@@ -84,75 +84,46 @@ public class MainActivity extends Activity implements RestaurantMainFragment.Res
         progressBar.setVisibility(View.VISIBLE);
         int random_id;
         String random_id_string = "";
-        boolean isFound = true;
-        while(isFound) {
+        boolean isFound = false;
+        while(!isFound) {
             Random rand = new Random();
             random_id = rand.nextInt(2147483647);
             Log.d("Mife", "random id : " + random_id);
             random_id_string = String.valueOf(random_id);
             if(Model.instace.getRestaurant(random_id_string) == null){
                 Log.d("Mife", "found new id");
-                isFound = false;
+                isFound = true;
             }
         }
         Log.d("TAG","Btn Save click");
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final Restaurant st = new Restaurant(random_id_string , nameEt.getText().toString(), foodNameEt.getText().toString(), user.getEmail() , addressEt.getText().toString() , cbEt.isChecked(),"" , ot.getText().toString() , od.getText().toString());
-        if (imageBitmap != null) {
-            Model.instace.saveImage(imageBitmap, st.id + ".jpeg", new Model.SaveImageListener() {
-                @Override
-                public void complete(String url) {
-                    st.imageUrl = url;
-                    Model.instace.addRestaurant(st);
-                    new AlertDialog.Builder(MainActivity.this)
-                            .setTitle("New Restaurant")
-                            .setMessage("The save operation was completed successfully.")
-                            .setIcon(android.R.drawable.ic_dialog_info)
-                            .show();
-                    setResult(RESAULT_SUCCESS);
-                    progressBar.setVisibility(GONE);
-                    //finish();
-                }
+        Model.instace.saveImage(imageBitmap, st.id + ".jpeg", new Model.SaveImageListener() {
+            @Override
+            public void complete(String url) {
+                st.imageUrl = url;
+                Model.instace.addRestaurant(st);
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("New Restaurant")
+                        .setMessage("The save operation was completed successfully.")
+                        .setIcon(android.R.drawable.ic_dialog_info)
+                        .show();
+                setResult(RESAULT_SUCCESS);
+                progressBar.setVisibility(GONE);
+            }
 
-                @Override
-                public void fail() {
-                    //notify operation fail,...
-                    setResult(RESAULT_SUCCESS);
-                    new AlertDialog.Builder(MainActivity.this)
-                            .setTitle("New Restaurant")
-                            .setMessage("The save operation was completed , without image...")
-                            .setIcon(android.R.drawable.ic_dialog_info)
-                            .show();
-                    progressBar.setVisibility(GONE);
-                    //finish();
-                }
-            });
-        }else{
-            Model.instace.addRestaurant(st);
-            new AlertDialog.Builder(MainActivity.this)
-                    .setTitle("New Restaurant")
-                    .setMessage("The save operation was completed successfully.")
-                    .setIcon(android.R.drawable.ic_dialog_info)
-                    .show();
-            setResult(RESAULT_SUCCESS);
-            progressBar.setVisibility(GONE);
-            //finish();
-        }
-        /*if(Model.instace.getRestaurant(idEt.getText().toString()) != null) {
-            new AlertDialog.Builder(MainActivity.this)
-                    .setTitle("New Restaurant")
-                    .setMessage("Id is already exist!")
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
-            return;
-        }*/
-        /*Restaurant new_student = new Restaurant(idEt.getText().toString() , nameEt.getText().toString(), phoneEt.getText().toString() , addressEt.getText().toString() , cbEt.isChecked(),"" , bt.getText().toString() , bd.getText().toString());
-        Model.instace.addRestaurant(new_student);
-        new AlertDialog.Builder(MainActivity.this)
-                .setTitle("New Restaurant")
-                .setMessage("The save operation was completed successfully.")
-                .setIcon(android.R.drawable.ic_dialog_info)
-                .show();
-        setResult(RESAULT_SUCCESS);*/
+            @Override
+            public void fail() {
+                //notify operation fail,...
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("New Restaurant")
+                        .setMessage("Image couldn't be loaded , try again...")
+                        .setIcon(android.R.drawable.ic_dialog_info)
+                        .show();
+                progressBar.setVisibility(GONE);
+                return;
+            }
+        });
+
     }
 }

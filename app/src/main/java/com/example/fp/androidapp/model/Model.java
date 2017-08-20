@@ -61,7 +61,8 @@ public class Model {
     }
     public  void updateRestaurant(Restaurant st){
         //RestaurantSql.updateRestaurant(Sql.getWritableDatabase(),st);
-        modelFirebase.addRestaurant(st);} //same functionallity as update
+        modelFirebase.addRestaurant(st);
+    } //same functionallity as update
     public Restaurant getRestaurant(String stId) {
         return RestaurantSql.getRestaurant(Sql.getReadableDatabase(),stId);
 
