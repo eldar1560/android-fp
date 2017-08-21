@@ -80,6 +80,13 @@ public class MainActivity extends Activity implements RestaurantMainFragment.Res
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
             return;
+        }else if(nameEt.getText().toString().contains("\n") || foodNameEt.getText().toString().contains("\n") || addressEt.getText().toString().contains("\n")){
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("New Restaurant")
+                    .setMessage("Do not put an enter in the fields")
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+            return;
         }
         progressBar.setVisibility(View.VISIBLE);
         int random_id;

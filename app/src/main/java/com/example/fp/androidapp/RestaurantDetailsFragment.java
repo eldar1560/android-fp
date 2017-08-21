@@ -1,6 +1,8 @@
 package com.example.fp.androidapp;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -26,6 +28,38 @@ public class RestaurantDetailsFragment extends Fragment {
     Restaurant st;
     private static final String ARG_PARAM1 = "param1";
     private String stId;
+
+    interface RestaurantDetailsFragmentListener{
+        void onFullImage();
+    }
+
+    RestaurantDetailsFragmentListener listener;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if(activity instanceof RestaurantDetailsFragmentListener){
+            listener = (RestaurantDetailsFragmentListener) activity;
+        }else{
+            throw new RuntimeException(activity.toString() + " must implement RestaurantDetailsFragmentListener");
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof RestaurantDetailsFragmentListener){
+            listener = (RestaurantDetailsFragmentListener) context;
+        }else{
+            throw new RuntimeException(context.toString() + " must implement RestaurantDetailsFragmentListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
+    }
 
     public static RestaurantDetailsFragment newInstance(String param1){
         RestaurantDetailsFragment fragment = new RestaurantDetailsFragment();
@@ -76,14 +110,21 @@ public class RestaurantDetailsFragment extends Fragment {
                 stu_cb = (CheckBox) contentView.findViewById(R.id.stu_cb);
                 stu_cb.setChecked(st.checked);
                 imageView = (ImageView) contentView.findViewById(R.id.stu_image);
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(listener!=null)
+                            listener.onFullImage();
+                    }
+                });
                 progressBar = (ProgressBar) contentView.findViewById(R.id.stu_progressBar);
                 if (st.imageUrl != null && !st.imageUrl.isEmpty() && !st.imageUrl.equals("")){
                     progressBar.setVisibility(View.VISIBLE);
                     Model.instace.getImage(st.imageUrl, new Model.GetImageListener() {
                         @Override
                         public void onSuccess(Bitmap image) {
-                                imageView.setImageBitmap(image);
-                                progressBar.setVisibility(View.GONE);
+                            imageView.setImageBitmap(image);
+                            progressBar.setVisibility(View.GONE);
                         }
 
                         @Override

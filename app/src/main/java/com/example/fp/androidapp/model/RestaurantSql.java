@@ -82,17 +82,17 @@ public class RestaurantSql {
                 if(restaurant_variables[0].equals(field)) {
                     /*if (st.name.equals(content))
                         list.add(st);*/
-                    if(st.name.toLowerCase().equals(content.toLowerCase()))
+                    if(st.name.toLowerCase().contains(content.toLowerCase()))
                         list.add(st);
                 }
                 else if(restaurant_variables[1].equals(field)) {
                     /*if (st.foodName.equals(content))
                         list.add(st);*/
-                    if(st.foodName.toLowerCase().equals(content.toLowerCase()))
+                    if(st.foodName.toLowerCase().contains(content.toLowerCase()))
                         list.add(st);
                 }
                 else if(restaurant_variables[2].equals(field)) {
-                    if (st.userName.equals(content))
+                    if (st.userName.contains(content))
                         list.add(st);
                 }
                 else

@@ -29,8 +29,9 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
-public class RestaurantListActivity extends Activity implements RestaurantListFragment.RestaurantListFragmentListener,AuthUIFragment.RestaurantAuthFragmentListener {
+public class RestaurantListActivity extends Activity implements RestaurantListFragment.RestaurantListFragmentListener,AuthUIFragment.RestaurantAuthFragmentListener , UserProfileFragment.RestaurantUserProfileFragmentListener{
     RestaurantListFragment restaurantListFragment;
+    UserProfileFragment userProfileFragment;
     AuthUIFragment authUIFragment;
     private FirebaseAuth mAuth;
     boolean isOnSearch = false;
@@ -107,6 +108,8 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
                         .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
             menu.add(0, 3, 0, "My Uploads")
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            menu.add(0,4,0,"Profile")
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
             menu.add(0,2,0,"Log Off")
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         }
@@ -134,7 +137,7 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
                 authUIFragment = AuthUIFragment.newInstance();
                 tran.replace(R.id.list_fragment_container , authUIFragment);
                 tran.commit();
-                new CountDownTimer(500, 50) { //for the case the fragment is not replaced already
+                new CountDownTimer(100, 50) { //for the case the fragment is not replaced already
 
                     public void onTick(long millisUntilFinished) {
                         RestaurantListActivity.this.invalidateOptionsMenu();
@@ -154,6 +157,22 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
                 tran.replace(R.id.list_fragment_container , restaurantListFragment);
                 tran.commit();
                 RestaurantListActivity.this.invalidateOptionsMenu();
+                return true;
+            case 4:
+                userProfileFragment = UserProfileFragment.newInstance();
+                tran.replace(R.id.list_fragment_container , userProfileFragment);
+                tran.commit();
+                new CountDownTimer(100, 50) { //for the case the fragment is not replaced already
+
+                    public void onTick(long millisUntilFinished) {
+                        RestaurantListActivity.this.invalidateOptionsMenu();
+                    }
+
+                    public void onFinish() {
+                        RestaurantListActivity.this.invalidateOptionsMenu();
+                    }
+
+                }.start();
                 return true;
             case android.R.id.home:
                 onBackPressed();
@@ -206,7 +225,7 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
                             isOnSearch = false;
                             tran.replace(R.id.list_fragment_container , restaurantListFragment);
                             tran.commit();
-                            new CountDownTimer(500, 50) { //for the case the fragment is not replaced already
+                            new CountDownTimer(100, 50) { //for the case the fragment is not replaced already
 
                                 public void onTick(long millisUntilFinished) {
                                     RestaurantListActivity.this.invalidateOptionsMenu();
@@ -250,7 +269,7 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
                             isOnSearch = false;
                             tran.replace(R.id.list_fragment_container , restaurantListFragment);
                             tran.commit();
-                            new CountDownTimer(500, 50) { //for the case the fragment is not replaced already
+                            new CountDownTimer(100, 50) { //for the case the fragment is not replaced already
 
                                 public void onTick(long millisUntilFinished) {
                                     RestaurantListActivity.this.invalidateOptionsMenu();
@@ -280,7 +299,27 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
         restaurantListFragment = RestaurantListFragment.newInstance("" ,"","true");
         tran.replace(R.id.list_fragment_container , restaurantListFragment);
         tran.commit();
-        new CountDownTimer(500, 50) { //for the case the fragment is not replaced already
+        new CountDownTimer(100, 50) { //for the case the fragment is not replaced already
+
+            public void onTick(long millisUntilFinished) {
+                RestaurantListActivity.this.invalidateOptionsMenu();
+            }
+
+            public void onFinish() {
+                RestaurantListActivity.this.invalidateOptionsMenu();
+            }
+
+        }.start();
+    }
+
+    @Override
+    public void onBack() {
+        isOnSearch = false;
+        FragmentTransaction tran = getFragmentManager().beginTransaction();
+        restaurantListFragment = RestaurantListFragment.newInstance("" ,"","true");
+        tran.replace(R.id.list_fragment_container , restaurantListFragment);
+        tran.commit();
+        new CountDownTimer(100, 50) { //for the case the fragment is not replaced already
 
             public void onTick(long millisUntilFinished) {
                 RestaurantListActivity.this.invalidateOptionsMenu();

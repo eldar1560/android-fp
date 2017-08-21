@@ -2,14 +2,17 @@ package com.example.fp.androidapp;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.fp.androidapp.model.Model;
 import com.example.fp.androidapp.model.Restaurant;
@@ -17,12 +20,13 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Locale;
 
-public class RestaurantDetailsActivity extends Activity{
+public class RestaurantDetailsActivity extends Activity implements RestaurantDetailsFullImageFragment.RestaurantDetailsFullImageFragmentListener , RestaurantDetailsFragment.RestaurantDetailsFragmentListener{
 
     final static int RESAULT_SUCCESS = 0;
     final static int RESAULT_FAIL = 1;
 
     RestaurantDetailsFragment restaurantDetailsFragment;
+    RestaurantDetailsFullImageFragment restaurantDetailsFullImageFragment;
 
     Restaurant st;
     String stId;
@@ -49,6 +53,17 @@ public class RestaurantDetailsActivity extends Activity{
                 FragmentTransaction tran = getFragmentManager().beginTransaction();
                 tran.add(R.id.details_fragment_container, restaurantDetailsFragment,"tag");
                 tran.commit();
+                new CountDownTimer(50, 50) { //for the case the fragment is not replaced already
+
+                    public void onTick(long millisUntilFinished) {
+                        RestaurantDetailsActivity.this.invalidateOptionsMenu();
+                    }
+
+                    public void onFinish() {
+                        RestaurantDetailsActivity.this.invalidateOptionsMenu();
+                    }
+
+                }.start();
             }
 
             @Override
@@ -77,6 +92,7 @@ public class RestaurantDetailsActivity extends Activity{
                 restaurantDetailsFragment = RestaurantDetailsFragment.newInstance(st.id);
                 tran.add(R.id.details_fragment_container, restaurantDetailsFragment,"tag");
                 tran.commit();
+                RestaurantDetailsActivity.this.invalidateOptionsMenu();
 
 
             }else if(resultCode == RestaurantEditActivity.RESAULT_SUCCESS_DELETE) {
@@ -95,23 +111,28 @@ public class RestaurantDetailsActivity extends Activity{
     @Override
     public boolean onCreateOptionsMenu(final Menu menu)
     {
-        Model.instace.getRestaurant(stId, new Model.getRestaurantCallback() {
-            @Override
-            public void onComplete(Restaurant restaurant) {
-                RestaurantDetailsActivity.this.st = restaurant;
-                menu.add(0,0,0,"Show On Map").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-                if(st.userName.equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())){
-                    menu.add(0, 1, 0, "Edit").setIcon(R.drawable.edit_button)
-                            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        Fragment rlf;
+        rlf = getFragmentManager().findFragmentById(R.id.details_fragment_container);
+        if(rlf instanceof RestaurantDetailsFragment) {
+            Model.instace.getRestaurant(stId, new Model.getRestaurantCallback() {
+                @Override
+                public void onComplete(Restaurant restaurant) {
+                    RestaurantDetailsActivity.this.st = restaurant;
+                    menu.add(0, 0, 0, "Show On Map").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                    if (st.userName.equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
+                        menu.add(0, 1, 0, "Edit").setIcon(R.drawable.edit_button)
+                                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                    } else {
+                        menu.add(0, 2, 0, "Contact User").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                    }
                 }
-            }
 
-            @Override
-            public void onCancel() {
-                Log.d("TAG","get restaurant cancell" );
-            }
-        });
-
+                @Override
+                public void onCancel() {
+                    Log.d("TAG", "get restaurant cancell");
+                }
+            });
+        }
         return true;
     }
 
@@ -125,8 +146,8 @@ public class RestaurantDetailsActivity extends Activity{
                     public void onComplete(Restaurant restaurant) {
                         RestaurantDetailsActivity.this.st = restaurant;
                         String uri = String.format(Locale.ENGLISH, "geo:0,0?q=%s",st.address);
-                        Intent intent2 = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                        startActivity(intent2);
+                        Intent intent_map = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                        startActivity(intent_map);
                     }
 
                     @Override
@@ -141,6 +162,20 @@ public class RestaurantDetailsActivity extends Activity{
                 intent.putExtra("STID",st.id);
                 startActivityForResult(intent,REQUEST_ID);
                 return true;
+            case 2:
+                try
+                {
+                    Intent intent_gmail = new Intent (Intent.ACTION_VIEW , Uri.parse("mailto:" + st.userName));
+                    //intent_gmail.putExtra(Intent.EXTRA_SUBJECT, "your_subject");
+                    //intent_gmail.putExtra(Intent.EXTRA_TEXT, "your_text");
+                    startActivity(intent_gmail);
+                }
+                catch(Exception e)
+                {
+                    Toast.makeText(MyApplication.getMyContext(), "Sorry...You don't have any mail app", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+                return true;
             case android.R.id.home:
                 onBackPressed();
                 return true;
@@ -149,4 +184,41 @@ public class RestaurantDetailsActivity extends Activity{
         }
     }
 
+    @Override
+    public void onBack() {
+        FragmentTransaction tran = getFragmentManager().beginTransaction();
+        restaurantDetailsFragment = RestaurantDetailsFragment.newInstance(st.id);
+        tran.replace(R.id.details_fragment_container , restaurantDetailsFragment);
+        tran.commit();
+        new CountDownTimer(50, 50) { //for the case the fragment is not replaced already
+
+            public void onTick(long millisUntilFinished) {
+                RestaurantDetailsActivity.this.invalidateOptionsMenu();
+            }
+
+            public void onFinish() {
+                RestaurantDetailsActivity.this.invalidateOptionsMenu();
+            }
+
+        }.start();
+    }
+
+    @Override
+    public void onFullImage() {
+        FragmentTransaction tran = getFragmentManager().beginTransaction();
+        restaurantDetailsFullImageFragment = RestaurantDetailsFullImageFragment.newInstance(st.id);
+        tran.replace(R.id.details_fragment_container , restaurantDetailsFullImageFragment);
+        tran.commit();
+        new CountDownTimer(50, 50) { //for the case the fragment is not replaced already
+
+            public void onTick(long millisUntilFinished) {
+                RestaurantDetailsActivity.this.invalidateOptionsMenu();
+            }
+
+            public void onFinish() {
+                RestaurantDetailsActivity.this.invalidateOptionsMenu();
+            }
+
+        }.start();
+    }
 }

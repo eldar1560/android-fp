@@ -195,8 +195,16 @@ public class RestaurantListFragment extends Fragment {
             final ImageView imageView = (ImageView) convertView.findViewById(R.id.strow_image);
             final ProgressBar progressBar = (ProgressBar) convertView.findViewById(R.id.strow_progressBar);
             final Restaurant st = data.get(position);
-            name.setText(st.name);
-            foodName.setText(st.foodName);
+            String resNameForRow = st.name , foodNameForRow = st.foodName;
+            if(resNameForRow.length() > 15)
+                resNameForRow = resNameForRow.substring(0,12) + "...";
+
+            if(foodNameForRow.length() > 15)
+                foodNameForRow = foodNameForRow.substring(0,12) + "...";
+
+
+            name.setText(resNameForRow);
+            foodName.setText(foodNameForRow);
             cb.setChecked(st.checked);
             cb.setTag(position);
 

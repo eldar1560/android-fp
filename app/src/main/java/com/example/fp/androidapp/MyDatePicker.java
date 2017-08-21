@@ -61,7 +61,7 @@ public class MyDatePicker extends EditText implements MyOnDateSetListener {
         if(today_year < year || (year == today_year && month > today_month) || (year == today_year && month == today_month && day > today_day)){
             new AlertDialog.Builder(((Activity)getContext()))
                     .setTitle("Wrong date")
-                    .setMessage("the birth date can't be in the future")
+                    .setMessage("the order date can't be in the future")
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
         }
