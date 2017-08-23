@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.fp.androidapp.model.Model;
 import com.example.fp.androidapp.model.Restaurant;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -101,14 +102,14 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
         Fragment rlf;
         rlf = getFragmentManager().findFragmentById(R.id.list_fragment_container);
         if(rlf instanceof RestaurantListFragment) {
-            menu.add(0, 0, 0, "Add").setIcon(R.drawable.button_add)
+            menu.add(0, 0, 0, "Add").setIcon(R.drawable.add_icon)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
             if(isOnSearch)
                 menu.add(0, 1, 0, "Show All")
                         .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-            menu.add(0, 3, 0, "My Uploads")
+            menu.add(0,4,0,"Profile").setIcon(R.drawable.my_profile)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-            menu.add(0,4,0,"Profile")
+            menu.add(0, 3, 0, "My Uploads")
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
             menu.add(0,2,0,"Log Off")
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
@@ -134,6 +135,7 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
                 return true;
             case 2:
                 FirebaseAuth.getInstance().signOut();
+                Model.instace.unRegisterUpdates();
                 authUIFragment = AuthUIFragment.newInstance();
                 tran.replace(R.id.list_fragment_container , authUIFragment);
                 tran.commit();
@@ -193,6 +195,8 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
 
     @Override
     public void onSearch(String content ,String field) {
+        if(content.equals(""))
+            return;
         isOnSearch = true;
         FragmentTransaction tran = getFragmentManager().beginTransaction();
         restaurantListFragment = RestaurantListFragment.newInstance(content,field,"false");
@@ -219,6 +223,7 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Mife", "signInWithEmail:success");
+                            Model.instace.registerUpdates();
                             FirebaseUser user = mAuth.getCurrentUser();
                             FragmentTransaction tran = getFragmentManager().beginTransaction();
                             restaurantListFragment = RestaurantListFragment.newInstance("","","true");
@@ -263,6 +268,7 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Mife", "createUserWithEmail:success");
+                            Model.instace.registerUpdates();
                             FirebaseUser user = mAuth.getCurrentUser();
                             FragmentTransaction tran = getFragmentManager().beginTransaction();
                             restaurantListFragment = RestaurantListFragment.newInstance("","","true");
@@ -293,6 +299,7 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
 
     @Override
     public void onAlreadyLoggedIn() {
+        Model.instace.registerUpdates();
         isOnSearch = false;
         mAuth = FirebaseAuth.getInstance();
         FragmentTransaction tran = getFragmentManager().beginTransaction();

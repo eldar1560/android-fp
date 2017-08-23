@@ -28,7 +28,8 @@ import java.util.Map;
 
 public class ModelFirebase {
 
-    List<ChildEventListener> listeners = new LinkedList<ChildEventListener>();
+    ChildEventListener listener;
+
     public void addRestaurant(Restaurant st) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("restaurants");
@@ -158,8 +159,7 @@ public class ModelFirebase {
                                         final RegisterRestaurantsUpdatesCallback callback) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("restaurants");
-        myRef.orderByChild("lastUpdateDate").startAt(lastUpdateDate);
-        ChildEventListener listener = myRef.orderByChild("lastUpdateDate").startAt(lastUpdateDate)
+        listener = myRef.orderByChild("lastUpdateDate").startAt(lastUpdateDate)
                 .addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -193,31 +193,16 @@ public class ModelFirebase {
 
             }
         });
-        listeners.add(listener);
     }
-//    public void getAllRestaurantsAndObserve(double lastUpdateDate,
-//                                         final getAllRestaurantsAndObserveCallback callback) {
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference myRef = database.getReference("students");
-//
-//        myRef.orderByChild("lastUpdateDate").startAt(lastUpdateDate)
-//                .addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                        List<Restaurant> list = new LinkedList<Restaurant>();
-//                        for (DataSnapshot snap : dataSnapshot.getChildren()) {
-//                            Restaurant restaurant = snap.getValue(Restaurant.class);
-//                            list.add(restaurant);
-//                        }
-//                        callback.onComplete(list);
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//
-//                    }
-//                });
-//    }
+    public void unregisterRestaurantsUpdates()
+    {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference(RestaurantSql.RESTAURANT_TABLE);
+        if(listener !=null)
+            myRef.removeEventListener(listener);
+        listener = null ;
+    }
+
 
 }
 

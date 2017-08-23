@@ -118,12 +118,14 @@ public class RestaurantDetailsActivity extends Activity implements RestaurantDet
                 @Override
                 public void onComplete(Restaurant restaurant) {
                     RestaurantDetailsActivity.this.st = restaurant;
-                    menu.add(0, 0, 0, "Show On Map").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                    menu.add(0, 0, 0, "Show On Map").setIcon(R.drawable.googlemaps)
+                            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
                     if (st.userName.equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
-                        menu.add(0, 1, 0, "Edit").setIcon(R.drawable.edit_button)
+                        menu.add(0, 1, 0, "Edit").setIcon(R.drawable.edit_icon)
                                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
                     } else {
-                        menu.add(0, 2, 0, "Contact User").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                        menu.add(0, 2, 0, "Contact User").setIcon(R.drawable.gmail)
+                                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
                     }
                 }
 

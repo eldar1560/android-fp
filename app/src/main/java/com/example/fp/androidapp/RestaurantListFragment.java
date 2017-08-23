@@ -73,22 +73,7 @@ public class RestaurantListFragment extends Fragment {
         list.setSelection(adapter.getCount() - 1);
 
     }
-    /*//for changing value of already created item
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(Model.ChangeStudentEvent event) {
-        Toast.makeText(MyApplication.getMyContext(), "got changing restaurant event", Toast.LENGTH_SHORT).show();
-        Log.d("Mife","got changing restaurant");
-        for (Restaurant st: data){
-            if (st.id.equals(event.restaurant.id)){
-                data.remove(st);
-                data.add(event.restaurant);
-                break;
-            }
-        }
-        adapter.notifyDataSetChanged();
-        list.setSelection(adapter.getCount() - 1);
 
-    }*/
     //for deletion
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Model.DeleteRestaurantEvent event) {
@@ -97,14 +82,14 @@ public class RestaurantListFragment extends Fragment {
         boolean exist = false;
         for (Restaurant st: data){
             if (st.id.equals(event.restaurant.id)){
+                Log.d("Mife","removing him");
+                data.remove(st);
                 st = event.restaurant;
                 exist = true;
                 break;
             }
         }
-        if (exist){
-            data.remove(event.restaurant);
-        }
+
         adapter.notifyDataSetChanged();
         list.setSelection(adapter.getCount() - 1);
 

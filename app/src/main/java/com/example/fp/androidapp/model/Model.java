@@ -25,14 +25,10 @@ public class Model {
     {
         Sql = new ModelSql(MyApplication.getMyContext());
         modelFirebase = new ModelFirebase();
-        synchRestaurantsDbAndregisterRestaurantsUpdates();
     }
-    /*public List<Restaurant> getAllRestaurants(){
-        //RestaurantSql.onUpgrade(Sql.getReadableDatabase(),0,0);
-        return RestaurantSql.getAllRestaurants(
-                Sql.getReadableDatabase());
+    public void registerUpdates(){synchRestaurantsDbAndregisterRestaurantsUpdates();}
+    public void unRegisterUpdates(){modelFirebase.unregisterRestaurantsUpdates();}
 
-    }*/
     public void getAllRestaurants(final getAllRestaurantsAndObserveCallback callback){
 
         //5. read from local db
@@ -52,23 +48,19 @@ public class Model {
         void onCancel();
     }
     public void addRestaurant(Restaurant st) {
-        //RestaurantSql.addRestaurant(modelSql.getWritableDatabase(),st);
         modelFirebase.addRestaurant(st);
     }
     public  void deleteRestaurant(Restaurant st){
-        //RestaurantSql.deleteRestaurant(Sql.getWritableDatabase(),st);
         modelFirebase.deleteRestaurant(st);
     }
     public  void updateRestaurant(Restaurant st){
-        //RestaurantSql.updateRestaurant(Sql.getWritableDatabase(),st);
-        modelFirebase.addRestaurant(st);
-    } //same functionallity as update
+        modelFirebase.addRestaurant(st); //add has same functionallity as update
+    }
     public Restaurant getRestaurant(String stId) {
         return RestaurantSql.getRestaurant(Sql.getReadableDatabase(),stId);
 
     }
     public void getRestaurant(String stId, final getRestaurantCallback callback) {
-        //return RestaurantSql.getRestaurant(modelSql.getReadableDatabase(),stId);
         modelFirebase.getRestaurant(stId, new ModelFirebase.getRestaurantCallback() {
             @Override
             public void onComplete(Restaurant restaurant) {
@@ -90,8 +82,9 @@ public class Model {
     private void synchRestaurantsDbAndregisterRestaurantsUpdates() {
         //1. get local lastUpdateTade
         SharedPreferences pref = MyApplication.getMyContext().getSharedPreferences("TAG", Context.MODE_PRIVATE);
-        final double lastUpdateDate = pref.getFloat("StudnetsLastUpdateDate",0);
-        Log.d("TAG","lastUpdateDate: " + lastUpdateDate);
+        final double lastUpdateDate = 0;
+        Sql.onUpgrade(Sql.getWritableDatabase(),0,0);
+        Log.d("mife","lastUpdateDate: " + lastUpdateDate);
 
         modelFirebase.registerRestaurantsUpdates(lastUpdateDate,new ModelFirebase.RegisterRestaurantsUpdatesCallback() {
             @Override
@@ -106,7 +99,7 @@ public class Model {
                             Context.MODE_PRIVATE).edit();
                     prefEd.putFloat("StudnetsLastUpdateDate", (float) restaurant.lastUpdateDate);
                     prefEd.commit();
-                    Log.d("TAG","StudnetsLastUpdateDate: " + restaurant.lastUpdateDate);
+                    Log.d("mife","StudnetsLastUpdateDate: " + restaurant.lastUpdateDate);
                 }
                 EventBus.getDefault().post(new UpdateRestaurantEvent(restaurant));
             }

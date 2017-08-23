@@ -173,7 +173,7 @@ public class RestaurantSql {
     }
 
     static public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("drop " + RESTAURANT_TABLE + ";");
+        db.execSQL("drop table if exists "+ RESTAURANT_TABLE);
         onCreate(db);
     }
     static public void deleteRestaurant(SQLiteDatabase db, Restaurant st)
@@ -198,15 +198,6 @@ public class RestaurantSql {
         }
         values.put(RESTAURANT_IMAGE_URL, st.imageUrl);
         db.update(RESTAURANT_TABLE, values, RESTAURANT_ID+"=?",new String[]{st.id});
-        /*int checked;
-        if(st.checked)
-            checked = 1;
-        else
-            checked = 0;
-        String strSQL = "UPDATE "+RESTAURANT_TABLE+" SET "+RESTAURANT_ID+" = "+st.id+" , "+RESTAURANT_USERNAME+" = "+st.userName+" , "+RESTAURANT_TIME+" = "+st.orderTime+" , "+RESTAURANT_DATE+
-                " = "+st.orderDate+" , "+RESTAURANT_NAME+" = "+st.name+" , "+ADDRESS+" = "+st.address+" , "+RESTAURANT_CHECK+" = "+checked+" WHERE "+RESTAURANT_ID+" = "+ st.id;
-
-        db.execSQL(strSQL);*/
     }
 
 }
