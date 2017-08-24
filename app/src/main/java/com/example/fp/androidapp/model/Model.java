@@ -97,6 +97,7 @@ public class Model {
         modelFirebase.registerRestaurantsUpdates(lastUpdateDate,new ModelFirebase.RegisterRestaurantsUpdatesCallback() {
             @Override
             public void onRestaurantUpdate(Restaurant restaurant) {
+                int likes_before = 0;
                 //3. update the local db
                 if(restaurant.isRemoved == 1){
                     if(RestaurantSql.getRestaurant(Sql.getReadableDatabase(),restaurant.id) != null){
@@ -104,6 +105,7 @@ public class Model {
                     }
                 }else {
                     if(RestaurantSql.getRestaurant(Sql.getReadableDatabase(),restaurant.id) != null){
+                        likes_before = RestaurantSql.getRestaurant(Sql.getReadableDatabase(),restaurant.id).likes;
                         RestaurantSql.updateRestaurant(Sql.getWritableDatabase(),restaurant);
                     }else{
                         RestaurantSql.addRestaurant(Sql.getWritableDatabase(),restaurant);
@@ -119,7 +121,7 @@ public class Model {
                     prefEd.commit();
                     Log.d("mife","StudnetsLastUpdateDate: " + restaurant.lastUpdateDate);
                 }
-                EventBus.getDefault().post(new UpdateRestaurantEvent(restaurant));
+                EventBus.getDefault().post(new UpdateRestaurantEvent(restaurant , likes_before));
             }
 
         });
@@ -185,8 +187,10 @@ public class Model {
 
     public class UpdateRestaurantEvent {
         public final Restaurant restaurant;
-        public UpdateRestaurantEvent(Restaurant restaurant) {
+        public final int likes_before;
+        public UpdateRestaurantEvent(Restaurant restaurant , int likes_before) {
             this.restaurant = restaurant;
+            this.likes_before = likes_before;
         }
     }
 }

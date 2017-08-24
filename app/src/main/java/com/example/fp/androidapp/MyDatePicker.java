@@ -21,9 +21,9 @@ interface MyOnDateSetListener{
 }
 
 public class MyDatePicker extends EditText implements MyOnDateSetListener {
-    int year = 2017;
-    int month = 0;
-    int day = 1;
+    int year = Calendar.getInstance().get(Calendar.YEAR);
+    int month = Calendar.getInstance().get(Calendar.MONTH);
+    int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 
     public MyDatePicker(Context context) {
         super(context);
@@ -45,7 +45,6 @@ public class MyDatePicker extends EditText implements MyOnDateSetListener {
         if (event.getAction() == MotionEvent.ACTION_DOWN){
             Log.d("TAG","event.getAction() == MotionEvent.ACTION_DOWN");
             MyDatePickerDialog dpd =  MyDatePickerDialog.newInstance(getId() , year ,month , day);
-            //tpd.listener = this;
             dpd.show(((Activity)getContext()).getFragmentManager(),"TAG");
             return true;
         }
@@ -106,7 +105,6 @@ public class MyDatePicker extends EditText implements MyOnDateSetListener {
                 month = getArguments().getInt("month");
                 day = getArguments().getInt("day");
             }
-            //Dialog timePicker = new TimePickerDialog(getActivity(),this,hour,min,false);
             Dialog datePicker = new DatePickerDialog(getActivity() , this , year , month , day);
             if (getArguments() != null) {
                 int tag = getArguments().getInt(ARG_CONTAINER_EDIT_TEXT_VIEW);

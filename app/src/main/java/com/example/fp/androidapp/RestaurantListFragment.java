@@ -2,11 +2,16 @@ package com.example.fp.androidapp;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,7 +63,6 @@ public class RestaurantListFragment extends Fragment {
     // (in the UI thread for Toast)
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Model.UpdateRestaurantEvent event) {
-        //Toast.makeText(MyApplication.getMyContext(), "someone added or edited restaurant", Toast.LENGTH_SHORT).show();
         Log.d("Mife","got new/edit/delete restaurant");
         boolean exist = false;
         for (int i = 0 ; i<data.size() ; i++){
@@ -68,8 +72,51 @@ public class RestaurantListFragment extends Fragment {
                 if(event.restaurant.isRemoved == 1) {
                     data.remove(i);
                 }
-                else
-                    data.set(i,event.restaurant);
+                else {
+                    data.set(i, event.restaurant);
+                    Log.d("mife" , "event.likes = "+event.likes_before +" , event likes = "+event.restaurant.likes);
+                    if(event.likes_before < event.restaurant.likes){
+                        Log.d("mife","Like added");
+                        final String [] user_liked = event.restaurant.userLikes.split(",");
+                        if(!user_liked[user_liked.length-1].equals(user.getEmail())) {
+                            Model.instace.getImage(event.restaurant.imageUrl, new Model.GetImageListener() {
+                                @Override
+                                public void onSuccess(Bitmap image) {
+                                    Log.d("mife", "found image");
+                                    NotificationCompat.Builder mBuilder =
+                                            new NotificationCompat.Builder(MyApplication.getMyContext())
+                                                    .setSmallIcon(R.drawable.icon)
+                                                    .setContentTitle("Eat&Share!")
+                                                    .setAutoCancel(true)
+                                                    .setDefaults(NotificationCompat.DEFAULT_SOUND)
+                                                    .setContentText(user_liked[user_liked.length - 1] + " liked your post");
+                                    Intent resultIntent = new Intent(MyApplication.getMyContext(), RestaurantListActivity.class);
+                                    PendingIntent resultPendingIntent =
+                                            PendingIntent.getActivity(
+                                                    MyApplication.getMyContext(),
+                                                    0,
+                                                    resultIntent,
+                                                    PendingIntent.FLAG_UPDATE_CURRENT
+                                            );
+                                    //mBuilder.setContentIntent(resultPendingIntent);
+                                    NotificationManager mNotificationManager =
+                                            (NotificationManager) MyApplication.getMyContext().getSystemService(MyApplication.getMyContext().NOTIFICATION_SERVICE);
+
+                                    NotificationCompat.BigPictureStyle s = new NotificationCompat.BigPictureStyle().bigPicture(image);
+                                    s.setSummaryText(user_liked[user_liked.length - 1] + " liked your post");
+                                    mBuilder.setStyle(s);
+                                    // mId allows you to update the notification later on.
+                                    mNotificationManager.notify(0, mBuilder.build());
+                                }
+
+                                @Override
+                                public void onFail() {
+                                    Log.d("mife", "didn't find image");
+                                }
+                            });
+                        }
+                    }
+                }
                 break;
             }
         }
@@ -77,46 +124,10 @@ public class RestaurantListFragment extends Fragment {
             data.add(event.restaurant);
         }
         adapter.notifyDataSetChanged();
-        /*boolean exist = false;
-        for (Restaurant st: data){
-            if (st.id.equals(event.restaurant.id)){
-                data.remove(st); //for changed restaurant
-                data.add(event.restaurant);
-                st = event.restaurant;
-                exist = true;
-                break;
-            }
-        }
-        if (!exist){
-            data.add(event.restaurant); //for new restaurant
-        }
-        adapter.notifyDataSetChanged();*/
         list.setSelection(adapter.getCount() - 1);
 
     }
-    //for deletion
-    /*@Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(Model.DeleteRestaurantEvent event) {
-        //Toast.makeText(MyApplication.getMyContext(), "someone deleted restaurant", Toast.LENGTH_SHORT).show();
-        Log.d("Mife","got delete restaurant");
-        boolean exist = false;
-        for (Restaurant st: data){
-            if (st.id.equals(event.restaurant.id)){
-                Log.d("Mife","removing him");
-                data.remove(st);
-                st = event.restaurant;
-                exist = true;
-                break;
-            }
-        }
-        /*if (exist){
-            Log.d("Mife","exist , removing");
-            data.remove(event.restaurant);
-        }
-        adapter.notifyDataSetChanged();
-        list.setSelection(adapter.getCount() - 1);
 
-    }*/
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -225,13 +236,13 @@ public class RestaurantListFragment extends Fragment {
                 public void onClick(View v) {
                     if(st.userLikes.contains(user.getEmail())){
                         st.likes--;
-                        st.userLikes = st.userLikes.replace(user.getEmail(),"");
+                        st.userLikes = st.userLikes.replace(user.getEmail()+",","");
                         likeButton.setBackgroundResource(R.mipmap.like_b);
                         likesNumber.setText(st.likes + " likes");
                         Model.instace.updateRestaurant(st);
                     }else{
                         st.likes++;
-                        st.userLikes += user.getEmail();
+                        st.userLikes += user.getEmail() +",";
                         likeButton.setBackgroundResource(R.mipmap.like_a);
                         likesNumber.setText(st.likes + " likes");
                         Model.instace.updateRestaurant(st);
@@ -245,7 +256,6 @@ public class RestaurantListFragment extends Fragment {
             cb.setTag(position);
 
             imageView.setTag(st.imageUrl);
-            //imageView.setImageDrawable(MyApplication.getMyContext().getDrawable(R.drawable.avatar));
 
             if (st.imageUrl != null && !st.imageUrl.isEmpty() && !st.imageUrl.equals("")){
                 progressBar.setVisibility(View.VISIBLE);
@@ -281,12 +291,10 @@ public class RestaurantListFragment extends Fragment {
             EventBus.getDefault().register(this);
         }
         if(isAll.equals("true")) {
-            //data = Model.instace.getAllRestaurants();
             Model.instace.getAllRestaurants(new Model.getAllRestaurantsAndObserveCallback() {
                 @Override
                 public void onComplete(List<Restaurant> list) {
                     data = list;
-                    //adapter.notifyDataSetChanged();
                 }
 
                 @Override

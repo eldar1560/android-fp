@@ -12,14 +12,16 @@ import android.view.MotionEvent;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
+import java.util.Calendar;
+
 
 interface MyOnTimeSetListener{
     void onTimeSet(int hour, int min);
 }
 
 public class MyTimePicker extends EditText implements MyOnTimeSetListener {
-    int hour = 12;
-    int min = 0;
+    int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+    int min = Calendar.getInstance().get(Calendar.MINUTE);
 
     public MyTimePicker(Context context) {
         super(context);

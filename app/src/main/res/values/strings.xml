@@ -4,5 +4,6 @@
         <item>Restaurant Name:</item>
         <item>Food Name:</item>
         <item>User Name:</item>
+        <item>Address:</item>
     </string-array>
 </resources>

@@ -115,6 +115,9 @@ public class RestaurantSql {
                 else if(restaurant_variables[2].equals(field)) {
                     if (st.userName.contains(content))
                         list.add(st);
+                }else if(restaurant_variables[3].equals(field)){
+                    if(st.address.contains(content))
+                        list.add(st);
                 }
                 else
                     list.add(st);
