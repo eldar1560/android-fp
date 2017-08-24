@@ -5,9 +5,9 @@
     <application
         android:name="com.example.fp.androidapp.MyApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="ELFinalProject"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:icon="@drawable/icon"
+        android:label="Eat&amp;Share"
+        android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name="com.example.fp.androidapp.MainActivity" android:configChanges="orientation|keyboardHidden|screenSize"/>

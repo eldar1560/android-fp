@@ -11,6 +11,9 @@ public class Restaurant {
     public String address;
     public String orderTime;
     public String orderDate;
+    public int isRemoved;
+    public int likes;
+    public String userLikes;
     public double lastUpdateDate;
 
     public Restaurant(){}
@@ -24,5 +27,8 @@ public class Restaurant {
         this.checked = checked;
         this.orderTime = orderTime;
         this.orderDate = orderDate;
+        this.isRemoved = 0;
+        this.likes = 0;
+        this.userLikes = "";
     }
 }

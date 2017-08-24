@@ -37,7 +37,7 @@ public class RestaurantEditActivity extends Activity implements RestaurantEditFr
         setResult(RESAULT_FAIL);
 
         ActionBar bar = getActionBar();
-        bar.setTitle("Edit Restaurant");
+        bar.setTitle("Edit Post");
         bar.setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -58,20 +58,8 @@ public class RestaurantEditActivity extends Activity implements RestaurantEditFr
             tran.add(R.id.edit_fragment_container, restaurantEditFragment, "tag");
             tran.commit();
         }
-
-        Model.instace.getRestaurant(stId, new Model.getRestaurantCallback() {
-            @Override
-            public void onComplete(Restaurant restaurant) {
-                RestaurantEditActivity.this.st_edit = restaurant;
-                Log.d("TAG","got restaurant name: " + restaurant.name);
-            }
-
-            @Override
-            public void onCancel() {
-                Log.d("TAG","get restaurant cancell" );
-
-            }
-        });
+        st_edit = Model.instace.getRestaurant(stId);
+        Log.d("TAG","got restaurant name: " + st_edit.name);
 
     }
     @Override

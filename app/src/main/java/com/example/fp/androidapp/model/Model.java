@@ -9,6 +9,7 @@ import android.webkit.URLUtil;
 import com.example.fp.androidapp.MyApplication;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ import static com.example.fp.androidapp.model.ModelFiles.saveImageToFile;
 
 
 public class Model {
-   ModelSql Sql;
+    ModelSql Sql;
     private ModelFirebase modelFirebase;
     public final static Model instace = new Model();
 
@@ -26,9 +27,15 @@ public class Model {
         Sql = new ModelSql(MyApplication.getMyContext());
         modelFirebase = new ModelFirebase();
     }
-    public void registerUpdates(){synchRestaurantsDbAndregisterRestaurantsUpdates();}
-    public void unRegisterUpdates(){modelFirebase.unregisterRestaurantsUpdates();}
 
+    public void registerUpdates(){
+        Log.d("mife","registered");
+        synchRestaurantsDbAndregisterRestaurantsUpdates();
+    }
+    public void unRegisterUpdates(){
+        Log.d("mife","unRegistered");
+        modelFirebase.unRegisterRestaurantsUpdates();
+    }
     public void getAllRestaurants(final getAllRestaurantsAndObserveCallback callback){
 
         //5. read from local db
@@ -51,16 +58,18 @@ public class Model {
         modelFirebase.addRestaurant(st);
     }
     public  void deleteRestaurant(Restaurant st){
-        modelFirebase.deleteRestaurant(st);
+        st.isRemoved = 1;
+        modelFirebase.addRestaurant(st);
     }
     public  void updateRestaurant(Restaurant st){
-        modelFirebase.addRestaurant(st); //add has same functionallity as update
-    }
+        modelFirebase.addRestaurant(st);
+    } //same functionallity as update
     public Restaurant getRestaurant(String stId) {
         return RestaurantSql.getRestaurant(Sql.getReadableDatabase(),stId);
 
     }
     public void getRestaurant(String stId, final getRestaurantCallback callback) {
+        //return RestaurantSql.getRestaurant(modelSql.getReadableDatabase(),stId);
         modelFirebase.getRestaurant(stId, new ModelFirebase.getRestaurantCallback() {
             @Override
             public void onComplete(Restaurant restaurant) {
@@ -82,15 +91,24 @@ public class Model {
     private void synchRestaurantsDbAndregisterRestaurantsUpdates() {
         //1. get local lastUpdateTade
         SharedPreferences pref = MyApplication.getMyContext().getSharedPreferences("TAG", Context.MODE_PRIVATE);
-        final double lastUpdateDate = 0;
-        Sql.onUpgrade(Sql.getWritableDatabase(),0,0);
+        final double lastUpdateDate = pref.getFloat("StudnetsLastUpdateDate",0);
         Log.d("mife","lastUpdateDate: " + lastUpdateDate);
 
         modelFirebase.registerRestaurantsUpdates(lastUpdateDate,new ModelFirebase.RegisterRestaurantsUpdatesCallback() {
             @Override
             public void onRestaurantUpdate(Restaurant restaurant) {
                 //3. update the local db
-                RestaurantSql.addRestaurant(Sql.getWritableDatabase(), restaurant);
+                if(restaurant.isRemoved == 1){
+                    if(RestaurantSql.getRestaurant(Sql.getReadableDatabase(),restaurant.id) != null){
+                        RestaurantSql.deleteRestaurant(Sql.getWritableDatabase(),restaurant);
+                    }
+                }else {
+                    if(RestaurantSql.getRestaurant(Sql.getReadableDatabase(),restaurant.id) != null){
+                        RestaurantSql.updateRestaurant(Sql.getWritableDatabase(),restaurant);
+                    }else{
+                        RestaurantSql.addRestaurant(Sql.getWritableDatabase(),restaurant);
+                    }
+                }
                 //4. update the lastUpdateTade
                 SharedPreferences pref = MyApplication.getMyContext().getSharedPreferences("TAG", Context.MODE_PRIVATE);
                 final double lastUpdateDate = pref.getFloat("StudnetsLastUpdateDate",0);
@@ -100,40 +118,6 @@ public class Model {
                     prefEd.putFloat("StudnetsLastUpdateDate", (float) restaurant.lastUpdateDate);
                     prefEd.commit();
                     Log.d("mife","StudnetsLastUpdateDate: " + restaurant.lastUpdateDate);
-                }
-                EventBus.getDefault().post(new UpdateRestaurantEvent(restaurant));
-            }
-
-            @Override
-            public void onRestaurantDeleted(Restaurant restaurant) {
-                //3. update the local db
-                RestaurantSql.deleteRestaurant(Sql.getWritableDatabase(), restaurant);
-                //4. update the lastUpdateTade
-                SharedPreferences pref = MyApplication.getMyContext().getSharedPreferences("TAG", Context.MODE_PRIVATE);
-                final double lastUpdateDate = pref.getFloat("StudnetsLastUpdateDate",0);
-                if (lastUpdateDate < restaurant.lastUpdateDate){
-                    SharedPreferences.Editor prefEd = MyApplication.getMyContext().getSharedPreferences("TAG",
-                            Context.MODE_PRIVATE).edit();
-                    prefEd.putFloat("StudnetsLastUpdateDate", (float) restaurant.lastUpdateDate);
-                    prefEd.commit();
-                    Log.d("TAG","StudnetsLastUpdateDate: " + restaurant.lastUpdateDate);
-                }
-                EventBus.getDefault().post(new DeleteRestaurantEvent(restaurant));
-            }
-
-            @Override
-            public void onRestaurantChanged(Restaurant restaurant) {
-                //3. update the local db
-                RestaurantSql.updateRestaurant(Sql.getWritableDatabase(), restaurant);
-                //4. update the lastUpdateTade
-                SharedPreferences pref = MyApplication.getMyContext().getSharedPreferences("TAG", Context.MODE_PRIVATE);
-                final double lastUpdateDate = pref.getFloat("StudnetsLastUpdateDate",0);
-                if (lastUpdateDate < restaurant.lastUpdateDate){
-                    SharedPreferences.Editor prefEd = MyApplication.getMyContext().getSharedPreferences("TAG",
-                            Context.MODE_PRIVATE).edit();
-                    prefEd.putFloat("StudnetsLastUpdateDate", (float) restaurant.lastUpdateDate);
-                    prefEd.commit();
-                    Log.d("TAG","StudnetsLastUpdateDate: " + restaurant.lastUpdateDate);
                 }
                 EventBus.getDefault().post(new UpdateRestaurantEvent(restaurant));
             }
@@ -202,12 +186,6 @@ public class Model {
     public class UpdateRestaurantEvent {
         public final Restaurant restaurant;
         public UpdateRestaurantEvent(Restaurant restaurant) {
-            this.restaurant = restaurant;
-        }
-    }
-    public class DeleteRestaurantEvent {
-        public final Restaurant restaurant;
-        public DeleteRestaurantEvent(Restaurant restaurant) {
             this.restaurant = restaurant;
         }
     }

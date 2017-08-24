@@ -5,6 +5,7 @@ package com.example.fp.androidapp.model;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.fp.androidapp.MyApplication;
 import com.example.fp.androidapp.R;
@@ -14,19 +15,23 @@ import java.util.List;
 
 
 public class RestaurantSql {
-    static final String RESTAURANT_TABLE = "restaurants";
-    static final String RESTAURANT_USERNAME="userName";
-    static final String RESTAURANT_DATE="date";
-    static final String RESTAURANT_TIME="time";
-    static final String ADDRESS="address";
-    static final String RESTAURANT_ID = "stid";
-    static final String RESTAURANT_NAME = "name";
-    static final String RESTAURANT_CHECK = "checked";
-    static final String RESTAURANT_IMAGE_URL = "imageUrl";
-    static final String RESTAURANT_FOOD_NAME = "foodName";
+    public static final String RESTAURANT_TABLE = "restaurants";
+    public static final String RESTAURANT_USERNAME="userName";
+    public static final String RESTAURANT_DATE="date";
+    public static final String RESTAURANT_TIME="time";
+    public static final String RESTAURANT_IS_REMOVED = "isRemoved";
+    public static final String RESTAURANT_LIKES = "likes";
+    public static final String RESTAURANT_USER_LIKES = "userLikes";
+    public static final String ADDRESS="address";
+    public static final String RESTAURANT_ID = "stid";
+    public static final String RESTAURANT_NAME = "name";
+    public static final String RESTAURANT_CHECK = "checked";
+    public static final String RESTAURANT_IMAGE_URL = "imageUrl";
+    public static final String RESTAURANT_FOOD_NAME = "foodName";
+    public static final String RESTAURANT_LAST_UPDATE_DATE = "lastUpdateDate";
 
     static List<Restaurant> getAllRestaurants(SQLiteDatabase db) {
-        Cursor cursor = db.query("restaurants", null, null, null, null, null, null);
+        Cursor cursor = db.query(RESTAURANT_TABLE, null, null, null, null, null, null);
         List<Restaurant> list = new LinkedList<Restaurant>();
         if (cursor.moveToFirst()) {
             int idIndex = cursor.getColumnIndex(RESTAURANT_ID);
@@ -38,6 +43,10 @@ public class RestaurantSql {
             int date =cursor.getColumnIndex(RESTAURANT_DATE);
             int address =cursor.getColumnIndex(ADDRESS);
             int foodName = cursor.getColumnIndex(RESTAURANT_FOOD_NAME);
+            int isRemovedIndex = cursor.getColumnIndex(RESTAURANT_IS_REMOVED);
+            int likesIndex = cursor.getColumnIndex(RESTAURANT_LIKES);
+            int userLikesIndex = cursor.getColumnIndex(RESTAURANT_USER_LIKES);
+            int lastUpdateIndex = cursor.getColumnIndex(RESTAURANT_LAST_UPDATE_DATE);
             do {
                 Restaurant st = new Restaurant();
                 st.id = cursor.getString(idIndex);
@@ -49,13 +58,17 @@ public class RestaurantSql {
                 st.orderTime = cursor.getString(time);
                 st.orderDate = cursor.getString(date);
                 st.foodName = cursor.getString(foodName);
+                st.isRemoved = cursor.getInt(isRemovedIndex);
+                st.likes = cursor.getInt(likesIndex);
+                st.userLikes = cursor.getString(userLikesIndex);
+                st.lastUpdateDate = cursor.getDouble(lastUpdateIndex);
                 list.add(st);
             } while (cursor.moveToNext());
         }
         return list;
     }
     static List<Restaurant> getAllRestaurantsByFilter(SQLiteDatabase db , String content , String field) {
-        Cursor cursor = db.query("restaurants", null, null, null, null, null, null); //must implement that way becuase we check without case sensitive and cannot achieve this with regular query.
+        Cursor cursor = db.query(RESTAURANT_TABLE, null, null, null, null, null, null); //must implement that way becuase we check without case sensitive and cannot achieve this with regular query.
         List<Restaurant> list = new LinkedList<Restaurant>();
         if (cursor.moveToFirst()) {
             int idIndex = cursor.getColumnIndex(RESTAURANT_ID);
@@ -67,6 +80,10 @@ public class RestaurantSql {
             int date =cursor.getColumnIndex(RESTAURANT_DATE);
             int address =cursor.getColumnIndex(ADDRESS);
             int foodName =cursor.getColumnIndex(RESTAURANT_FOOD_NAME);
+            int isRemovedIndex = cursor.getColumnIndex(RESTAURANT_IS_REMOVED);
+            int likesIndex = cursor.getColumnIndex(RESTAURANT_LIKES);
+            int userLikesIndex = cursor.getColumnIndex(RESTAURANT_USER_LIKES);
+            int lastUpdateIndex = cursor.getColumnIndex(RESTAURANT_LAST_UPDATE_DATE);
             do {
                 Restaurant st = new Restaurant();
                 st.id = cursor.getString(idIndex);
@@ -78,6 +95,10 @@ public class RestaurantSql {
                 st.orderTime = cursor.getString(time);
                 st.orderDate = cursor.getString(date);
                 st.foodName = cursor.getString(foodName);
+                st.isRemoved = cursor.getInt(isRemovedIndex);
+                st.likes = cursor.getInt(likesIndex);
+                st.userLikes = cursor.getString(userLikesIndex);
+                st.lastUpdateDate = cursor.getDouble(lastUpdateIndex);
                 String [] restaurant_variables = MyApplication.getMyContext().getResources().getStringArray(R.array.restaurant_variables);
                 if(restaurant_variables[0].equals(field)) {
                     /*if (st.name.equals(content))
@@ -111,6 +132,10 @@ public class RestaurantSql {
         values.put(RESTAURANT_NAME, st.name);
         values.put(RESTAURANT_FOOD_NAME, st.foodName);
         values.put(ADDRESS, st.address);
+        values.put(RESTAURANT_IS_REMOVED, st.isRemoved);
+        values.put(RESTAURANT_LIKES, st.likes);
+        values.put(RESTAURANT_USER_LIKES, st.userLikes);
+        values.put(RESTAURANT_LAST_UPDATE_DATE, st.lastUpdateDate);
 
         if (st.checked) {
             values.put(RESTAURANT_CHECK, 1);
@@ -139,6 +164,10 @@ public class RestaurantSql {
                 int date = cursor.getColumnIndex(RESTAURANT_DATE);
                 int address =cursor.getColumnIndex(ADDRESS);
                 int foodName = cursor.getColumnIndex(RESTAURANT_FOOD_NAME);
+                int isRemovedIndex = cursor.getColumnIndex(RESTAURANT_IS_REMOVED);
+                int likesIndex = cursor.getColumnIndex(RESTAURANT_LIKES);
+                int userLikesIndex = cursor.getColumnIndex(RESTAURANT_USER_LIKES);
+                int lastUpdateIndex = cursor.getColumnIndex(RESTAURANT_LAST_UPDATE_DATE);
 
                 Restaurant st = new Restaurant();
                 st.id = cursor.getString(idIndex);
@@ -150,6 +179,10 @@ public class RestaurantSql {
                 st.address= cursor.getString(address);
                 st.orderDate = cursor.getString(date);
                 st.foodName = cursor.getString(foodName);
+                st.isRemoved = cursor.getInt(isRemovedIndex);
+                st.likes = cursor.getInt(likesIndex);
+                st.userLikes = cursor.getString(userLikesIndex);
+                st.lastUpdateDate = cursor.getDouble(lastUpdateIndex);
                 return st;
             }
 
@@ -166,14 +199,18 @@ public class RestaurantSql {
                 RESTAURANT_FOOD_NAME + " TEXT, " +
                 RESTAURANT_CHECK + " NUMBER, " +
                 RESTAURANT_IMAGE_URL + " TEXT, "+
+                RESTAURANT_IS_REMOVED + " NUMBER, " +
+                RESTAURANT_LIKES + " NUMBER, " +
+                RESTAURANT_USER_LIKES + " TEXT, "+
                 RESTAURANT_USERNAME+" TEXT, "
                 +RESTAURANT_DATE+" TEXT, "
                 +RESTAURANT_TIME+" TEXT, " +
+                RESTAURANT_LAST_UPDATE_DATE+" DOUBLE, " +
                 ADDRESS+" TEXT);");
     }
 
     static public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("drop table if exists "+ RESTAURANT_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + RESTAURANT_TABLE);
         onCreate(db);
     }
     static public void deleteRestaurant(SQLiteDatabase db, Restaurant st)
@@ -190,7 +227,10 @@ public class RestaurantSql {
         values.put(RESTAURANT_NAME, st.name);
         values.put(RESTAURANT_FOOD_NAME, st.foodName);
         values.put(ADDRESS, st.address);
-
+        values.put(RESTAURANT_IS_REMOVED, st.isRemoved);
+        values.put(RESTAURANT_LIKES, st.likes);
+        values.put(RESTAURANT_USER_LIKES, st.userLikes);
+        values.put(RESTAURANT_LAST_UPDATE_DATE, st.lastUpdateDate);
         if (st.checked) {
             values.put(RESTAURANT_CHECK, 1);
         } else {

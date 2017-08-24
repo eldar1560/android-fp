@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -23,6 +24,8 @@ import android.widget.TextView;
 
 import com.example.fp.androidapp.model.Model;
 import com.example.fp.androidapp.model.Restaurant;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -33,6 +36,7 @@ import java.util.List;
 
 public class RestaurantListFragment extends Fragment {
 
+    final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     List<Restaurant> data;
     LayoutInflater inflater;
     ListView list;
@@ -55,8 +59,25 @@ public class RestaurantListFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Model.UpdateRestaurantEvent event) {
         //Toast.makeText(MyApplication.getMyContext(), "someone added or edited restaurant", Toast.LENGTH_SHORT).show();
-        Log.d("Mife","got new/edit restaurant");
+        Log.d("Mife","got new/edit/delete restaurant");
         boolean exist = false;
+        for (int i = 0 ; i<data.size() ; i++){
+            Restaurant r = data.get(i) ;
+            if (r.id.equals(event.restaurant.id)){
+                exist = true;
+                if(event.restaurant.isRemoved == 1) {
+                    data.remove(i);
+                }
+                else
+                    data.set(i,event.restaurant);
+                break;
+            }
+        }
+        if (!exist && event.restaurant.isRemoved != 1){
+            data.add(event.restaurant);
+        }
+        adapter.notifyDataSetChanged();
+        /*boolean exist = false;
         for (Restaurant st: data){
             if (st.id.equals(event.restaurant.id)){
                 data.remove(st); //for changed restaurant
@@ -69,13 +90,12 @@ public class RestaurantListFragment extends Fragment {
         if (!exist){
             data.add(event.restaurant); //for new restaurant
         }
-        adapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();*/
         list.setSelection(adapter.getCount() - 1);
 
     }
-
     //for deletion
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    /*@Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Model.DeleteRestaurantEvent event) {
         //Toast.makeText(MyApplication.getMyContext(), "someone deleted restaurant", Toast.LENGTH_SHORT).show();
         Log.d("Mife","got delete restaurant");
@@ -89,11 +109,14 @@ public class RestaurantListFragment extends Fragment {
                 break;
             }
         }
-
+        /*if (exist){
+            Log.d("Mife","exist , removing");
+            data.remove(event.restaurant);
+        }
         adapter.notifyDataSetChanged();
         list.setSelection(adapter.getCount() - 1);
 
-    }
+    }*/
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -174,9 +197,11 @@ public class RestaurantListFragment extends Fragment {
                 //cb.setOnClickListener(listener);
             }
 
+
             TextView name = (TextView) convertView.findViewById(R.id.strow_name);
             TextView foodName = (TextView) convertView.findViewById(R.id.strow_foodName);
             CheckBox cb = (CheckBox) convertView.findViewById(R.id.strow_cb);
+
             final ImageView imageView = (ImageView) convertView.findViewById(R.id.strow_image);
             final ProgressBar progressBar = (ProgressBar) convertView.findViewById(R.id.strow_progressBar);
             final Restaurant st = data.get(position);
@@ -187,6 +212,32 @@ public class RestaurantListFragment extends Fragment {
             if(foodNameForRow.length() > 15)
                 foodNameForRow = foodNameForRow.substring(0,12) + "...";
 
+            final TextView likesNumber = (TextView) convertView.findViewById(R.id.strow_likes_number);
+            likesNumber.setText(st.likes + " likes");
+            final ImageButton likeButton = (ImageButton) convertView.findViewById(R.id.strow_like_button);
+            if(st.userLikes.contains(user.getEmail())){
+                likeButton.setBackgroundResource(R.mipmap.like_a);
+            }else{
+                likeButton.setBackgroundResource(R.mipmap.like_b);
+            }
+            likeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(st.userLikes.contains(user.getEmail())){
+                        st.likes--;
+                        st.userLikes = st.userLikes.replace(user.getEmail(),"");
+                        likeButton.setBackgroundResource(R.mipmap.like_b);
+                        likesNumber.setText(st.likes + " likes");
+                        Model.instace.updateRestaurant(st);
+                    }else{
+                        st.likes++;
+                        st.userLikes += user.getEmail();
+                        likeButton.setBackgroundResource(R.mipmap.like_a);
+                        likesNumber.setText(st.likes + " likes");
+                        Model.instace.updateRestaurant(st);
+                    }
+                }
+            });
 
             name.setText(resNameForRow);
             foodName.setText(foodNameForRow);

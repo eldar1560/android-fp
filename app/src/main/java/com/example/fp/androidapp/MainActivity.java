@@ -36,7 +36,7 @@ public class MainActivity extends Activity implements RestaurantMainFragment.Res
         setContentView(R.layout.activity_main);
         setResult(RESAULT_FAIL);
         ActionBar bar = getActionBar();
-        bar.setTitle("New Restaurant");
+        bar.setTitle("New Post");
         bar.setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -75,15 +75,15 @@ public class MainActivity extends Activity implements RestaurantMainFragment.Res
     public void onSave(EditText nameEt , EditText foodNameEt , EditText addressEt , CheckBox cbEt , MyTimePicker ot , MyDatePicker od , final ProgressBar progressBar , Bitmap imageBitmap) {
         if(foodNameEt.getText().toString().equals("") || nameEt.getText().toString().equals("") || addressEt.getText().toString().equals("") || ot.getText().toString().equals("") || od.getText().toString().equals("") || imageBitmap == null) {
             new AlertDialog.Builder(MainActivity.this)
-                    .setTitle("New Restaurant")
+                    .setTitle("New Post")
                     .setMessage("Do not leave a field or image empty!")
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
             return;
         }else if(nameEt.getText().toString().contains("\n") || foodNameEt.getText().toString().contains("\n") || addressEt.getText().toString().contains("\n")){
             new AlertDialog.Builder(MainActivity.this)
-                    .setTitle("New Restaurant")
-                    .setMessage("Do not put an enter in the fields")
+                    .setTitle("New Post")
+                    .setMessage("Do not put an enter in the fields!")
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
             return;
@@ -111,7 +111,7 @@ public class MainActivity extends Activity implements RestaurantMainFragment.Res
                 st.imageUrl = url;
                 Model.instace.addRestaurant(st);
                 new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("New Restaurant")
+                        .setTitle("New Post")
                         .setMessage("The save operation was completed successfully.")
                         .setIcon(android.R.drawable.ic_dialog_info)
                         .show();
@@ -123,7 +123,7 @@ public class MainActivity extends Activity implements RestaurantMainFragment.Res
             public void fail() {
                 //notify operation fail,...
                 new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("New Restaurant")
+                        .setTitle("New Post")
                         .setMessage("Image couldn't be loaded , try again...")
                         .setIcon(android.R.drawable.ic_dialog_info)
                         .show();

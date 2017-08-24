@@ -28,11 +28,10 @@ import java.util.Map;
 
 public class ModelFirebase {
 
-    ChildEventListener listener;
-
+    ChildEventListener listener = null;
     public void addRestaurant(Restaurant st) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("restaurants");
+        DatabaseReference myRef = database.getReference(RestaurantSql.RESTAURANT_TABLE);
         Map<String, Object> value = new HashMap<>();
         value.put("id", st.id);
         value.put("name", st.name);
@@ -44,13 +43,16 @@ public class ModelFirebase {
         value.put("userName", st.userName);
         value.put("orderDate", st.orderDate);
         value.put("orderTime", st.orderTime);
+        value.put("isRemoved", st.isRemoved);
+        value.put("likes", st.likes);
+        value.put("userLikes", st.userLikes);
         myRef.child(st.id).setValue(value);
     }
 
 
     public void deleteRestaurant (Restaurant st){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("restaurants");
+        DatabaseReference myRef = database.getReference(RestaurantSql.RESTAURANT_TABLE);
         myRef.child(st.id).removeValue();
     }
     interface getRestaurantCallback {
@@ -61,7 +63,7 @@ public class ModelFirebase {
 
     public void getRestaurant(String stId, final getRestaurantCallback callback) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("restaurants");
+        DatabaseReference myRef = database.getReference(RestaurantSql.RESTAURANT_TABLE);
         myRef.child(stId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -82,7 +84,7 @@ public class ModelFirebase {
     }
     public void getAllRestaurantsAndObserve(final getAllRestaurantsAndObserveCallback callback) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("restaurants");
+        DatabaseReference myRef = database.getReference(RestaurantSql.RESTAURANT_TABLE);
         ValueEventListener listener = myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -152,53 +154,53 @@ public class ModelFirebase {
 
     interface RegisterRestaurantsUpdatesCallback{
         void onRestaurantUpdate(Restaurant restaurant);
-        void onRestaurantDeleted(Restaurant restaurant);
-        void onRestaurantChanged(Restaurant restaurant);
     }
     public void registerRestaurantsUpdates(double lastUpdateDate,
-                                        final RegisterRestaurantsUpdatesCallback callback) {
+                                           final RegisterRestaurantsUpdatesCallback callback) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("restaurants");
+        DatabaseReference myRef = database.getReference(RestaurantSql.RESTAURANT_TABLE);
+        //myRef.orderByChild("lastUpdateDate").startAt(lastUpdateDate);
         listener = myRef.orderByChild("lastUpdateDate").startAt(lastUpdateDate)
                 .addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.d("Mife","onChildAdded called");
-                Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
-                callback.onRestaurantUpdate(restaurant);
-            }
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        Log.d("Mife","onChildAdded called");
+                        Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
+                        callback.onRestaurantUpdate(restaurant);
+                    }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Log.d("Mife","onChildChanged called");
-                Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
-                callback.onRestaurantChanged(restaurant);
-            }
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                        Log.d("Mife","onChildChanged called");
+                        Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
+                        callback.onRestaurantUpdate(restaurant);
+                    }
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Log.d("Mife","onChildremoved called");
-                Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
-                callback.onRestaurantDeleted(restaurant);
-            }
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+                        Log.d("Mife","onChildremoved called");
+                        Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
+                        callback.onRestaurantUpdate(restaurant);
+                    }
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
-                callback.onRestaurantUpdate(restaurant);
-            }
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                        Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
+                        callback.onRestaurantUpdate(restaurant);
+                    }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                    }
+                });
+
     }
-    public void unregisterRestaurantsUpdates()
+    public void unRegisterRestaurantsUpdates()
     {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference(RestaurantSql.RESTAURANT_TABLE);
-        if(listener !=null)
+        if(listener != null)
             myRef.removeEventListener(listener);
         listener = null ;
     }

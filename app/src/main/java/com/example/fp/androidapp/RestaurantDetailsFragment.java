@@ -84,63 +84,51 @@ public class RestaurantDetailsFragment extends Fragment {
 
         Log.d("TAG","stid = " + stId);
 
+        st = Model.instace.getRestaurant(stId);
+        Log.d("TAG","got restaurant name: " + st.name);
+        stu_foodName = (TextView) contentView.findViewById(R.id.stu_foodName);
+        stu_foodName.setText("Food Name : " + st.foodName);
+        stu_name = (TextView) contentView.findViewById(R.id.stu_name);
+        stu_name.setText("Restaurant Name : " + st.name);
 
-        Model.instace.getRestaurant(stId, new Model.getRestaurantCallback() {
+        stu_userName = (TextView) contentView.findViewById(R.id.stu_userName);
+        stu_userName.setText("User Name : " + st.userName);
+
+        stu_address = (TextView) contentView.findViewById(R.id.stu_address);
+        stu_address.setText("Restaurant Address : " + st.address);
+
+        stu_ot = (TextView) contentView.findViewById(R.id.stu_ot);
+        stu_ot.setText("Order time : "+st.orderTime);
+
+        stu_od = (TextView) contentView.findViewById(R.id.stu_od);
+        stu_od.setText("Order date : "+st.orderDate);
+
+        stu_cb = (CheckBox) contentView.findViewById(R.id.stu_cb);
+        stu_cb.setChecked(st.checked);
+        imageView = (ImageView) contentView.findViewById(R.id.stu_image);
+        imageView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onComplete(Restaurant restaurant) {
-                RestaurantDetailsFragment.this.st = restaurant;
-                Log.d("TAG","got restaurant name: " + restaurant.name);
-                stu_foodName = (TextView) contentView.findViewById(R.id.stu_foodName);
-                stu_foodName.setText("Food Name : " + st.foodName);
-                stu_name = (TextView) contentView.findViewById(R.id.stu_name);
-                stu_name.setText("Restaurant Name : " + st.name);
-
-                stu_userName = (TextView) contentView.findViewById(R.id.stu_userName);
-                stu_userName.setText("User Name : " + st.userName);
-
-                stu_address = (TextView) contentView.findViewById(R.id.stu_address);
-                stu_address.setText("Restaurant Address : " + st.address);
-
-                stu_ot = (TextView) contentView.findViewById(R.id.stu_ot);
-                stu_ot.setText("Order time : "+st.orderTime);
-
-                stu_od = (TextView) contentView.findViewById(R.id.stu_od);
-                stu_od.setText("Order date : "+st.orderDate);
-
-                stu_cb = (CheckBox) contentView.findViewById(R.id.stu_cb);
-                stu_cb.setChecked(st.checked);
-                imageView = (ImageView) contentView.findViewById(R.id.stu_image);
-                imageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(listener!=null)
-                            listener.onFullImage();
-                    }
-                });
-                progressBar = (ProgressBar) contentView.findViewById(R.id.stu_progressBar);
-                if (st.imageUrl != null && !st.imageUrl.isEmpty() && !st.imageUrl.equals("")){
-                    progressBar.setVisibility(View.VISIBLE);
-                    Model.instace.getImage(st.imageUrl, new Model.GetImageListener() {
-                        @Override
-                        public void onSuccess(Bitmap image) {
-                            imageView.setImageBitmap(image);
-                            progressBar.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onFail() {
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancel() {
-                Log.d("TAG","get restaurant cancell" );
-
+            public void onClick(View v) {
+                if(listener!=null)
+                    listener.onFullImage();
             }
         });
+        progressBar = (ProgressBar) contentView.findViewById(R.id.stu_progressBar);
+        if (st.imageUrl != null && !st.imageUrl.isEmpty() && !st.imageUrl.equals("")){
+            progressBar.setVisibility(View.VISIBLE);
+            Model.instace.getImage(st.imageUrl, new Model.GetImageListener() {
+                @Override
+                public void onSuccess(Bitmap image) {
+                    imageView.setImageBitmap(image);
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onFail() {
+                    progressBar.setVisibility(View.GONE);
+                }
+            });
+        }
 
 
         return contentView;

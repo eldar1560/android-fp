@@ -93,36 +93,25 @@ public class RestaurantDetailsFullImageFragment extends Fragment {
         });
         imageView = (ImageView) contentView.findViewById(R.id.full_image);
         progressBar = (ProgressBar) contentView.findViewById(R.id.full_image_progressBar);
-        Model.instace.getRestaurant(stId, new Model.getRestaurantCallback() {
-            @Override
-            public void onComplete(Restaurant restaurant) {
-                RestaurantDetailsFullImageFragment.this.st = restaurant;
-                Log.d("TAG","got restaurant name: " + restaurant.name);
+        st = Model.instace.getRestaurant(stId);
+        Log.d("TAG","got restaurant name: " + st.name);
 
 
-                if (st.imageUrl != null && !st.imageUrl.isEmpty() && !st.imageUrl.equals("")){
-                    progressBar.setVisibility(View.VISIBLE);
-                    Model.instace.getImage(st.imageUrl, new Model.GetImageListener() {
-                        @Override
-                        public void onSuccess(Bitmap image) {
-                                imageView.setImageBitmap(image);
-                                progressBar.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onFail() {
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    });
+        if (st.imageUrl != null && !st.imageUrl.isEmpty() && !st.imageUrl.equals("")){
+            progressBar.setVisibility(View.VISIBLE);
+            Model.instace.getImage(st.imageUrl, new Model.GetImageListener() {
+                @Override
+                public void onSuccess(Bitmap image) {
+                    imageView.setImageBitmap(image);
+                    progressBar.setVisibility(View.GONE);
                 }
-            }
 
-            @Override
-            public void onCancel() {
-                Log.d("TAG","get restaurant cancell" );
-
-            }
-        });
+                @Override
+                public void onFail() {
+                    progressBar.setVisibility(View.GONE);
+                }
+            });
+        }
 
 
         return contentView;

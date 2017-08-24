@@ -37,42 +37,30 @@ public class RestaurantDetailsActivity extends Activity implements RestaurantDet
         setResult(RESAULT_FAIL);
 
         ActionBar bar = getActionBar();
-        bar.setTitle("Restaurant Details");
+        bar.setTitle("Post Details");
         bar.setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
         stId = intent.getStringExtra("STID");
-        Model.instace.getRestaurant(stId, new Model.getRestaurantCallback() {
-            @Override
-            public void onComplete(Restaurant restaurant) {
-                RestaurantDetailsActivity.this.st = restaurant;
-                Log.d("Mife","got restaurant name: " + restaurant.name);
-                restaurantDetailsFragment = RestaurantDetailsFragment.newInstance(st.id);
+        st = Model.instace.getRestaurant(stId);
+        Log.d("Mife","got restaurant name: " + st.name);
+        restaurantDetailsFragment = RestaurantDetailsFragment.newInstance(st.id);
 
-                FragmentTransaction tran = getFragmentManager().beginTransaction();
-                tran.add(R.id.details_fragment_container, restaurantDetailsFragment,"tag");
-                tran.commit();
-                new CountDownTimer(50, 50) { //for the case the fragment is not replaced already
+        FragmentTransaction tran = getFragmentManager().beginTransaction();
+        tran.add(R.id.details_fragment_container, restaurantDetailsFragment,"tag");
+        tran.commit();
+        new CountDownTimer(50, 50) { //for the case the fragment is not replaced already
 
-                    public void onTick(long millisUntilFinished) {
-                        RestaurantDetailsActivity.this.invalidateOptionsMenu();
-                    }
-
-                    public void onFinish() {
-                        RestaurantDetailsActivity.this.invalidateOptionsMenu();
-                    }
-
-                }.start();
+            public void onTick(long millisUntilFinished) {
+                RestaurantDetailsActivity.this.invalidateOptionsMenu();
             }
 
-            @Override
-            public void onCancel() {
-                Log.d("Mife","get restaurant cancell" );
-
+            public void onFinish() {
+                RestaurantDetailsActivity.this.invalidateOptionsMenu();
             }
-        });
 
+        }.start();
 
     }
 
@@ -114,26 +102,16 @@ public class RestaurantDetailsActivity extends Activity implements RestaurantDet
         Fragment rlf;
         rlf = getFragmentManager().findFragmentById(R.id.details_fragment_container);
         if(rlf instanceof RestaurantDetailsFragment) {
-            Model.instace.getRestaurant(stId, new Model.getRestaurantCallback() {
-                @Override
-                public void onComplete(Restaurant restaurant) {
-                    RestaurantDetailsActivity.this.st = restaurant;
-                    menu.add(0, 0, 0, "Show On Map").setIcon(R.drawable.googlemaps)
-                            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-                    if (st.userName.equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
-                        menu.add(0, 1, 0, "Edit").setIcon(R.drawable.edit_icon)
-                                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-                    } else {
-                        menu.add(0, 2, 0, "Contact User").setIcon(R.drawable.gmail)
-                                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-                    }
-                }
-
-                @Override
-                public void onCancel() {
-                    Log.d("TAG", "get restaurant cancell");
-                }
-            });
+            st = Model.instace.getRestaurant(stId);
+            menu.add(0, 0, 0, "Show On Map").setIcon(R.drawable.googlemaps)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            if (st.userName.equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
+                menu.add(0, 1, 0, "Edit").setIcon(R.drawable.edit_icon)
+                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            } else {
+                menu.add(0, 2, 0, "Contact User").setIcon(R.drawable.gmail)
+                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            }
         }
         return true;
     }
@@ -143,21 +121,10 @@ public class RestaurantDetailsActivity extends Activity implements RestaurantDet
         // Handle item selection
         switch (item.getItemId()) {
             case 0:
-                Model.instace.getRestaurant(stId, new Model.getRestaurantCallback() {
-                    @Override
-                    public void onComplete(Restaurant restaurant) {
-                        RestaurantDetailsActivity.this.st = restaurant;
-                        String uri = String.format(Locale.ENGLISH, "geo:0,0?q=%s",st.address);
-                        Intent intent_map = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                        startActivity(intent_map);
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        Log.d("TAG","get restaurant cancell" );
-
-                    }
-                });
+                st = Model.instace.getRestaurant(stId);
+                String uri = String.format(Locale.ENGLISH, "geo:0,0?q=%s",st.address);
+                Intent intent_map = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                startActivity(intent_map);
                 return true;
             case 1:
                 Intent intent = new Intent(RestaurantDetailsActivity.this,RestaurantEditActivity.class);

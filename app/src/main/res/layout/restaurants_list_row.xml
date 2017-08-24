@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants">
 
     <FrameLayout
         android:layout_width="wrap_content"
@@ -12,7 +13,7 @@
         <ImageView
             android:id="@+id/strow_image"
             android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_height="140dp"
             android:src="@drawable/avatar"/>
 
         <ProgressBar
@@ -63,7 +64,35 @@
                 android:textSize="30dp"
                 android:text="food name"/>
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@android:color/darker_gray" />
 
+
+        <LinearLayout
+            android:focusable="false"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageButton
+                android:id="@+id/strow_like_button"
+                android:layout_marginTop="5dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:focusable="false"
+                />
+            <TextView
+                android:id="@+id/strow_likes_number"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                android:text="likes"/>
+
+        </LinearLayout>
 
 
     </LinearLayout>

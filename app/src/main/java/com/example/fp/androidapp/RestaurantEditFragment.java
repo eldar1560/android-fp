@@ -97,42 +97,29 @@ public class RestaurantEditFragment extends Fragment {
         progressBar = (ProgressBar) contentView.findViewById(R.id.stu_edit_progressBar);
         progressBar.setVisibility(GONE);
         imageView = (ImageView) contentView.findViewById(R.id.stu_edit_image);
-        Model.instace.getRestaurant(stId, new Model.getRestaurantCallback() {
-            @Override
-            public void onComplete(Restaurant restaurant) {
-                RestaurantEditFragment.this.st_edit = restaurant;
-                Log.d("TAG","got restaurant name: " + restaurant.name);
-                nameEt.setText(st_edit.name);
-                foodNameEt.setText(st_edit.foodName);
-                addressEt.setText(st_edit.address);
-                ot.onTimeSet(Integer.valueOf(st_edit.orderTime.substring(0,st_edit.orderTime.indexOf(":"))),Integer.valueOf(st_edit.orderTime.substring(st_edit.orderTime.indexOf(":")+1)));
-                od.onDateSet(Integer.valueOf(st_edit.orderDate.substring(st_edit.orderDate.lastIndexOf("/")+1)) , Integer.valueOf(st_edit.orderDate.substring(st_edit.orderDate.indexOf("/")+1,st_edit.orderDate.lastIndexOf("/")))-1 , Integer.valueOf(st_edit.orderDate.substring(0,st_edit.orderDate.indexOf("/"))));
-                cbEt.setChecked(st_edit.checked);
-                if (st_edit.imageUrl != null && !st_edit.imageUrl.isEmpty() && !st_edit.imageUrl.equals("")){
-                    progressBar.setVisibility(View.VISIBLE);
-                    Model.instace.getImage(st_edit.imageUrl, new Model.GetImageListener() {
-                        @Override
-                        public void onSuccess(Bitmap image) {
-                            imageView.setImageBitmap(image);
-                            progressBar.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onFail() {
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    });
+        st_edit = Model.instace.getRestaurant(stId);
+        Log.d("TAG","got restaurant name: " + st_edit.name);
+        nameEt.setText(st_edit.name);
+        foodNameEt.setText(st_edit.foodName);
+        addressEt.setText(st_edit.address);
+        ot.onTimeSet(Integer.valueOf(st_edit.orderTime.substring(0,st_edit.orderTime.indexOf(":"))),Integer.valueOf(st_edit.orderTime.substring(st_edit.orderTime.indexOf(":")+1)));
+        od.onDateSet(Integer.valueOf(st_edit.orderDate.substring(st_edit.orderDate.lastIndexOf("/")+1)) , Integer.valueOf(st_edit.orderDate.substring(st_edit.orderDate.indexOf("/")+1,st_edit.orderDate.lastIndexOf("/")))-1 , Integer.valueOf(st_edit.orderDate.substring(0,st_edit.orderDate.indexOf("/"))));
+        cbEt.setChecked(st_edit.checked);
+        if (st_edit.imageUrl != null && !st_edit.imageUrl.isEmpty() && !st_edit.imageUrl.equals("")) {
+            progressBar.setVisibility(View.VISIBLE);
+            Model.instace.getImage(st_edit.imageUrl, new Model.GetImageListener() {
+                @Override
+                public void onSuccess(Bitmap image) {
+                    imageView.setImageBitmap(image);
+                    progressBar.setVisibility(View.GONE);
                 }
-            }
 
-            @Override
-            public void onCancel() {
-                Log.d("TAG","get restaurant cancell" );
-
-            }
-        });
-
-
+                @Override
+                public void onFail() {
+                    progressBar.setVisibility(View.GONE);
+                }
+            });
+        }
 
         Button saveBtn = (Button) contentView.findViewById(R.id.editSaveBtn);
         Button cancelBtn = (Button) contentView.findViewById(R.id.editCancelBtn);

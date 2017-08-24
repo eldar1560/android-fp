@@ -28,6 +28,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+
+
 import java.util.List;
 
 public class RestaurantListActivity extends Activity implements RestaurantListFragment.RestaurantListFragmentListener,AuthUIFragment.RestaurantAuthFragmentListener , UserProfileFragment.RestaurantUserProfileFragmentListener{
@@ -41,7 +43,7 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_list);
         ActionBar bar = getActionBar();
-        bar.setTitle("Restaurants World");
+        bar.setTitle("Eat&Share");
 
 
         bar.setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
@@ -117,6 +119,12 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
         return true;
     }
 
+
+    @Override
+    public void onDestroy() {
+        //Model.instace.unRegisterUpdates();
+        super.onDestroy();
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
@@ -299,8 +307,8 @@ public class RestaurantListActivity extends Activity implements RestaurantListFr
 
     @Override
     public void onAlreadyLoggedIn() {
-        Model.instace.registerUpdates();
         isOnSearch = false;
+        Model.instace.registerUpdates();
         mAuth = FirebaseAuth.getInstance();
         FragmentTransaction tran = getFragmentManager().beginTransaction();
         restaurantListFragment = RestaurantListFragment.newInstance("" ,"","true");
