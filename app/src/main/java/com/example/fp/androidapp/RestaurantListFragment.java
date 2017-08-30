@@ -4,11 +4,9 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -74,15 +72,12 @@ public class RestaurantListFragment extends Fragment {
                 }
                 else {
                     data.set(i, event.restaurant);
-                    Log.d("mife" , "event.likes = "+event.likes_before +" , event likes = "+event.restaurant.likes);
                     if(event.likes_before < event.restaurant.likes){
-                        Log.d("mife","Like added");
                         final String [] user_liked = event.restaurant.userLikes.split(",");
                         if(!user_liked[user_liked.length-1].equals(user.getEmail())) {
                             Model.instace.getImage(event.restaurant.imageUrl, new Model.GetImageListener() {
                                 @Override
                                 public void onSuccess(Bitmap image) {
-                                    Log.d("mife", "found image");
                                     NotificationCompat.Builder mBuilder =
                                             new NotificationCompat.Builder(MyApplication.getMyContext())
                                                     .setSmallIcon(R.drawable.icon)

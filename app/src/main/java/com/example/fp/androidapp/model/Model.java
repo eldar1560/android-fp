@@ -91,7 +91,7 @@ public class Model {
     private void synchRestaurantsDbAndregisterRestaurantsUpdates() {
         //1. get local lastUpdateTade
         SharedPreferences pref = MyApplication.getMyContext().getSharedPreferences("TAG", Context.MODE_PRIVATE);
-        final double lastUpdateDate = pref.getFloat("StudnetsLastUpdateDate",0);
+        final double lastUpdateDate = pref.getFloat("RestaurantsLastUpdateDate",0);
         Log.d("mife","lastUpdateDate: " + lastUpdateDate);
 
         modelFirebase.registerRestaurantsUpdates(lastUpdateDate,new ModelFirebase.RegisterRestaurantsUpdatesCallback() {
@@ -113,13 +113,13 @@ public class Model {
                 }
                 //4. update the lastUpdateTade
                 SharedPreferences pref = MyApplication.getMyContext().getSharedPreferences("TAG", Context.MODE_PRIVATE);
-                final double lastUpdateDate = pref.getFloat("StudnetsLastUpdateDate",0);
+                final double lastUpdateDate = pref.getFloat("RestaurantsLastUpdateDate",0);
                 if (lastUpdateDate < restaurant.lastUpdateDate){
                     SharedPreferences.Editor prefEd = MyApplication.getMyContext().getSharedPreferences("TAG",
                             Context.MODE_PRIVATE).edit();
-                    prefEd.putFloat("StudnetsLastUpdateDate", (float) restaurant.lastUpdateDate);
+                    prefEd.putFloat("RestaurantsLastUpdateDate", (float) restaurant.lastUpdateDate);
                     prefEd.commit();
-                    Log.d("mife","StudnetsLastUpdateDate: " + restaurant.lastUpdateDate);
+                    Log.d("mife","RestaurantsLastUpdateDate: " + restaurant.lastUpdateDate);
                 }
                 EventBus.getDefault().post(new UpdateRestaurantEvent(restaurant , likes_before));
             }

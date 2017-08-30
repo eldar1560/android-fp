@@ -21,7 +21,7 @@ import com.example.fp.androidapp.model.Restaurant;
 
 public class RestaurantDetailsFragment extends Fragment {
 
-    TextView stu_name , stu_userName , stu_address ,stu_foodName , stu_ot , stu_od;
+    TextView stu_name , stu_userName , stu_address ,stu_foodName , stu_ot , stu_od ,stu_user_liked;
     ImageView imageView;
     ProgressBar progressBar;
     CheckBox stu_cb;
@@ -129,6 +129,15 @@ public class RestaurantDetailsFragment extends Fragment {
                 }
             });
         }
+        stu_user_liked = (TextView) contentView.findViewById(R.id.stu_userLiked);
+        String [] user_liked = st.userLikes.split(",");
+        String all_users_liked ="";
+        for(String user : user_liked){
+            if(!user.equals(""))
+                all_users_liked += user +"\n";
+        }
+        if(!all_users_liked.equals(""))
+            stu_user_liked.setText("User that liked : " +all_users_liked);
 
 
         return contentView;
