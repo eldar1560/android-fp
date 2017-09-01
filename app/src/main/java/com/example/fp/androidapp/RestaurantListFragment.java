@@ -75,40 +75,42 @@ public class RestaurantListFragment extends Fragment {
                     if(event.likes_before < event.restaurant.likes){
                         final String [] user_liked = event.restaurant.userLikes.split(",");
                         if(!user_liked[user_liked.length-1].equals(user.getEmail())) {
-                            Model.instace.getImage(event.restaurant.imageUrl, new Model.GetImageListener() {
-                                @Override
-                                public void onSuccess(Bitmap image) {
-                                    NotificationCompat.Builder mBuilder =
-                                            new NotificationCompat.Builder(MyApplication.getMyContext())
-                                                    .setSmallIcon(R.drawable.icon)
-                                                    .setContentTitle("Eat&Share!")
-                                                    .setAutoCancel(true)
-                                                    .setDefaults(NotificationCompat.DEFAULT_SOUND)
-                                                    .setContentText(user_liked[user_liked.length - 1] + " liked your post");
-                                    Intent resultIntent = new Intent(MyApplication.getMyContext(), RestaurantListActivity.class);
-                                    PendingIntent resultPendingIntent =
-                                            PendingIntent.getActivity(
-                                                    MyApplication.getMyContext(),
-                                                    0,
-                                                    resultIntent,
-                                                    PendingIntent.FLAG_UPDATE_CURRENT
-                                            );
-                                    //mBuilder.setContentIntent(resultPendingIntent);
-                                    NotificationManager mNotificationManager =
-                                            (NotificationManager) MyApplication.getMyContext().getSystemService(MyApplication.getMyContext().NOTIFICATION_SERVICE);
+                            if(event.restaurant.userName.equals(user.getEmail())) { //if user liked the post of the logged in user , it will show a notification(and the user that liked is not the same user)
+                                Model.instace.getImage(event.restaurant.imageUrl, new Model.GetImageListener() {
+                                    @Override
+                                    public void onSuccess(Bitmap image) {
+                                        NotificationCompat.Builder mBuilder =
+                                                new NotificationCompat.Builder(MyApplication.getMyContext())
+                                                        .setSmallIcon(R.drawable.icon)
+                                                        .setContentTitle("Eat&Share!")
+                                                        .setAutoCancel(true)
+                                                        .setDefaults(NotificationCompat.DEFAULT_SOUND)
+                                                        .setContentText(user_liked[user_liked.length - 1] + " liked your post");
+                                        Intent resultIntent = new Intent(MyApplication.getMyContext(), RestaurantListActivity.class);
+                                        PendingIntent resultPendingIntent =
+                                                PendingIntent.getActivity(
+                                                        MyApplication.getMyContext(),
+                                                        0,
+                                                        resultIntent,
+                                                        PendingIntent.FLAG_UPDATE_CURRENT
+                                                );
+                                        //mBuilder.setContentIntent(resultPendingIntent);
+                                        NotificationManager mNotificationManager =
+                                                (NotificationManager) MyApplication.getMyContext().getSystemService(MyApplication.getMyContext().NOTIFICATION_SERVICE);
 
-                                    NotificationCompat.BigPictureStyle s = new NotificationCompat.BigPictureStyle().bigPicture(image);
-                                    s.setSummaryText(user_liked[user_liked.length - 1] + " liked your post");
-                                    mBuilder.setStyle(s);
-                                    // mId allows you to update the notification later on.
-                                    mNotificationManager.notify(0, mBuilder.build());
-                                }
+                                        NotificationCompat.BigPictureStyle s = new NotificationCompat.BigPictureStyle().bigPicture(image);
+                                        s.setSummaryText(user_liked[user_liked.length - 1] + " liked your post");
+                                        mBuilder.setStyle(s);
+                                        // mId allows you to update the notification later on.
+                                        mNotificationManager.notify(0, mBuilder.build());
+                                    }
 
-                                @Override
-                                public void onFail() {
-                                    Log.d("mife", "didn't find image");
-                                }
-                            });
+                                    @Override
+                                    public void onFail() {
+                                        Log.d("mife", "didn't find image");
+                                    }
+                                });
+                            }
                         }
                     }
                 }
@@ -116,7 +118,26 @@ public class RestaurantListFragment extends Fragment {
             }
         }
         if (!exist && event.restaurant.isRemoved != 1){
-            data.add(event.restaurant);
+            if(isAll.equals("true"))
+                data.add(event.restaurant);
+            else{ //if user is on search , update the list according to the search variables and not add automatically.
+                String [] restaurant_variables = MyApplication.getMyContext().getResources().getStringArray(R.array.restaurant_variables);
+                if(restaurant_variables[0].equals(field)) {
+                    if(event.restaurant.name.toLowerCase().contains(content.toLowerCase()))
+                        data.add(event.restaurant);
+                }
+                else if(restaurant_variables[1].equals(field)) {
+                    if(event.restaurant.foodName.toLowerCase().contains(content.toLowerCase()))
+                        data.add(event.restaurant);
+                }
+                else if(restaurant_variables[2].equals(field)) {
+                    if (event.restaurant.userName.contains(content))
+                        data.add(event.restaurant);
+                }else if(restaurant_variables[3].equals(field)){
+                    if(event.restaurant.address.contains(content))
+                        data.add(event.restaurant);
+                }
+            }
         }
         adapter.notifyDataSetChanged();
         list.setSelection(adapter.getCount() - 1);

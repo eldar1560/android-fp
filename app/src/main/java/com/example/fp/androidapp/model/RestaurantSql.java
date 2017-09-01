@@ -5,7 +5,6 @@ package com.example.fp.androidapp.model;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.example.fp.androidapp.MyApplication;
 import com.example.fp.androidapp.R;
@@ -101,14 +100,10 @@ public class RestaurantSql {
                 st.lastUpdateDate = cursor.getDouble(lastUpdateIndex);
                 String [] restaurant_variables = MyApplication.getMyContext().getResources().getStringArray(R.array.restaurant_variables);
                 if(restaurant_variables[0].equals(field)) {
-                    /*if (st.name.equals(content))
-                        list.add(st);*/
                     if(st.name.toLowerCase().contains(content.toLowerCase()))
                         list.add(st);
                 }
                 else if(restaurant_variables[1].equals(field)) {
-                    /*if (st.foodName.equals(content))
-                        list.add(st);*/
                     if(st.foodName.toLowerCase().contains(content.toLowerCase()))
                         list.add(st);
                 }

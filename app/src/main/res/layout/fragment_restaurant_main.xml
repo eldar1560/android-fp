@@ -136,6 +136,7 @@
         android:orientation="horizontal">
 
         <Button
+            android:background="@color/lightorange"
             android:id="@+id/mainSaveBtn"
             android:layout_width="1dp"
             android:layout_height="wrap_content"
@@ -144,6 +145,7 @@
             android:layout_margin="7dp"
             android:layout_weight="1"/>
         <Button
+            android:background="@color/lightorange"
             android:id="@+id/mainCancelBtn"
             android:layout_width="1dp"
             android:layout_height="wrap_content"
